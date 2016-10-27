@@ -3,3 +3,7 @@
 *.dvi
 *.aux
 *.out
+*.pdf
+*.lof
+*.toc
+*.lot
