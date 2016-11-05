@@ -24,7 +24,7 @@
 % Set up the Title Page
 \title  {Building, testing and visualizing neural networks from scratch}
 \authors  {\texorpdfstring
-            {\href{https://www.github.com/botcs}{Csaba Botos}}
+            {\href{https://www.github.com/botcs/botcs}{Csaba Botos}}
             {Csaba Botos}
             }
 \addresses  {\groupname\\\deptname\\\univname}  % Do not change this here, instead these must be set in the "Thesis.cls" file, please look through it instead
@@ -101,22 +101,22 @@ Recently a special branch of Machine Learning, a model based on living organic s
 It gained larger attention when better results were achieved than task-specific, handcrafted models in feature extraction. 
 %Despite the computational cost of the training process, the generalization capabilities and the scalability of recent architectures make Deep Learning a powerful tool applied widespread in computer vision, speech recognition, language processing. 
 %Today's leading companies (Google, Facebook, Ebay, Twitter etc\dots) are the main investors and beneficiaries of researches and developement of DNNs. 
-The reason behind its success is their scalability: the latest architectures are able to exploit the capacity of cutting-edge GPU hardware since the abstraction of the data is accomplished by succeeding neural nodes performing elementary operations which can be easily paralellized.
+The reason behind its success is its scalability: the latest architectures are able to exploit the capacity of cutting-edge GPU hardware since the abstraction of the data is accomplished by succeeding neural nodes performing elementary operations, which can be easily paralellized.
 
 It is of the utmost importance to understand the main concept of such networks to contribute to the breakthroughs of the fourth industrial revolution. 
 To this purpose, building a framework from the base unit blocks of the newest models is the best introduction to Machine Learning. 
-In my research I have disassembled black-box representated networks to the very basic, intuitive level and reorganized it in objectoriented manner where each neural layer is treated as an entity derived from a common ancestor, therefore information flow and processes of the system are easily traced. 
-Current implementations are based on the principals of the components used by networks built for ImageNet classification, such as Convolutional, ReLU, Max-Pooling, Fully-Connected, Softmax and k-Winner-Takes-All layers.
-Furthermore the following training methods and policies were adapted: cross validated, minibatch, on-line, $L_p$ regularized and basic Stochastic Gradient Descent training.
+In my research I have disassembled black-box representated networks to the very basic, intuitive level and reorganized it in objectoriented manner, where each neural layer is treated as an entity derived from a common ancestor, therefore information flow and processes of the system are easily traced. 
+My design and implementation is based on the principals of the components used by networks built for ImageNet classification, such as Convolutional, ReLU, Max-Pooling, Fully-Connected, Dropout, DropConnect, Softmax and k-Winner-Takes-All layers.
+Furthermore, the following training methods and policies were adapted: cross validated, minibatch, on-line, $L_p$ regularized and basic Stochastic Gradient Descent training.
 
 For testing the framework, the parameter space of Fully Connected networks was exhaustively explored. 
-After training and evaluating sessions - mainly performed on the MNIST and self-acquisited datasets - the results were gathered to analyze the performance of different architectures. 
+After training and evaluating sessions - mainly performed on the MNIST and self-acquired datasets - the results were gathered to analyze the performance of different architectures. 
 For further investigation the best performing models  were compared to each other to find pros and cons of different capacity, layout and training of networks.
 
-Besides architectural experiments, targeted by many recent researches a non-trivial task of visualizing the inner representation of information, understanding transient activation patterns was studied as well.
-Previously mentioned candidate networks were also visualized individually to retrieve information about characteristics of the processes in their Hidden Layer.
+Besides architectural experiments, a non-trivial task targeted by many recent research of visualizing the inner representation of information, understanding transient activation patterns was studied as well.
+Previously mentioned candidate networks were also visualized individually to retrieve information about characteristics of the processes in their Hidden Layers.
 %Novel visualization methods of Ian J. Goodfellow et al., Matthew Zeiler, Ross Girshick et al., summarized by Andrej Karpathy, were analyzed and compared.
-My implementation proposes a simplification of the DeConvNet derived from Gradient Ascent, efficient algorithm to reveal patterns recognized by nodes in the hidden layers of Neural Networks, to produce adversarial input samples.
+My implementation proposes a simplification of the DeconvNet derived from Gradient Ascent, an efficient algorithm to reveal patterns recognized by nodes in the hidden layers of Neural Networks, to produce adversarial input samples.
 
 
 
@@ -131,7 +131,7 @@ My implementation proposes a simplification of the DeConvNet derived from Gradie
 \acknowledgements{
 \addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
 
-The acknowledgements and the people to thank go here, don't forget to include your project advisor\ldots
+The acknowledgements and the people t1o thank go here, don't forget to include your project advisor\ldots
 
 }
 \clearpage  % End of the Acknowledgements

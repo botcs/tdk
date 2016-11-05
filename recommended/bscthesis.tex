@@ -1,0 +1,105 @@
+%\documentclass[fontsize=11pt, appendixprefix=true]{scrreprt}
+\documentclass[11pt]{report}
+\usepackage{tocloft}
+%\renewcommand{\cftpartleader}{\cftdotfill{\cftdotsep}} % for parts
+%\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} % for chapters
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % for sections, if you really want! (It is default in report and book class (So you may not need it).
+
+% appendixprefix: hogy odaírja, hogy "Függelék A", ne csak "A"
+%\usepackage[english, magyar]{babel}                        % nyelvi csomag
+\usepackage[T1]{fontenc}                                   % ékezetes betűknél is legyen automatikus elválasztás
+\usepackage[utf8]{inputenc}                                % ékezetes betűk kezelése
+\usepackage{lmodern}                                       % alapértelmezett betűtípus ne legyen pixeles
+\usepackage{mathtools}                                     % képletekhez kell
+\usepackage[style=ieee, backend=biber]{biblatex}           % bibliográfia
+\usepackage{graphicx}                                      % képek beszúrása
+\graphicspath{ {images/} }
+\usepackage[export]{adjustbox}                             % ez az ITK logó pozicionálásához kell
+\usepackage[margin=2.5cm, bindingoffset=1.25cm]{geometry}  % margók
+\usepackage[onehalfspacing]{setspace}                      % másfeles sorköz
+\usepackage[hidelinks, unicode, pdfusetitle]{hyperref}     % kattintható tartalomjegyzék és hivatkozások
+\usepackage{bookmark}                                      % PDF könyvjelzők
+\usepackage{csquotes}                                      % a bibliográfiában megfelelően legyenek formázva az idézőjelek
+\DeclareQuoteAlias{german}{magyar}
+
+% Kódrészletekhez ajánlom
+\usepackage{listings, scrhack}
+\usepackage{sourcecodepro} % egy jó betűtípus
+\lstset{captionpos=b, numberbychapter=false, basicstyle=\ttfamily, showstringspaces=false, columns=fullflexible}
+% Kódrészletek magyar stílusú számozása
+\renewcommand\lstlistingname{kódrészlet}
+\makeatletter
+\renewcommand\fnum@lstlisting{\ifx\lst@@caption\@empty\else\thelstlisting.~\fi\lstlistingname}%
+\makeatother
+% Nyilatkozathoz két parancs definíciója
+\newcommand{\pushtobottom}{\vspace*{\fill}}
+\newcommand{\signatureline}[1]{\begin{flushright}
+	\vspace*{.5cm}\par\noindent\makebox[2.5in]{\hrulefill}
+	\par\noindent\makebox[2.5in][c]{#1}
+	\end{flushright}
+}
+
+\addbibresource{bscthesis.bib}
+
+% Ezeket írd át!
+\author{Csaba Botos}
+\title{Building, testing and visualizing neural networks from scratch}
+\date{2016}
+%\subject{A thesis submitted for the Council of Scientific Students’ Associations}
+%\publishers{Advisor:\\PhD.\ István Z. Reguly}
+
+
+
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BEVEZETÉS
+
+\includegraphics[valign=m]{ITK_logo} \parbox[c]{\textwidth}{Pázmány Péter Catholic University\newline Faculty of Information Technology and Bionics}
+\vspace*{\fill}
+
+{\let\newpage\relax\maketitle}
+\vspace*{\fill}
+\begin{center}
+A thesis submitted for the Council of Scientific Students’ Associations\\
+Advisor: PhD.\ István Z. Reguly
+\end{center}
+\clearpage
+
+\input{chapters/abstract}
+\clearpage
+
+
+\input{chapters/declaration}
+\clearpage  % Declaration ended, now start a new page
+\tableofcontents
+\clearpage
+
+\input{chapters/introduction}	%2-5 oldal
+\clearpage
+\input{chapters/literature}		% minimum 10 oldal
+\clearpage
+%% BEVEZETÉS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TARTALOM
+\input{chapters/designing}		% 
+\clearpage
+\input{chapters/implementation}	%
+\clearpage
+\input{chapters/results}		%
+\clearpage
+\input{chapters/conclusion}		%
+\clearpage
+
+%% TARTALOM
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BEFEJEZÉS
+
+\input{chapters/summary}		%
+\clearpage
+\input{chapters/future}			%
+\clearpage
+
+%% BEFEJEZÉS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

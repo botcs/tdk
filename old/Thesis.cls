@@ -207,7 +207,7 @@
       {\LARGE \authornames \par}
       \vfill
       {\large A thesis submitted for the \par}
-      {\large Council of National Scientific Students' Associations \par}
+      {\large Council of Scientific Students' Associations \par}
       \bigskip
       \bigskip
       {\large in the \par}
@@ -245,17 +245,21 @@
     %\setlength{\parskip}{0pt}
     %{\normalsize \UNIVNAME \par}
     %\bigskip
-    {\huge{\textit{Abstract}} \par}
+    %{\huge{\textit{Abstract}} \par}
+    {\huge{\textit{Building, testing and visualizing neural networks from scratch}} \par}
     %\bigskip
     %{\normalsize \facname \par}
     %{\normalsize \deptname \par}
     %\bigskip
-    %{\normalsize\bf \@title \par}
+    {\normalsize\bf \@title \par}
     %\medskip
-    %{\normalsize by \authornames \par}
-    \bigskip
+    %{\normalsize by \authornames}
+    %\bigskip
   \end{center}
+  
   Advisor: Istvan Z. Reguly
+  
+  
 }
 {
   \vfil\vfil\vfil\null

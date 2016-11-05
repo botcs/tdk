@@ -1,0 +1,120 @@
+\documentclass{scrartcl}
+\usepackage[magyar]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx, amsthm, lmodern, hologo}
+\usepackage[export]{adjustbox}
+\usepackage{listings}
+\usepackage[colorlinks, linkcolor=blue, unicode, pdfusetitle]{hyperref}
+\usepackage{bookmark}
+
+\title{\LaTeX\ sablon szakdolgozathoz}
+\subtitle{Használati utasítás}
+\author{Marczell Márton}
+\titlehead{\includegraphics[valign=m]{ITK_logo} \parbox[c]{\textwidth}{Pázmány Péter Katolikus Egyetem\\Információs Technológiai és Bionikai Kar}}
+
+\newtheoremstyle{fineprint}{}{}{\footnotesize}{}{\itshape}{.}{ }{}
+\theoremstyle{fineprint}
+\newtheorem*{explanation}{Magyarázat}
+\lstset{basicstyle=\ttfamily, columns=fullflexible}
+\lstMakeShortInline{|}
+
+\begin{document}
+\maketitle
+Ebbe a használati utasításba nem fér bele a \LaTeX\ használatának oktatása, csak néhány tanács.
+
+\section{Követelmények}
+Használat előtt győződj meg róla, hogy a \TeX\ disztribúciód (általában MiK\TeX\ vagy \TeX\ Live) a lehető legfrissebb, és rendelkezel az include-olt csomagok és a KOMA-Script documentclassok friss verzióival. Ezen felül szükséged lesz a Biberre, ami pedig egy külön program a bibliográfia generálásához. A disztribúció (vagy néha az operációs rendszer) csomagkezelőjével jellemzően ezt is egyszerűen fel lehet telepíteni. Online LaTeX szerkesztők esetén ezek elvileg gyárilag megvannak.
+
+Ha a bibliográfia angolul van, a magyarításához töltsd le a |magyar.lbx| fájlt innen: \url{https://bitbucket.org/marczellm/latex-magyar-contrib/src}. Ha online LaTeX szerkesztőt használsz, akkor sajnos lehet, hogy manuálisan kell felraknod a magyar nyelvi csomagot is: \url{http://tug.ctan.org/language/hungarian/babel/magyar.ldf}
+
+\section{A \LaTeX\ futtatása}
+Így készíts PDF-et a forráskódból, ha a választott szerkesztőprogram (\TeX{Maker}, Kile stb.) ezt nem automatizálja. Parancssorban, a |bscthesis.tex| fájl mappájában futtasd ezt:
+\begin{lstlisting}
+pdflatex bscthesis.tex
+biber bscthesis
+pdflatex bscthesis.tex
+pdflatex bscthesis.tex
+\end{lstlisting}
+
+\begin{explanation}
+Az első |pdflatex| hívás végigmegy a dokumentumon, és segédfájlba írja a kereszthivatkozásokat és szakirodalmi hivatkozásokat. A |biber| beolvassa a |bib| fájlból a forrásjegyzéket, és újabb segédfájlba írja a ténylegesen meghivatkozott forrásokból összeállított, formázott bibliográfiát. A következő két |pdflatex| menetre a layout stabilizálása és az összes kereszthivatkozás feloldása miatt van szükség. Természetesen munka közben egyetlen |pdflatex| futtatás is elég egy nem végleges PDF elkészítéséhez.
+\end{explanation}
+
+\section{Hasznos tanácsok, gyakori tévhitek}
+Ide olyasmiket írtam le, amit tapasztalatom szerint kevesen tudnak (vagy sokan rosszul), pedig fontos.
+\subsection{Szóközök}
+Olyan rövidítés után, ami nem végig nagybetűs, a pont miatt a \LaTeX\ azt hiszi majd, mondat vége van, és nagyobb szóközt rak. Normál szóköz lesz, ha elé írsz egy backspace-t:
+
+\begin{lstlisting}
+... mint pl.\ itt
+\end{lstlisting}
+
+Ha a rövidítés végig nagybetűs, de a mondat végén áll, |\@| használandó a pont előtt:
+
+\begin{lstlisting}
+ezt tartalmazza a PDF\@.
+\end{lstlisting}
+
+\subsection{Ábrák és táblázatok}
+Tudományos szövegben az ábrák és táblázatok nincsenek fix helyre beszúrva a szövegbe, tehát nincs olyan, hogy ,,\ldots amint az az alábbi ábrán látható:'', hanem ,,\ldots amint az a 2.1.\ ábrán látható''. A |table| és |figure| környezeteknek \emph{éppen az a lényege}, hogy az ábra ne ott jelenjen meg, ahol te gondolod, hanem azt majd a \LaTeX\ jobban tudja. (Ezek úgynevezett floatok.) A \LaTeX\-nek lehet tippeket adni, hogy hova tegye ezeket:
+
+\begin{lstlisting}
+\begin{figure}[htbp]
+\end{lstlisting}
+
+A következő tippeket (engedélyeket) adhatod, érdemes többet is:
+\begin{description}
+\item[h] Futó szövegbe beszúrás
+\item[t] Elhelyezés egy oldal tetején
+\item[b] Elhelyezés egy oldal alján
+\item[p] Elhelyezés külön oldalon
+\end{description}
+
+Így hivatkozz az ábrára:
+
+\begin{lstlisting}
+\begin{figure}
+\centering
+\includegraphics{kep.png}
+\caption{informativ kepalairas}
+\label{abraneve}  % ez csak belso hasznalatra
+\end{figure}
+\end{lstlisting}
+
+majd a futó szövegben:
+
+\begin{lstlisting}
+amint az \az{\ref{abraneve}}.~abran lathato.
+\end{lstlisting}
+
+A |\az| parancsot a magyar Babel csomag definiálja, a megfelelő névelőt illeszti be a sorszám elé. A |~| nem törhető szóközt szúr be.
+
+\subsection{Hivatkozások a felhasznált irodalomra}
+Ajánlom figyelmedbe a |\cite|, |\textcite|, |\parencite| parancsokat a |biblatex| csomagból; részletek a csomag dokumentációjában.
+
+\subsection{\LaTeX\ csomagok dokumentációja}
+Interneten minden csomag friss dokumentációja megtalálható:
+
+\begin{lstlisting}
+http://texdoc.net/pkg/<csomag neve>
+\end{lstlisting}
+
+és parancssorból offline is, ha a csomag telepítve van a gépeden:
+\begin{lstlisting}
+texdoc <csomag neve>
+\end{lstlisting}
+
+\subsection{Egyebek}
+Kódrészletekhez a |listings| vagy haladóknak a |minted|, táblázatokhoz a |booktabs|, vektorgrafikus ábrák készítéséhez (haladóknak) a |tikz| és |pgfplots| csomagokat ajánlom. Dokumentációkat el kell olvasni.
+
+Az alapértelmezett betűtípust le lehet cserélni, ld. \url{http://www.tug.dk/FontCatalogue}. A gépeden telepített OpenType/TrueType betűtípusokat is lehet használni, ennek lépései:
+
+\begin{enumerate}
+\item Vedd ki az |inputenc| és |fontenc| csomagokat.
+\item |\usepackage{fontspec}|
+\item |\setmainfont{Cambria}| vagy amelyik tetszik
+\item PDF\LaTeX\ helyett használj \hologo{XeLaTeX}-et vagy \hologo{LuaLaTeX}-et.
+\end{enumerate}
+
+\end{document}
