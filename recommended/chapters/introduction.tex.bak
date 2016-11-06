@@ -8,7 +8,9 @@ Every time we are modeling our environment, we get closer to understanding it. O
 
 Such a simple paradigm is boosting the industry and the research of today, because introducing Machine Learning to any field of life results in a great leap-forward. Thanks to the recent technological improvements, even with the current computational capacity of a personal computer one can get encouraging results by simply exploring the basics of the topic.
 
-\textbf{Main motivation.} Using outer libraries \cite{TF, torch, caffe}, without diving deep into mathematical proofs, treating neural networks as black-boxes thousands of useful applications \cite{haykin2004comprehensive} are made. On the other hand, building such architectures from scratch helps to clarify how simple units might be organized, taught \cite{werbos1994roots}, and function \cite{hornik1989multilayer} as a large system. As complexity arises, the processes in the network becomes unclear and brings (yields?) the question: what is the purpose of each node? Exploring methods to understand how patterns form, and what meanings
+\textbf{Main motivation.} Using outer libraries \cite{TF, torch, caffe}, without diving deep into mathematical proofs, treating neural networks as black-boxes thousands of useful applications \cite{haykin2004comprehensive} are made. On the other hand, building such architectures from scratch helps to clarify how simple units might be organized, taught \cite{werbos1994roots}, and function \cite{hornik1989multilayer} as a large system. As complexity arises, the processes in the network becomes unclear and brings (yields?) the question: what is the purpose of each node? 
+
+Methods to visualize how activation patterns formulate, and what information is held within them has been already investigated \cite{yosinski2015understanding}, and exploited to improve performance \cite{zeiler2014visualizing}. My studies are mainly based on recent contributions in fields of such researches
 
  
 

@@ -1,0 +1,5 @@
+[1] Config.pm:340> INFO - This is Biber 2.4
+[1] Config.pm:343> INFO - Logfile is 'bscthesis.tex.blg'
+[69] biber:287> INFO - === h nov  7, 2016, 00:08:11
+[147] Utils.pm:163> ERROR - Cannot find control file 'bscthesis.tex.bcf'! - did you pass the "backend=biber" option to BibLaTeX?
+[147] Biber.pm:113> INFO - ERRORS: 1
