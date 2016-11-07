@@ -1,5 +1,5 @@
-%documentclass[fontsize=11pt, appendixprefix=true]{scrreprt} -- ORIGINAL
-\documentclass[10pt]{report}
+%\documentclass[fontsize=11pt, appendixprefix=true]{scrreprt}
+\documentclass[11pt]{report}
 \usepackage{tocloft}
 %\renewcommand{\cftpartleader}{\cftdotfill{\cftdotsep}} % for parts
 %\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} % for chapters
@@ -52,6 +52,8 @@
 \usepackage{titlesec}
 
 % Chapter customization
+\renewcommand\thesection{\arabic{section}}
+
 \titleformat{\chapter}[block]
   {\normalfont\Huge\bfseries}{\thechapter.}{1em}{\huge}
 
@@ -96,7 +98,7 @@ Advisor: PhD.\ István Z. Reguly
 %% TARTALOM
 \input{chapters/design}	%
 \clearpage
-\input{chapters/results}		%
+\input{chapters/test_results}		%
 \clearpage
 \input{chapters/conclusion}		%
 \clearpage
