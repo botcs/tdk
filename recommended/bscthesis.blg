@@ -1,15 +1,15 @@
 [0] Config.pm:340> INFO - This is Biber 2.4
 [0] Config.pm:343> INFO - Logfile is 'bscthesis.blg'
-[78] biber:287> INFO - === h nov  7, 2016, 00:38:28
-[240] Biber.pm:348> INFO - Reading 'bscthesis.bcf'
-[526] Biber.pm:742> INFO - Found 6 citekeys in bib section 0
-[536] Biber.pm:3151> INFO - Processing section 0
-[592] Biber.pm:3308> INFO - Looking for bibtex format file 'bscthesis.bib' for section 0
-[613] bibtex.pm:1113> INFO - Decoding LaTeX character macros into UTF-8
-[631] bibtex.pm:974> INFO - Found BibTeX data source 'bscthesis.bib'
-[899] UCollate.pm:65> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[899] UCollate.pm:65> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[900] Biber.pm:3028> INFO - Sorting list 'anyt/global' of type 'entry' with scheme 'anyt' and locale 'en-US'
-[900] Biber.pm:3032> INFO - No sort tailoring available for locale 'en-US'
-[916] bbl.pm:519> INFO - Writing 'bscthesis.bbl' with encoding 'UTF-8'
-[955] bbl.pm:615> INFO - Output to bscthesis.bbl
+[51] biber:287> INFO - === h nov  7, 2016, 02:37:34
+[165] Biber.pm:348> INFO - Reading 'bscthesis.bcf'
+[360] Biber.pm:742> INFO - Found 13 citekeys in bib section 0
+[366] Biber.pm:3151> INFO - Processing section 0
+[399] Biber.pm:3308> INFO - Looking for bibtex format file 'bscthesis.bib' for section 0
+[420] bibtex.pm:1113> INFO - Decoding LaTeX character macros into UTF-8
+[437] bibtex.pm:974> INFO - Found BibTeX data source 'bscthesis.bib'
+[739] UCollate.pm:65> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[739] UCollate.pm:65> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[739] Biber.pm:3028> INFO - Sorting list 'anyt/global' of type 'entry' with scheme 'anyt' and locale 'en-US'
+[739] Biber.pm:3032> INFO - No sort tailoring available for locale 'en-US'
+[766] bbl.pm:519> INFO - Writing 'bscthesis.bbl' with encoding 'UTF-8'
+[855] bbl.pm:615> INFO - Output to bscthesis.bbl

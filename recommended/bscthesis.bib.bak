@@ -83,3 +83,41 @@ note  = {arXiv preprint},
 institution = {Google Brain}
 }
 
+@unpublished{Goodfellow-et-al-2016-Book,
+    title={Deep Learning},
+    author={Ian Goodfellow and Yoshua Bengio and Aaron Courville},
+    note={Book in preparation for MIT Press},
+    url={http://www.deeplearningbook.org},
+    year={2016}
+}
+
+@unpublished{nnsdl,
+  author = {Michael Nielsen},
+  title = {{Neural Networks and Deep Learning}},
+  year = 2016,
+  url = {http://neuralnetworksanddeeplearning.com/},
+  note = {Accessed: \today}
+}
+
+@unpublished{gibiansky,
+  author = {Andrew Gibiansky},
+  title = {{Math to Code}},
+  year = 2016,
+  url = {http://andrew.gibiansky.com/},
+  note = {Accessed: \today}
+}
+
+@unpublished{deeplearningdotnet,
+  title = {{Deep Learning} moving beyond shallow machine learning since 2006},
+  year = 2016,
+  url = {http://deeplearning.net/tutorial/},
+  note = {Accessed: \today}
+}
+
+@unpublished{stanfordlectures,
+  author = {Andrej Karpathy, Fei-Fei Li, Justin Johnson},
+  title = {{CS231n} Convolutional Neural Networks for Visual Recognition. },
+  year = 2016,
+  url = {http://cs231n.github.io/},
+  note = {Accessed: \today}
+}

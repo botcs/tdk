@@ -149,6 +149,29 @@
       \verb https://arxiv.org/abs/1605.08695
       \endverb
     \endentry
+    \entry{stanfordlectures}{unpublished}{}
+      \name{author}{1}{}{%
+        {{hash=401dac2171f69a596d3596b90269d092}{%
+           family={Andrej\bibnamedelima Karpathy},
+           family_i={A\bibinitperiod\bibinitdelim K\bibinitperiod},
+           suffix={Fei-Fei\bibnamedelima Li},
+           suffix_i={F\bibinithyphendelim F\bibinitperiod\bibinitdelim L\bibinitperiod},
+           given={Justin\bibnamedelima Johnson},
+           given_i={J\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \strng{namehash}{401dac2171f69a596d3596b90269d092}
+      \strng{fullhash}{401dac2171f69a596d3596b90269d092}
+      \field{sortinit}{A}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: \today}
+      \field{title}{{CS231n} Convolutional Neural Networks for Visual Recognition.}
+      \field{year}{2016}
+      \verb{url}
+      \verb http://cs231n.github.io/
+      \endverb
+    \endentry
     \entry{torch}{inproceedings}{}
       \name{author}{3}{}{%
         {{hash=133261178beda1dc3991e0e1dfd5a791}{%
@@ -177,6 +200,69 @@
       \field{number}{EPFL-CONF-192376}
       \field{title}{Torch7: A matlab-like environment for machine learning}
       \field{year}{2011}
+    \endentry
+    \entry{deeplearningdotnet}{unpublished}{}
+      \field{sortinit}{D}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: \today}
+      \field{title}{{Deep Learning} moving beyond shallow machine learning since 2006}
+      \field{year}{2016}
+      \verb{url}
+      \verb http://deeplearning.net/tutorial/
+      \endverb
+    \endentry
+    \entry{gibiansky}{unpublished}{}
+      \name{author}{1}{}{%
+        {{hash=6166533c3e09152e7b89f67438020ff5}{%
+           family={Gibiansky},
+           family_i={G\bibinitperiod},
+           given={Andrew},
+           given_i={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{6166533c3e09152e7b89f67438020ff5}
+      \strng{fullhash}{6166533c3e09152e7b89f67438020ff5}
+      \field{sortinit}{G}
+      \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: \today}
+      \field{title}{{Math to Code}}
+      \field{year}{2016}
+      \verb{url}
+      \verb http://andrew.gibiansky.com/
+      \endverb
+    \endentry
+    \entry{Goodfellow-et-al-2016-Book}{unpublished}{}
+      \name{author}{3}{}{%
+        {{hash=5d2585c11210cf1d4512e6e0a03ec315}{%
+           family={Goodfellow},
+           family_i={G\bibinitperiod},
+           given={Ian},
+           given_i={I\bibinitperiod}}}%
+        {{hash=40a8e4774982146adc2688546f54efb2}{%
+           family={Bengio},
+           family_i={B\bibinitperiod},
+           given={Yoshua},
+           given_i={Y\bibinitperiod}}}%
+        {{hash=ccec1ccd2e1aa86960eb2e872c6b7020}{%
+           family={Courville},
+           family_i={C\bibinitperiod},
+           given={Aaron},
+           given_i={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{3ae53fe582e8a815b118d26947eaa326}
+      \strng{fullhash}{3ae53fe582e8a815b118d26947eaa326}
+      \field{sortinit}{G}
+      \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Book in preparation for MIT Press}
+      \field{title}{Deep Learning}
+      \field{year}{2016}
+      \verb{url}
+      \verb http://www.deeplearningbook.org
+      \endverb
     \endentry
     \entry{haykin2004comprehensive}{article}{}
       \name{author}{2}{}{%
@@ -296,6 +382,27 @@
       \field{pages}{675\bibrangedash 678}
       \range{pages}{4}
     \endentry
+    \entry{nnsdl}{unpublished}{}
+      \name{author}{1}{}{%
+        {{hash=3b32fb3a134f406f7b5107358d27befe}{%
+           family={Nielsen},
+           family_i={N\bibinitperiod},
+           given={Michael},
+           given_i={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{3b32fb3a134f406f7b5107358d27befe}
+      \strng{fullhash}{3b32fb3a134f406f7b5107358d27befe}
+      \field{sortinit}{N}
+      \field{sortinithash}{925374ca63e7594de7fafdb83e64d41d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: \today}
+      \field{title}{{Neural Networks and Deep Learning}}
+      \field{year}{2016}
+      \verb{url}
+      \verb http://neuralnetworksanddeeplearning.com/
+      \endverb
+    \endentry
     \entry{werbos1994roots}{book}{}
       \name{author}{1}{}{%
         {{hash=efa43b352dd0891d03f16aae76fbefdc}{%
@@ -316,6 +423,72 @@
       \field{title}{The roots of backpropagation: from ordered derivatives to neural networks and political forecasting}
       \field{volume}{1}
       \field{year}{1994}
+    \endentry
+    \entry{yosinski2015understanding}{article}{}
+      \name{author}{5}{}{%
+        {{hash=9f400712248e594ce887c5cd06d9767b}{%
+           family={Yosinski},
+           family_i={Y\bibinitperiod},
+           given={Jason},
+           given_i={J\bibinitperiod}}}%
+        {{hash=ec864655608cdb84e55422b0797b6419}{%
+           family={Clune},
+           family_i={C\bibinitperiod},
+           given={Jeff},
+           given_i={J\bibinitperiod}}}%
+        {{hash=f480ed206a30d0a24ab31eb69169599c}{%
+           family={Nguyen},
+           family_i={N\bibinitperiod},
+           given={Anh},
+           given_i={A\bibinitperiod}}}%
+        {{hash=569d4c062eb4bbd99244081aab5fe4cc}{%
+           family={Fuchs},
+           family_i={F\bibinitperiod},
+           given={Thomas},
+           given_i={T\bibinitperiod}}}%
+        {{hash=475bdf26aafc86ddd3f62a8ff9267f8a}{%
+           family={Lipson},
+           family_i={L\bibinitperiod},
+           given={Hod},
+           given_i={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{73b0eb667b42d956848df75c7dfb6b12}
+      \strng{fullhash}{40d2d85b5fa0bfdeac45668bd2518dee}
+      \field{sortinit}{Y}
+      \field{sortinithash}{3cbc1e3d286284cedb5e5218a3248f94}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:1506.06579}
+      \field{title}{Understanding neural networks through deep visualization}
+      \field{year}{2015}
+    \endentry
+    \entry{zeiler2014visualizing}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=1a4eceec316f5a57d92fe121cb662e06}{%
+           family={Zeiler},
+           family_i={Z\bibinitperiod},
+           given={Matthew\bibnamedelima D},
+           given_i={M\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=a6784304d1cc890b2cb6c6c7f2f3fd76}{%
+           family={Fergus},
+           family_i={F\bibinitperiod},
+           given={Rob},
+           given_i={R\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{2d06d89f52cbca25bada0bfdcee7da21}
+      \strng{fullhash}{2d06d89f52cbca25bada0bfdcee7da21}
+      \field{sortinit}{Z}
+      \field{sortinithash}{fdda4caaa6b5fa63e0c081dcb159543a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{European Conference on Computer Vision}
+      \field{title}{Visualizing and understanding convolutional networks}
+      \field{year}{2014}
+      \field{pages}{818\bibrangedash 833}
+      \range{pages}{16}
     \endentry
   \endsortlist
 \endrefsection

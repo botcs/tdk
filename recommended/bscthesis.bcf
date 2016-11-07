@@ -2056,8 +2056,18 @@
     <bcf:citekey order="1">torch</bcf:citekey>
     <bcf:citekey order="1">caffe</bcf:citekey>
     <bcf:citekey order="2">haykin2004comprehensive</bcf:citekey>
-    <bcf:citekey order="3">hornik1989multilayer</bcf:citekey>
-    <bcf:citekey order="4">werbos1994roots</bcf:citekey>
+    <bcf:citekey order="3">werbos1994roots</bcf:citekey>
+    <bcf:citekey order="4">hornik1989multilayer</bcf:citekey>
+    <bcf:citekey order="5">yosinski2015understanding</bcf:citekey>
+    <bcf:citekey order="6">zeiler2014visualizing</bcf:citekey>
+    <bcf:citekey order="7">Goodfellow-et-al-2016-Book</bcf:citekey>
+    <bcf:citekey order="7">deeplearningdotnet</bcf:citekey>
+    <bcf:citekey order="7">nnsdl</bcf:citekey>
+    <bcf:citekey order="7">stanfordlectures</bcf:citekey>
+    <bcf:citekey order="7">gibiansky</bcf:citekey>
+    <bcf:citekey order="8">TF</bcf:citekey>
+    <bcf:citekey order="8">torch</bcf:citekey>
+    <bcf:citekey order="8">caffe</bcf:citekey>
   </bcf:section>
   <bcf:sortlist section="0" name="anyt/global" type="entry" sortscheme="anyt" sortnamekeyscheme="global">
   <bcf:sorting>
