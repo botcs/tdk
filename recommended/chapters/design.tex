@@ -47,7 +47,8 @@ $x_{(l+1)} = y_l$.
 For the sake of simplicity I excluded Recurrent Networks from the space of $\mathcal{F}$, but later the definition can be extended for vanilla recurrent networks and LSTM networks as well.
 
 \paragraph{Inference.}
-Let us suppose that for a particular object an $\mathcal{F}$ is given, first what we have to understand is how input data $x$ (interchangebly $x_1$) is infered.
+Let us suppose that for a particular object an $\mathcal{F}$ is given, first what we have to understand is how input data 
+$x \in \mathbb{X}$ (interchangebly $x_1$) is infered.
 First, assume that the data can be expressed as multi-dimensional matrix, like RGB pictures, audio recordings, gene maps.
 Some network preserves the spatial information i.e. feature extraction performed on images, 
 while other instances operate on the whole input data i.e. processing audio samples in frequency domain.
@@ -56,13 +57,27 @@ $ y = \mathcal{F}(x)$
 The core concept is that we can compose such an $\mathcal{F}$ function by applying multiple projections to $x$.
 Practically that means sending input through the first layer, the second and all the way through to the last layer $L^{th}$, which output would be the value of $\mathcal{F}(x)$, the response of the network.
 Therefore in terms of evaluating $\mathcal{F}(x)$ layer by layer actually translates to a recursive function call, which can be unfolded to a sequence of embedded projections:
-\begin{equation}
+\begin{equation}\label{eq:forward}
 \begin{split}
     \mathcal{F}(x) & = F_L(x_L) \\
-    F_L(x_L) & = F_L(y_{(L-1)}) = F_L(F_{L-1}(x_{(L-1)})) = F_L(F_{L-1}(\cdots F_1(x)))
+    F_L(x_L) & = F_L(y_{(L-1)}) = F_L(F_{(L-1)}(x_{(L-1)})) = F_L(F_{(L-1)}(\cdots F_1(x)))
 \end{split}
 \end{equation}
-    
 
+The \ref{eq:forward} equation is the most fundamental idea behind feed-forward neural networks.
+
+\paragraph{Measuring efficiency.}
+Despite it has proven, that standard multilayer
+feedforward networks are capable of approximating
+any measurable function to any desired degree of
+accuracy \cite{hornik1989multilayer}
+if the goal function $\mathcal{F}^*$ is unknown, 
+or too abstract to be \emph{measureable} i.e. telling how funny a picture is, 
+we cannot utilize the universal approximator. 
+However by reformulating the objective, we can define a \textbf{Loss} function $\mathcal{L}:\mathcal{F}(\mathbb{X}) \rightarrow \mathbb{R}$,
+which maps our candidate $F$ function to a scalar field, that represents the general incorrectness of $F$ over the space of possible inputs $\mathbb{X}$.
+By doing so we may apply algorithms that would \textbf{minimize} the Loss, therefore $F$ would converge towards $F^*$ implicitly.
+
+In practical implementations 
 
 
