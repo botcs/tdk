@@ -3,7 +3,7 @@
 After researching literature on building libraries from scratch, and analyzing pet project source-codes \cite{convnetjs, gibianskysource} and implementations of industrial APIs \cite{TF, caffe, torch}
 I concluded that the best way to acquire that knowledge is to build my own Deep Learning framework.
 This way I had a chance to understand why novel solutions in Machine Learning are formed the way they are.
-Also gained insight into what main paradigms are popular libraries based on, such as \emph{computational graphs, parallel distributed processings}, 
+Also gained insight into what main paradigms are popular libraries based on, such as \emph{computational graphs, parallel distributed processing}, 
 and what trade-offs can be made between \emph{computational cost} and \emph{memory usage}, between robustness and plasticity.
 Most thankfully, by starting from scratch I have faced challenges of situations when theoretical formulas had to be translated into exact working code, which roughly speaking is the hardest part of modern science.
 
@@ -16,12 +16,12 @@ Most thankfully, by starting from scratch I have faced challenges of situations 
     \item[] to stay as close to pure mathematical formulation of the classical paradigms as possible
     \item[] put emphasis on ease of use and understanding
 \end{itemize}
-\paragraph{Disclaimer.} Apart from \textbf{NumPy} and its complementary package \textbf{SciPy}, no external libraries and dependecies are built in the implementation. 
-I want to emphasize that this work was not written to compete with conemporary state-of-the-art frameworks, rather to help perceive the general ideas behind novel researches, and to encourage interested fellows to carry out researches on their own.
+\paragraph{Disclaimer.} Apart from \textbf{NumPy} and its complementary package \textbf{SciPy}, no external libraries and dependencies are built in the implementation. 
+I want to emphasize that this work was not written to compete with contemporary state-of-the-art frameworks, rather to help perceive the general ideas behind novel researches, and to encourage interested fellows to carry out researches on their own.
 
 \section{Choice of design pattern and language}
 
-The formulas of classical neural networks, whose nodes are organized into lattices forming a Directed Acyclic Graph, shows soft variance in contents of independent sources. Still their common point that they rely on fundaments of vector algebra and functional analysis, therefore considering array representated general mapping functions, as their core building units is a paradigm which would not interfere with the current formal and informal descriptions of deep learning.
+The formulas of classical neural networks, whose nodes are organized into lattices forming a Directed Acyclic Graph, shows soft variance in contents of independent sources. Still their common point that they rely on fundamentals (basics?) of vector algebra and functional analysis, therefore considering array represented general mapping functions, as their core building units is a paradigm which would not interfere with the current formal and informal descriptions of deep learning.
 
 \subsection{Disassembling a universal approximator}
 Thinking of a neural net as a function \(\mathcal{F}\), is implicitly a black-box representation of the paradigm.
@@ -47,7 +47,7 @@ Later I used these units in \textsc{bottom-up} approach to create an object-orie
 
 \section{Inference}
 Let us suppose that for a particular object an $\mathcal{F}$ is given, first what we have to understand is how input data 
-$x \in \mathbb{X}$ (interchangebly $x_1$) is infered.
+$x \in \mathbb{X}$ (interchangeably $x_1$) is inferred.
 First, assume that the data can be expressed as multi-dimensional matrix, like RGB pictures, audio recordings, gene maps.
 Some network preserves the spatial information i.e. feature extraction performed on images, 
 while other instances operate on the whole input data i.e. processing audio samples in frequency domain.
@@ -81,7 +81,7 @@ Therefore evaluating the output of the Fully Connected layer is the defined by t
 \end{equation}
 \subsection{Activation layer} 
 Nodes in activation layers are introducing non-linearity to the network, by applying the same non-linear activation function to the corresponding output of the previous layer, performing element-wise operation.
-These functions are essential for the network, since they increase the numerical stability of the preceeding they \emph{squeeze} or \emph{mitigate} the input preventing the network from \emph{saturation} or \emph{explosion} (numerical of course). Conventionally the following functions are applied most often as activation function:
+These functions are essential for the network, since they increase the numerical stability of the preceding they \emph{squeeze} or \emph{mitigate} the input preventing the network from \emph{saturation} or \emph{explosion} (numerical of course). Conventionally the following functions are applied most often as activation function:
 \begin{align*}
     \mathrm{Rectified Linear Unit (ReLU) := } &max(0, x) \\
     \mathrm{Hyperbolic Tangent (TanH) := }   &tanh(x) = \frac{2}{1+e^{-2x}}-1 \\
@@ -94,24 +94,13 @@ These functions are essential for the network, since they increase the numerical
 If the function $\mathcal{F}$ mentioned above is given, and satisfy our needs then we are done.
 However this is usually not the case, and finding the optimal $\mathcal{F}^*$ is the main challenge targeted by many branches of Machine Learning.
 Despite it has proven, that standard multilayer
-feedforward networks are capable of approximating
+feed-forward networks are capable of approximating
 any measurable function to any desired degree of
 accuracy \cite{hornik1989multilayer}
 if the goal function $\mathcal{F}^*$ is unknown, 
-or too abstract to be \emph{measureable} (i.e. telling how funny a picture is), 
+or too abstract to be \emph{measurable} (i.e. telling how funny a picture is), 
 we cannot utilize the universal approximator.
 
-\subsection{Supervised learning}
-However in cases where the parameters of $\mathcal{F}^*$ is not known but we know how it would map the input space $\mathbb{X} \rightarrow \mathbb{Y}$, i.e. which character appears on the input image $x$, then we can define a set of previously \emph{labeled} pairs of input - solution sample which could be used later on for training, and evaluating performance of the network.
-
-\subsection{Unsupervised learning}
-When no labeled dataset is avaiable, the network still can be used for extraction of hidden structure of the unlabeled samples. Later these instances are used as density estimators, or adapted as feature extractors for larger networks.
-
-\paragraph{Generative Networks.} Training such architectures can be done by feeding networks random noise as input and training them to reproduce given samples: $\mathcal{F}:\mathbb{R}^k \rightarrow \mathbb{X}$, hence the name \emph{Generative Networks}.
-
-\paragraph{Autoencoder Networks} The other frequently applied paradigm is setting the objective task to compress the input sample into a $h \in \mathbb{R}^k$ hidden representation vector that is able to preserve the key information about the original input, and either by symmetric (Restrictive Boltzmann Machines) or independent (Deep Belief networks) operations decompress the data.
-
-Hyper-parameter $k$ is the number of unlabeled features in the \emph{latent space} that the network will be able to categorize, i.e. correlation between different colour intensities on pictures taken of stained brain samples. The architectures can be also used as density 
 \subsection{Loss} 
 By reformulating the objective, we can define a Loss function $\mathcal{L}:\mathcal{F}(\mathbb{X}) \rightarrow \mathbb{R}$,
 which maps our candidate $\mathcal{F}$ network to a scalar field, that represents the general incorrectness of $\mathcal{F}$ over the space of possible inputs $\mathbb{X}$.
@@ -122,14 +111,27 @@ By doing so we may apply Machine Learning algorithms that would \emph{minimize} 
 \section{Adjusting parameters}
 Generally speaking, applying Machine Learning algorithms boils down to the process of iteratively altering parameters $\phi$ of $\mathcal{F}$ to optimize the Loss.
 Once $\mathcal{L}(\mathcal{F})$ is obtained, we can evaluate how changing the parameters would influence it -- evaluate the gradient of the parameters $\nabla \phi$ with regards to $\mathcal{L}$.
+
+\subsection{Supervised learning}
+In cases where the parameters of $\mathcal{F}^*$ is not known but we know how it would map the input space $\mathbb{X} \rightarrow \mathbb{Y}$, i.e. which character appears on the input image $x$, then we can define a set of previously \emph{labeled} pairs of input - solution sample which could be used later on for training, and evaluating performance of the network.
+
+\subsection{Unsupervised learning}
+When no labeled dataset is available, the network still can be used for extraction of hidden structure of the unlabeled samples. Later these instances are used as density estimators, or adapted as feature extractors for larger networks.
+
+\textbf{Generative Networks.} Training such architectures can be done by feeding networks random noise as input and training them to reproduce given samples: $\mathcal{F}:\mathbb{R}^k \rightarrow \mathbb{X}$, hence the name \emph{Generative Networks}.
+
+\textbf{Auto-encoder Networks} The other frequently applied paradigm is setting the objective task to compress the input sample into a $h \in \mathbb{R}^k$ hidden representation vector that is able to preserve the key information about the original input, and either by symmetric (Restrictive Boltzmann Machines) or independent (Deep Belief networks) operations decompress the data.
+
+In both cases hyper-parameter $k$ is intuitively the number of unlabeled features in the \emph{latent space} that the network will be able to categorize, i.e. correlation between different color intensities on pictures taken of stained brain samples.
+
 \subsection{Gradient Descent}
 Updating $\phi$ by descending on the gradient steep with a small step size $\epsilon$ will decrease $\mathcal{L}$.
 Enucleating the general form of Gradient Descent depends on the architecture of the network, but there is a main concept for doing so, called Backpropagation invented by Werbos \emph{et al.} \cite{werbos1994roots}.
 
 \subsection{Backpropagation} 
-Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions seen in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla \phi_{FC}$ is well defined, explained in the following example.
+Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla \phi_{FC}$ is well defined, explained in the following example.
 
-\paragraph{Toy example.} Assume $\mathcal{L}$ is given, and we have a three-layer fully connected network, which maps a $N$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \rightarrow \mathbb{R}^M$. The constraint on the paramethers are:
+\paragraph{Toy example.} Assume $\mathcal{L}$ is given, and we have a three-layer fully connected network, which maps a $N$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \rightarrow \mathbb{R}^M$. The constraint on the parameters are:
 \begin{itemize}
     \item[] $W_1$ of the first layer must have $N$ columns
     \item[] $W_3$ and the bias $b_3$ of the last layer must have $M$ rows, dimensions respectively.

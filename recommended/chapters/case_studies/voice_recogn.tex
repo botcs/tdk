@@ -3,7 +3,7 @@
 Today's neural networks work on algorithmically very complex, yet intuitive tasks. These objectives can be categorized into two main classes: \emph{supervised} and \emph{unsupervised}. The trend shows that labeling slavery becomes unfavored therefore classical supervised learning is getting less attention over time. Still understanding how these models (should) work is essential and demonstrating via the simplest examples ends in some interesting case studies. In the following an informal introduction presents results of such experiments.
 
     {Technical background}
-For the sake of readibility the detailed implementation of the perceptron framework is excluded from this writing (although can be found at \href{https://github.com/botcs/deepvision/tree/master/demo/audio}{github}). 
+For the sake of readability the detailed implementation of the perceptron framework is excluded from this writing (although can be found at \href{https://github.com/botcs/deepvision/tree/master/demo/audio}{github}). 
 The writing assumes basic knowledge in linear algebra, the model will be described in the following manner: \\
  
 \begin{figure}
@@ -44,7 +44,7 @@ To enhance the stability of $N$  \emph{non-linearities} may be introduced as act
 \begin{figure}
 	\centering
 	\includegraphics[width=0.45\textwidth]{network.jpg}
-	\caption{A small feedforward network with one hidden layer, and single output perceptron.
+	\caption{A small feed-forward network with one hidden layer, and single output perceptron.
 	Source: \href{http://www.codeproject.com/KB/dotnet/predictor/network.jpg}{Codeproject} 	}
 	\label{fig:ff}
 \end{figure}
@@ -75,7 +75,7 @@ After defining the model, the first implementation should be able to classify th
 \end{figure}
 
 \paragraph{Varying the precision of the Fourier Transform, N}
-For such arbitrary cases, where no noise is added to the signal, larger precision is unnecessary, for validation check Figure \ref{fig:N5000}, \ref{fig:N50}. However the importance of chosing the right N should not be underestimated: in environments with high \emph{Signal-to-Noise ratio} it is advised to use high \emph{sampling rate}, and large $N$, however for real-time applications it is a trade-off between quality and speed, because the computation complexity for this architecture is $O(N^2)$, therefore choosing too large N results in slow processing.
+For such arbitrary cases, where no noise is added to the signal, larger precision is unnecessary, for validation check Figure \ref{fig:N5000}, \ref{fig:N50}. However the importance of choosing the right N should not be underestimated: in environments with high \emph{Signal-to-Noise ratio} it is advised to use high \emph{sampling rate}, and large $N$, however for real-time applications it is a trade-off between quality and speed, because the computation complexity for this architecture is $O(N^2)$, therefore choosing too large N results in slow processing.
 
 \begin{figure}
 	\centering
@@ -96,7 +96,7 @@ For such arbitrary cases, where no noise is added to the signal, larger precisio
 
 \paragraph{Introducing regularization}
 An unknown term was used in the previous description, which now will be revealed.
-The regularization is simply a practical implementation of Occam's razor, meaning that the unimportant features of $\mathbf{x}$ will not be taken into account by the perceptron. On Figures \ref{fig:N500}, \ref{fig:N5000},  \ref{fig:N50} the weights were originally initialized with random Gaussian noise, but after training only the important frequencies' weights stayed significant. If the regularization factor is reduced the noise wouldn't disappear and the perceptron would still take irrelevant informations into account. This phenomena is shown on Figure \ref{fig:reg}. However instead of regularizing we can \emph{overtrain} our networks, increasing the number of epochs, the number of times we show the same samples in the training set. Noise reducing via \textbf{overfit} can be seen on Figure \ref{fig:overtrain}. 
+The regularization is simply a practical implementation of Occam's razor, meaning that the unimportant features of $\mathbf{x}$ will not be taken into account by the perceptron. On Figures \ref{fig:N500}, \ref{fig:N5000},  \ref{fig:N50} the weights were originally initialized with random Gaussian noise, but after training only the important frequencies' weights stayed significant. If the regularization factor is reduced the noise wouldn't disappear and the perceptron would still take irrelevant informations into account. This phenomena is shown on Figure \ref{fig:reg}. However instead of regularizing we can \emph{over train} our networks, increasing the number of epochs, the number of times we show the same samples in the training set. Noise reducing via \textbf{overfit} can be seen on Figure \ref{fig:overtrain}. 
 
 
 \begin{figure}
@@ -117,7 +117,7 @@ The regularization is simply a practical implementation of Occam's razor, meanin
 
 
 \paragraph{Dealing with multiple waves}
-Approaching to real life problems, more parallel signals should be introduced to the network. In this subsection the case of recognizing overlapping frequencies and common frequencies are examined. The networks were initialized and trained identically to the network in previous experiment with $\lambda=0.5$. In the first case six different base functions were used to compose the samples. On Figure \ref{fig:multi} it is really trivial that the network is not just capable of separating low-pitch samples from high-pitch samples, but can recognize different patterns, even if they are scattered throughout the state space of the input. In the second case the conlusion is that the perceptrons (if well trained) will look only for relevant signals and patterns in the input.  See Figure \ref{fig:multi-common} \\
+Approaching to real life problems, more parallel signals should be introduced to the network. In this subsection the case of recognizing overlapping frequencies and common frequencies are examined. The networks were initialized and trained identically to the network in previous experiment with $\lambda=0.5$. In the first case six different base functions were used to compose the samples. On Figure \ref{fig:multi} it is really trivial that the network is not just capable of separating low-pitch samples from high-pitch samples, but can recognize different patterns, even if they are scattered throughout the state space of the input. In the second case the conclusion is that the perceptrons (if well trained) will look only for relevant signals and patterns in the input.  See Figure \ref{fig:multi-common} \\
 
 \begin{figure}
 	\centering
@@ -141,10 +141,10 @@ For acquiring samples from the environment the architecture should be wired to a
 Practically outer libraries are applied to perform the capturing, the only thing remaining is to write an adapter to make the information format compatible with the network's architecture.
 
 \paragraph{Capturing sound}
-For the following experiments an algorithmic smart capturing is used, which enables us to record multiple sound waves with different length, without pressing a single key. The main idea is that the noise of the environment can be monitored, and in the background mean averaged. A practical treshold is set for recognising significant audio inputs, where the magnitudes of the sampled waves reach the critical. After the recording starts, a fixed size time-frame will cancel out further activities of the capturing system. Another option is to end the capturing process when the magnitude of the input falls below a treshold. Either way, the samples are gathered in a list, and each of them are transformed to frequency domain with \emph{N-FFT}, producing equal length inputs  $\mathbf{x^i}$ for the network.
+For the following experiments an algorithmic smart capturing is used, which enables us to record multiple sound waves with different length, without pressing a single key. The main idea is that the noise of the environment can be monitored, and in the background mean averaged. A practical threshold is set for recognizing significant audio inputs, where the magnitudes of the sampled waves reach the critical. After the recording starts, a fixed size time-frame will cancel out further activities of the capturing system. Another option is to end the capturing process when the magnitude of the input falls below a threshold. Either way, the samples are gathered in a list, and each of them are transformed to frequency domain with \emph{N-FFT}, producing equal length inputs  $\mathbf{x^i}$ for the network.
 
 \paragraph{Defining the classes}
-For human interpretation it is useful, that the separated classes are labeled, while from the aspect of the network it is totally irrelevent whatever these classes are. That is an important thing to understand, both in supervised and in unsupervised learning. In the next cases separation sound waves of \emph{Hello} will be separated from samples of \emph{Goodbye}.
+For human interpretation it is useful, that the separated classes are labeled, while from the aspect of the network it is totally irrelevant whatever these classes are. That is an important thing to understand, both in supervised and in unsupervised learning. In the next cases separation sound waves of \emph{Hello} will be separated from samples of \emph{Goodbye}.
 
 \paragraph{Binary classifiers}
 \paragraph{First greeting recognizer}
@@ -158,12 +158,12 @@ Currently the model somehow works like the one depicted on Figure \ref{fig:dumb}
 
 The experiments were done with 5 different languages: \emph{French, Arabic, Spanish, German, Hungarian}. The training scene is the same as in the previous cases: input sequentially $N$ number of samples for each language, end the recording with a clap.
 For a demonstration script check out \href{https://github.com/botcs/deepvision/tree/master/demo/audio}{demo (nclass.py)}
-The network trains on the given set, and the system is ready for testing. End the testing session by sending a \textbf{\textsc{sig-term}} signal. With the following hyperparamethers: 1-1 number of samples in each language, \emph{mini-batch}$=1$, \emph{number of epochs}$=15$, $\lambda=0.005$, from random Gaussian initialization a network with 60\% performance can be obtained. With larger training set, 3 samples for each language the result raised over 85\%. Comparing to industrial networks the training set used to adjust the parameters is very small in size. For larger projects usually the training set contains thousands and millions of samples, and overfitting is less likely to occur. For such a narrow network trained with a poor training set it can be said that 85\% is not that bad at all. Although the result still depends on who tests the configured network.
+The network trains on the given set, and the system is ready for testing. End the testing session by sending a \textbf{\textsc{sig-term}} signal. With the following hyperparameters: 1-1 number of samples in each language, \emph{mini-batch}$=1$, \emph{number of epochs}$=15$, $\lambda=0.005$, from random Gaussian initialization a network with 60\% performance can be obtained. With larger training set, 3 samples for each language the result raised over 85\%. Comparing to industrial networks the training set used to adjust the parameters is very small in size. For larger projects usually the training set contains thousands and millions of samples, and overfitting is less likely to occur. For such a narrow network trained with a poor training set it can be said that 85\% is not that bad at all. Although the result still depends on who tests the configured network.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\textwidth]{current-model.pdf}
-	\caption{A basic perceptron model, operating on 8 clues of the input. The perimeter of each input node describes how much it increases the output of the perceptron with the same colour and decreases the neuron with opposite colour. Input nodes which are not colored holds irrelevant informations for both perceptrons, therefore discarded.}
+	\caption{A basic perceptron model, operating on 8 clues of the input. The perimeter of each input node describes how much it increases the output of the perceptron with the same color and decreases the neuron with opposite color. Input nodes which are not colored holds irrelevant informations for both perceptrons, therefore discarded.}
 	
 	\label{fig:dumb}
 \end{figure}
@@ -171,18 +171,18 @@ The network trains on the given set, and the system is ready for testing. End th
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\textwidth]{improved.pdf}
-	\caption{An improved perceptron model, operating on 8 clues of the input $\mathbf{x}$ , deciding which class it belongs to. The weight anti-symmetry is not so trivial in this case because perceptrons of multiple classes can be turned on by one single feature while other perceptrons are inhibited by the same feature or perceptrons may even discard it. Meaning that colours on this figure are a bit tricky, because each input node can be shared between the classes.}
+	\caption{An improved perceptron model, operating on 8 clues of the input $\mathbf{x}$ , deciding which class it belongs to. The weight anti-symmetry is not so trivial in this case because perceptrons of multiple classes can be turned on by one single feature while other perceptrons are inhibited by the same feature or perceptrons may even discard it. Meaning that colors on this figure are a bit tricky, because each input node can be shared between the classes.}
 	
 	\label{fig:improved}
 \end{figure}
 
 \subsection{Conclusion}
-So far it is shown how single layer neural networks work. How they should be thought of, what difficulties rises during their training. The capabilities of shallow networks were met during tests with the N-multiclass classifier. The next topic of the investigation is that how can these perceptron layers be combined to each other, for example to recognise whether a user said yes or no, without explicitly telling  which language he or she was speaking.
+So far it is shown how single layer neural networks work. How they should be thought of, what difficulties rises during their training. The capabilities of shallow networks were met during tests with the N-multiclass classifier. The next topic of the investigation is that how can these perceptron layers be combined to each other, for example to recognize whether a user said yes or no, without explicitly telling  which language he or she was speaking.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{hello-goodbye-N1000-L205}
-	\caption{On the left: the first example of the whole training set, showing the wave and frequency plot of a \emph{Hello}. On the right: the same for the word \emph{Goodbye}. As experienced on Figure \ref{fig:N500}, an anti-simmetric pattern arises in the weight plot of the classifier perceptrons. One pattern in the frequency domain of \emph{Goodbye} samples is very dominant and the weights of the \emph{Goodbye}-recognizing perceptron fits on it very well, while the same pattern can be found in the opposite perceptron's weight plot with negative sign.}
+	\caption{On the left: the first example of the whole training set, showing the wave and frequency plot of a \emph{Hello}. On the right: the same for the word \emph{Goodbye}. As experienced on Figure \ref{fig:N500}, an anti-symmetric pattern arises in the weight plot of the classifier perceptrons. One pattern in the frequency domain of \emph{Goodbye} samples is very dominant and the weights of the \emph{Goodbye}-recognizing perceptron fits on it very well, while the same pattern can be found in the opposite perceptron's weight plot with negative sign.}
 	
 	\label{fig:hello}
 \end{figure}

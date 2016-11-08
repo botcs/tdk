@@ -109,8 +109,8 @@ A pre-trained network holds generalized information in the weights and biases, a
     \item for each layer there is a given set of nodes $N = [784, 784, 100, 10]$ respectively
 \end{itemize}
 
-Totalling in $T\times(N_l)$ picture per layer, which are hard to deal with, \emph{(see Figure \ref{fig:dense})}. 
-Especially when the neuron's favoured patterns can be matched to different digits, 
+Totaling in $T\times(N_l)$ picture per layer, which are hard to deal with, \emph{(see Figure \ref{fig:dense})}. 
+Especially when the neuron's favored patterns can be matched to different digits, 
 the $T$ should be increased in order to get a more general picture when aggregating the amplified pictures.
 On the other hand, the gradient ascent optimization cannot terminate on \emph{convex functions}, which is actually true for the activation of neural node's activation w.r.t to its input - meaning that the original image can be amplified as many times as possible, the output of the corresponding neuron $y_l^i$ will always increase with the number of iterations $I$. An example for applying the same method, but with 5 times the original number of iterations depicted on \emph{Figure \ref{fig:dense}} is shown on \emph{Figure \ref{fig:dense-100}}.
 Therefore finding the best $I$ is also essential for extracting important information from the network.
