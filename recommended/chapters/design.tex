@@ -38,9 +38,31 @@ Later I used these units in \textsc{bottom-up} approach to create a model that r
 Thinking of a neural net as a function \(\mathcal{F}\), is implicitly a black-box representation of the paradigm.
 Users of different applications which offers feature detection, segmentation, prediction, etc. are using this function without knowing what exactly happens behind the curtains. 
 Further investigating \(\mathcal{F}\) we can constrain it to have a DAG computational graph, also to have the nodes of the graph arranged to lattices.
-Practically it means that the perceptrons making up the layer \(l\) are strictly projecting their \textbf{inputs} 
+Practically it means that the perceptrons making up the layer \(l\) are strictly projecting $F_l$ their \textbf{inputs} 
 $ x_l \in \mathbb{R}^N $ \emph{forward} to scalars, which if all perceptron is evaluated parallel forms the 
 \textbf{output} $y_l \in \mathbb{R}^M$, have no feedbacks and loops. 
-%For the sake of simplicity I excluded Recurrent Networks from the space of \(\mathcal{F}\), but later the definition can be extended for vanilla recurrent networks and LSTM networks as well.
+This projection of layer $l$ can be written as $y_l = F_l(x_l)$. 
+Intuitively the input of the next $(l+1)^{th}$ layer will be the output of the previous layer:
+$x_{(l+1)} = y_l$.
+For the sake of simplicity I excluded Recurrent Networks from the space of $\mathcal{F}$, but later the definition can be extended for vanilla recurrent networks and LSTM networks as well.
+
+\paragraph{Inference.}
+Let us suppose that for a particular object an $\mathcal{F}$ is given, first what we have to understand is how input data $x$ (interchangebly $x_1$) is infered.
+First, assume that the data can be expressed as multi-dimensional matrix, like RGB pictures, audio recordings, gene maps.
+Some network preserves the spatial information i.e. feature extraction performed on images, 
+while other instances operate on the whole input data i.e. processing audio samples in frequency domain.
+Either way the output $y$ (or $y_L$) can be obtained by feeding $x$ to the network: 
+$ y = \mathcal{F}(x)$
+The core concept is that we can compose such an $\mathcal{F}$ function by applying multiple projections to $x$.
+Practically that means sending input through the first layer, the second and all the way through to the last layer $L^{th}$, which output would be the value of $\mathcal{F}(x)$, the response of the network.
+Therefore in terms of evaluating $\mathcal{F}(x)$ layer by layer actually translates to a recursive function call, which can be unfolded to a sequence of embedded projections:
+\begin{equation}
+\begin{split}
+    \mathcal{F}(x) & = F_L(x_L) \\
+    F_L(x_L) & = F_L(y_{(L-1)}) = F_L(F_{L-1}(x_{(L-1)})) = F_L(F_{L-1}(\cdots F_1(x)))
+\end{split}
+\end{equation}
+    
+
 
 
