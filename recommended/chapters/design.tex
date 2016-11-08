@@ -20,3 +20,12 @@ Most thankfully, by starting from scratch I have faced challenges of situations 
 \textbf{Disclaimer.} Apart from \textbf{NumPy} and its complementary package \textbf{SciPy}, no outer libraries and dependecies are built in the implementation. 
 I want to emphasize that this work was not written to compete with conemporary state-of-the-art frameworks, rather to help perceive the general ideas behind novel researches, and to encourage interested fellows to carry out researches on their own.
 
+\section{Choice of design pattern and language}
+
+The formulas of classical neural networks, whose nodes are organized into lattices forming a Directed Acyclic Graph, shows soft variance in contents of independent sources. Still their common point that they rely on fundaments of vector algebra and functional analysis, therefore considering array representated general mapping functions, as their core building units is a paradigm which would not interfere with the current formal and informal descriptions of deep learning.
+
+Keeping in mind, that using a general high-level language (like MATLAB) can yield poor computational efficiency, making benchmarks, testing and applications impossible.
+Also considering a low-level language (like C) would distract us from the main goal, always optimizing further and further the basic algorithms -- else resulting in boilerplate codes. Either way it would make the implementation unclear for those, who did not participate in the designing of the library.
+I wanted to chose a lagnuage which offers an optimal solution for this challenge, is flexible, well documented and simple enough for newbies to catch up.
+Because of the support of both object-oriented and procedural approaches and offering the above, Python was the best choice.
+
