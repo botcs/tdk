@@ -1,5 +1,5 @@
 %\documentclass[fontsize=11pt, appendixprefix=true]{scrreprt}
-\documentclass[11pt]{report}
+\documentclass[10pt]{report}
 \usepackage{tocloft}
 %\renewcommand{\cftpartleader}{\cftdotfill{\cftdotsep}} % for parts
 %\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} % for chapters
@@ -24,7 +24,7 @@
 \usepackage{bookmark}                                      % PDF könyvjelzők
 \usepackage{csquotes}                                      % a bibliográfiában megfelelően legyenek formázva az idézőjelek
 \DeclareQuoteAlias{german}{magyar}
-
+\usepackage{blindtext} %mer mért ne?
 % Kódrészletekhez ajánlom
 \usepackage{listings, scrhack}
 \usepackage{sourcecodepro} % egy jó betűtípus
@@ -102,6 +102,7 @@ Advisor: PhD.\ István Z. Reguly
 \input{chapters/test_results}		%
 \clearpage
 \input{chapters/conclusion}		%
+\blindtext
 \clearpage
 
 %% TARTALOM

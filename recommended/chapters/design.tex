@@ -72,11 +72,11 @@ feedforward networks are capable of approximating
 any measurable function to any desired degree of
 accuracy \cite{hornik1989multilayer}
 if the goal function $\mathcal{F}^*$ is unknown, 
-or too abstract to be \emph{measureable} i.e. telling how funny a picture is, 
+or too abstract to be \emph{measureable} (i.e. telling how funny a picture is), 
 we cannot utilize the universal approximator. 
 However by reformulating the objective, we can define a \textbf{Loss} function $\mathcal{L}:\mathcal{F}(\mathbb{X}) \rightarrow \mathbb{R}$,
-which maps our candidate $F$ function to a scalar field, that represents the general incorrectness of $F$ over the space of possible inputs $\mathbb{X}$.
-By doing so we may apply algorithms that would \textbf{minimize} the Loss, therefore $F$ would converge towards $F^*$ implicitly.
+which maps our candidate $\mathcal{F}$ network to a scalar field, that represents the general incorrectness of $\mathcal{F}$ over the space of possible inputs $\mathbb{X}$.
+By doing so we may apply algorithms that would \textbf{minimize} the Loss, therefore $\mathcal{F}$ would converge towards $\mathcal{F}^*$ implicitly.
 
 In practical implementations 
 
