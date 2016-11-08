@@ -7,7 +7,7 @@ Also gained insight into what main paradigms are popular libraries based on, suc
 and what trade-offs can be made between \emph{computational cost} and \emph{memory usage}, between robustness and plasticity.
 Most thankfully, by starting from scratch I have faced challenges of situations when theoretical formulas had to be translated into exact working code, which roughly speaking is the hardest part of modern science.
 
-\textbf{Goals.} My main intentions when started writing code was the following:
+\paragraph{Goals.} My main objectives when writing code was the following:
 \begin{itemize}
     \item[] to make such a library that is able to be extended further
     \item[] open-source, so it can be forked by anyone interested in developing it
@@ -16,25 +16,14 @@ Most thankfully, by starting from scratch I have faced challenges of situations 
     \item[] to stay as close to pure mathematical formulation of the classical paradigms as possible
     \item[] put emphasis on ease of use and understanding
 \end{itemize}
-
-\textbf{Disclaimer.} Apart from \textbf{NumPy} and its complementary package \textbf{SciPy}, no outer libraries and dependecies are built in the implementation. 
+\paragraph{Disclaimer.} Apart from \textbf{NumPy} and its complementary package \textbf{SciPy}, no external libraries and dependecies are built in the implementation. 
 I want to emphasize that this work was not written to compete with conemporary state-of-the-art frameworks, rather to help perceive the general ideas behind novel researches, and to encourage interested fellows to carry out researches on their own.
 
 \section{Choice of design pattern and language}
 
 The formulas of classical neural networks, whose nodes are organized into lattices forming a Directed Acyclic Graph, shows soft variance in contents of independent sources. Still their common point that they rely on fundaments of vector algebra and functional analysis, therefore considering array representated general mapping functions, as their core building units is a paradigm which would not interfere with the current formal and informal descriptions of deep learning.
 
-\paragraph{Language.} Keeping in mind, that using a general high-level language (like MATLAB) can yield poor computational efficiency, making benchmarks, testing and applications impossible.
-Also considering a low-level language (like C) would distract us from the main goal, always optimizing further and further the basic algorithms -- else resulting in boilerplate codes. Either way it would make the implementation unclear for those, who did not participate in the designing of the library.
-I wanted to chose a lagnuage which offers an optimal solution for this challenge, is flexible, well documented and simple enough for newbies to catch up.
-Because of the support of both object-oriented and procedural approaches and offering the above, Python was the best choice.
-
-\paragraph{Design pattern} While carrying out blueprints of the implementation, I examined the Neural Networks as universal approximators in a \textsc{top-down} manner.
-I have disassembled them to basic units, abstracting the function of each level.
-Later I used these units in \textsc{bottom-up} approach to create an object-oriented hierarchic model that realize simple operations and is well defined on every level: granting a universal interface to be further extended.
-
-\section{Disassembling a universal approximator}
-%\in \mathfrak{F}
+\subsection{Disassembling a universal approximator}
 Thinking of a neural net as a function \(\mathcal{F}\), is implicitly a black-box representation of the paradigm.
 Users of different applications which offers feature detection, segmentation, prediction, etc. are using this function without knowing what exactly happens behind the curtains. 
 Further investigating \(\mathcal{F}\) we can constrain it to have a DAG computational graph, also to have the nodes of the graph arranged to lattices.
@@ -46,7 +35,17 @@ Intuitively the input of the next $(l+1)^{th}$ layer will be the output of the p
 $x_{(l+1)} = y_l$.
 For the sake of simplicity I excluded Recurrent Networks from the space of $\mathcal{F}$, but later the definition can be extended for vanilla recurrent networks and LSTM networks as well.
 
-\subsection{Inference}
+\subsection{Language} Keeping in mind, that using a general high-level language (like MATLAB) can yield poor computational efficiency, making benchmarks, testing and applications impossible.
+Also considering a low-level language (like C) would distract us from the main goal, always optimizing further and further the basic algorithms -- else resulting in boilerplate codes. Either way it would make the implementation unclear for those, who did not participate in the designing of the library.
+I wanted to chose a lagnuage which offers an optimal solution for this challenge, is flexible, well documented and simple enough for newbies to catch up.
+Because of the support of both object-oriented and procedural approaches and offering the above, Python was the best choice.
+
+\subsection{Design pattern} While carrying out blueprints of the implementation, I examined the Neural Networks as universal approximators in a \textsc{top-down} manner.
+I have disassembled them to basic units, abstracting the function of each level.
+Later I used these units in \textsc{bottom-up} approach to create an object-oriented hierarchic model that realize simple operations and is well defined on every level: granting a universal interface to be further extended.
+
+
+\section{Inference}
 Let us suppose that for a particular object an $\mathcal{F}$ is given, first what we have to understand is how input data 
 $x \in \mathbb{X}$ (interchangebly $x_1$) is infered.
 First, assume that the data can be expressed as multi-dimensional matrix, like RGB pictures, audio recordings, gene maps.
@@ -59,14 +58,39 @@ Practically that means sending input through the first layer, the second and all
 Therefore in terms of evaluating $\mathcal{F}(x)$ layer by layer actually translates to a recursive function call, which can be unfolded to a sequence of embedded projections:
 \begin{equation}\label{eq:forward}
 \begin{split}
-    \mathcal{F}(x) & = F_L(x_L) \\
-    F_L(x_L) & = F_L(y_{(L-1)}) = F_L(F_{(L-1)}(x_{(L-1)})) = F_L(F_{(L-1)}(\cdots F_1(x)))
+    \mathcal{F}(x) &= F_L \left( x_L \right) = F_L \left( y_{(L-1)} \right)\\
+    F_L \left( y_{(L-1)} \right) = 
+    F_L \left( F_{(L-1)} \left( x_{(L-1)} \right) \right) &= F_L \left( F_{(L-1)}\left( \cdots F_1(x)\right)\right)
 \end{split}
 \end{equation}
-
+%
 The \ref{eq:forward} equation is the most fundamental idea behind feed-forward neural networks.
+As mentioned above, every layer $l$ are represented by $F_l$. 
+The most basic layers are the \emph{Fully Connected} and \emph{Activation} layers.
 
-\subsection{Measuring efficiency}
+\subsection{Fully Connected layer} 
+These layers carry out the heavy-lifting of inference by performing linear projection and translation transformations. 
+The operations are following the rules of basic linear algebra, where the input $x_{FC} \in \mathbb{R}^N$ and the output $y_{FC} \in \mathbb{R}^M$ are specified as real valued vectors.
+The parameters of the layer $\phi_{FC}=(W, b)$ are the corresponding weights and biases of each perceptron node in the layer forming a \emph{weight matrix} $W \in \mathbb{R}^{M \times N}$ and a \emph{bias vector} $b \in \mathbb{R}^M$ respectively.
+Therefore evaluating the output of the Fully Connected layer is the defined by the following:
+\begin{equation}\label{eq:FC}
+\begin{split}
+    y_i = \left(\sum_i W_{i,j} \cdot x_j \right) + b_i \qquad &\in \mathbb{R}\\
+    y = Wx + b \qquad &\in \mathbb{R}^M
+\end{split}
+\end{equation}
+\subsection{Activation layer} 
+Nodes in activation layers are introducing non-linearity to the network, by applying the same non-linear activation function to the corresponding output of the previous layer, performing element-wise operation.
+These functions are essential for the network, since they increase the numerical stability of the preceeding they \emph{squeeze} or \emph{mitigate} the input preventing the network from \emph{saturation} or \emph{explosion} (numerical of course). Conventionally the following functions are applied most often as activation function:
+\begin{align*}
+    \mathrm{Rectified Linear Unit (ReLU) := } &max(0, x) \\
+    \mathrm{Hyperbolic Tangent (TanH) := }   &tanh(x) = \frac{2}{1+e^{-2x}}-1 \\
+    \mathrm{SoftPlus (SP) := }   &ln(1+e^x) \\
+    \mathrm{Sigmoid (S) := }  &\frac{1}{1+e^{-x}}
+\end{align*}
+\emph{Note:} These functions do not have any variable parameters, therefore activation layers cannot be trained.
+
+\section{Measuring efficiency}
 If the function $\mathcal{F}$ mentioned above is given, and satisfy our needs then we are done.
 However this is usually not the case, and finding the optimal $\mathcal{F}^*$ is the main challenge targeted by many branches of Machine Learning.
 Despite it has proven, that standard multilayer
@@ -76,10 +100,21 @@ accuracy \cite{hornik1989multilayer}
 if the goal function $\mathcal{F}^*$ is unknown, 
 or too abstract to be \emph{measureable} (i.e. telling how funny a picture is), 
 we cannot utilize the universal approximator. 
-However by reformulating the objective, we can define a \textbf{Loss} function $\mathcal{L}:\mathcal{F}(\mathbb{X}) \rightarrow \mathbb{R}$,
+\subsection{Loss} 
+By reformulating the objective, we can define a Loss function $\mathcal{L}:\mathcal{F}(\mathbb{X}) \rightarrow \mathbb{R}$,
 which maps our candidate $\mathcal{F}$ network to a scalar field, that represents the general incorrectness of $\mathcal{F}$ over the space of possible inputs $\mathbb{X}$.
-By doing so we may apply Machine Learning algorithms that would \textbf{minimize} the Loss, therefore $\mathcal{F}$ would converge towards $\mathcal{F}^*$ implicitly.
+By doing so we may apply Machine Learning algorithms that would \emph{minimize} the Loss, therefore $\mathcal{F}$ would converge towards $\mathcal{F}^*$ implicitly.
 
-In practical implementations $\mathcal{F}$ is not evaluated over the whole space of possible inputs, instead 
+\emph{Note:} In practical implementations $\mathcal{F}$ is not evaluated over the whole space of possible inputs, instead in the hope that a small subset of both \emph{training} and \emph{validating} samples called a mini-batch will approximate $\mathcal{L}(\mathcal{F})$ as well. Useful practices for reducing computing complexity and improving stability, and rate of convergence will be covered later.
+
+\section{Adjusting parameters}
+Generally speaking, applying Machine Learning algorithms boils down to the process of iteratively altering parameters $\phi$ of $\mathcal{F}$ to optimize the Loss.
+Once $\mathcal{L}(\mathcal{F})$ is obtained, we can evaluate how changing the parameters would influence it -- evaluate the gradient of the parameters $\nabla \phi$.
+\subsection{Gradient Descent}
+Updating $\phi$ by descending a small step on the gradient steep with a small step size $\epsilon$ will decrease $\mathcal{L}$.
+Enucleating the general form of Gradient Descent depends on the architecture of the network, but there is a main concept for doing so.
+\subsection{Backpropagation} 
+Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions seen in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla \phi_{FC}$ is well defined
+
 
 
