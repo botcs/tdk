@@ -29,3 +29,18 @@ Also considering a low-level language (like C) would distract us from the main g
 I wanted to chose a lagnuage which offers an optimal solution for this challenge, is flexible, well documented and simple enough for newbies to catch up.
 Because of the support of both object-oriented and procedural approaches and offering the above, Python was the best choice.
 
+While carrying out blueprints of the implementation, I examined the Neural Networks as universal approximators in a \textsc{top-down} manner.
+I have disassembled them to basic units, abstracting the function of each level.
+Later I used these units in \textsc{bottom-up} approach to create a model that realize simple operations, and is well defined on every level: granting a universal interface to be further extended.
+
+\subsection{Disassembling a universal approximator}
+%\in \mathfrak{F}
+Thinking of a neural net as a function \(\mathcal{F}\), is implicitly a black-box representation of the paradigm.
+Users of different applications which offers feature detection, segmentation, prediction, etc. are using this function without knowing what exactly happens behind the curtains. 
+Further investigating \(\mathcal{F}\) we can constrain it to have a DAG computational graph, also to have the nodes of the graph arranged to lattices.
+Practically it means that the perceptrons making up the layer \(l\) are strictly projecting their \textbf{inputs} 
+$ x_l \in \mathbb{R}^N $ \emph{forward} to scalars, which if all perceptron is evaluated parallel forms the 
+\textbf{output} $y_l \in \mathbb{R}^M$, have no feedbacks and loops. 
+%For the sake of simplicity I excluded Recurrent Networks from the space of \(\mathcal{F}\), but later the definition can be extended for vanilla recurrent networks and LSTM networks as well.
+
+

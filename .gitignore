@@ -3,7 +3,7 @@
 *.dvi
 *.aux
 *.out
-*.pdf
+**/build/*
 *.lof
 *.toc
 *.lot
