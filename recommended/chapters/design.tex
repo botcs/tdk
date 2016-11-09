@@ -131,14 +131,45 @@ Enucleating the general form of Gradient Descent depends on the architecture of 
 \subsection{Backpropagation} 
 Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla \phi_{FC}$ is well defined, explained in the following example.
 
-\paragraph{Toy example.} Assume $\mathcal{L}$ is given, and we have a three-layer fully connected network, which maps a $N$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \rightarrow \mathbb{R}^M$. The constraint on the parameters are:
+\paragraph{Toy example.} Assume $\mathcal{L}$ is given, and we have a three-layer fully connected network $L=3$, which maps a $N$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \rightarrow \mathbb{R}^M$. The constraint on the parameters are:
 \begin{itemize}
     \item[] $W_1$ of the first layer must have $N$ columns
     \item[] $W_3$ and the bias $b_3$ of the last layer must have $M$ rows, dimensions respectively.
     \item[] Number of rows of $W_l$ must match $dim(b_l)$
     \item[] Number of columns of $W_l$ must match $dim(b_{(l-1)})$
 \end{itemize} 
-The evaluation unfolded would look like the following: 
+Then the evaluation unfolded would look like the following: 
 $$y = \mathcal{F}(x) = F_3(F_2(F_1(x))) = W_3(W_2(W_1(x)+b_1)+b_2)+b_3$$
+For further usage and simplicity, I would like to fix these numbers.
+Let $\mathcal{F}$ be a network with the following \emph{shape}: $5, 4, 3$
+meaning that in each layer there are 5, 4, 3 neurons respectively $M=3$, all connected to the previous layer. The width of the input layer is not yet defined, let be $N=10$.
+\section{Derivation} In the above evaluating of $\nabla \phi$ can be done in two ways, namely by numerical approximation, or by analytical derivation, in the following I will discuss both.
 
+\subsection{Numerical} Evaluating the numerical gradient (or difference) is an elementary, yet powerful operation, in which we would \emph{perturbate}, or modify one parameter $\phi$ of our system $\mathcal{F}$ at once.
+That is done by first adding $\phi^+$ and after subtracting $\phi^-$ a little amount $d\phi$ from the original $\phi$ and evaluate $\mathcal{L}^{\pm}=\mathcal{L}(\mathcal{F}_{\phi^{\pm}})$, namely the \emph{Loss} of the system in the modified state, yielding the numerical gradient in the following equation:
 
+\begin{equation}
+    \frac{d\mathcal{L}(\mathcal{F})}{d\phi} = 
+    \frac{\mathcal{L}^+ - \mathcal{L}^-}{2 d\phi} = 
+    \frac{\mathcal{L}(\mathcal{F}_{\phi^+}) - \mathcal{L}(\mathcal{F}_{\phi^-})}{2 d\phi}
+\end{equation}
+
+\subsection{Complexity} 
+Though letting the computer do the hard work seems to be a good idea, it worths considering that the simple method above will be applied to every $\phi$ of $\mathcal{L}$.
+It means that for the network in the toy example, we need to evaluate $\mathcal{L}(\mathcal{F})$ two times for each parameter in 
+the weight matrices and the bias vectors of the network, totaling in 
+$$\#(\phi) = 2\times\sum_{i=1}^3 N_{(i-1)}\cdot N_i + N_i = 2\times(10\cdot 5 + 5 ... + 4\cdot 3 + 3) = 188$$
+Even if $\mathcal{F}$ is approximated by using $k$-sized mini-batches for evaluation it is still a computationally very expensive function, because the inference would result in the following number of operations of addition and multiplication:
+$$\#(\mathrm{operations}) = k\times\sum_{i=1}^3 2\cdot N_{(i-1)}\cdot N_i + N_i = k \times 176$$
+Therefore approximated with $k=10$ mini-batches would a single parameter update of a very tiny network would require total operations of:
+\begin{equation}
+    \#(\mathrm{total})=\#(\phi) \times k \times \#(\mathrm{operations}) = 188 \cdot 10 \cdot 176  = 330880
+\end{equation}
+Because both $\#(\phi)$ and $\#(\mathrm{operations})$ has complexity of $\mathcal{O}(N^2)$, one update will yield complexity of 
+\begin{equation}
+    \#(\mathrm{total})=\mathcal{O}(N^4)
+\end{equation}
+
+Which rather encourages us to derive our differentials on paper first, and use numerical gradient approximation for checking whether our implementation is correct.
+\subsection{Analytical}
+requires basic knowledge in calculus, though since the operations are very easy, in general it would require three theorems to 

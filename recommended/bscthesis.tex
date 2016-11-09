@@ -15,6 +15,7 @@
 \addbibresource{bscthesis.bib}
 \usepackage{amsmath} 
 \usepackage{amssymb} 
+\usepackage{commath}
 \usepackage{graphicx}                                      % képek beszúrása
 \graphicspath{ {images/} }
 \usepackage[export]{adjustbox}                             % ez az ITK logó pozicionálásához kell
@@ -82,7 +83,7 @@ Advisor: PhD.\ István Z. Reguly
 \pagenumbering{roman}
 \chapter*{Abstract}
 \input{chapters/abstract}
-\addcontentsline{toc}{chapter}{Abstract}
+%\addcontentsline{toc}{chapter}{Abstract}
 \clearpage
 
 \input{chapters/declaration}
@@ -116,11 +117,13 @@ Advisor: PhD.\ István Z. Reguly
 \input{chapters/future}			%
 \clearpage
 
+\addcontentsline{toc}{chapter}{List of Figures}
 \listoffigures
 \clearpage
 
-\printbibliography
 \addcontentsline{toc}{chapter}{Bibliography}
+\printbibliography
+\clearpage
 %% BEFEJEZÉS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
