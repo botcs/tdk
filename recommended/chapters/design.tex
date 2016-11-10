@@ -56,14 +56,20 @@ $ y = \mathcal{F}(x)$
 The core concept is that we can compose such an $\mathcal{F}$ function by applying multiple projections to $x$.
 Practically that means sending input through the first layer, the second and all the way through to the last layer $L^{th}$, which output would be the value of $\mathcal{F}(x)$, the response of the network.
 Therefore in terms of evaluating $\mathcal{F}(x)$ layer by layer, actually translates to a single function call, which can be unfolded to a sequence of embedded projections:
-\begin{equation}\label{eq:forward}
+\begin{equation*}
 \begin{split}
     \mathcal{F}(x) &= F_L \left( x_L \right) = F_L \left( y_{(L-1)} \right)\\
     F_L \left( y_{(L-1)} \right) = 
     F_L \left( F_{(L-1)} \left( x_{(L-1)} \right) \right) &= F_L \left( F_{(L-1)}\left( \cdots F_1(x)\right)\right)
 \end{split}
+\end{equation*}
+Using the function composition operator $\circ$, rewritten in the classical notation:
+\begin{equation}\label{eq:forward}
+\begin{split}
+    \mathcal{F}(x) = F_L \circ F_{(L-1)} \circ \cdots \circ F_1(x)
+\end{split}
 \end{equation}
-%
+
 The \ref{eq:forward} equation is the most fundamental idea behind feed-forward neural networks.
 As mentioned above, every layer $l$ is represented by an $F_l$. 
 The most basic layers are the \emph{Fully Connected} and \emph{Activation} layers.
@@ -88,6 +94,7 @@ These functions are essential for the network, since they increase the numerical
     \mathrm{SoftPlus (SP) := }   &ln(1+e^x) \\
     \mathrm{Sigmoid (S) := }  &\frac{1}{1+e^{-x}}
 \end{align*}
+The only constraint on these functions that they have to keep the dimension of the input, namely $F_{act}:\mathbb{R}^N \rightarrow \mathbb{R}^N$.
 \emph{Note:} These functions do not have any variable parameters, therefore activation layers cannot be trained.
 
 \section{Measuring efficiency}
@@ -114,7 +121,7 @@ In cases where the parameters of $\mathcal{F}^*$ is not known but we know how it
 
 \subsection{Unsupervised learning}
 When no labeled dataset is available, the network still can be used for extraction of hidden structure of the unlabeled samples. Later these instances are used as density estimators, or adapted as feature extractors for larger networks.
-
+network containing only activation layers: $\mathcal{F}=F_{\mathrm{ReLU}} \circ F_{\math}$
 \textbf{Generative Networks.} Training such architectures can be done by feeding networks random noise as input and training them to reproduce given samples: $\mathcal{F}:\mathbb{R}^k \rightarrow \mathbb{X}$, hence the name \emph{Generative Networks}.
 
 \textbf{Auto-encoder Networks} The other frequently applied paradigm is setting the objective task to compress the input sample into a $h \in \mathbb{R}^k$ hidden representation vector that is able to preserve the key information about the original input, and either by symmetric (Restrictive Boltzmann Machines) or independent (Deep Belief networks) operations decompress the data.
@@ -130,6 +137,8 @@ Once $\mathcal{L}(\mathcal{F})$ is obtained, we can evaluate how changing the pa
 Updating $\phi$ by descending on the gradient slope with a small step size $\epsilon$ will decrease $\mathcal{L}$.
 Enucleating the general form of Gradient Descent depends on the architecture of the network, but there is a main concept for doing so, called Backpropagation described by Werbos \emph{et al.} \cite{werbos1994roots}.
 
+\paragraph{Train policies} jjj
+
 \subsection{Backpropagation} 
 Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla_\phi F_{FC}$ is well defined, explained in the following example.
 
@@ -141,10 +150,16 @@ Though networks can vary in shape and function, the representation of the succee
     \item[] Number of columns of $W_l$ must match $dim(b_{(l-1)})$
 \end{itemize} 
 Then the evaluation unfolded would look like the following: 
-$$y = \mathcal{F}(x) = F_3(F_2(F_1(x))) = W_3(W_2(W_1(x)+b_1)+b_2)+b_3$$
+$$y = \mathcal{F}(x) = F_3 \circ F_2 \circ F_1(x) = W_3(W_2(W_1(x)+b_1)+b_2)+b_3$$
 For further usage and simplicity, I would like to fix these numbers.
 Let $\mathcal{F}$ be a network with the following \emph{shape}: $\left[5, 4, 3\right] $
-meaning that in each layer there are 5, 4, 3 neurons respectively $M=3$, all connected to the previous layer. The width of the input layer is not yet defined, let be $N=10$.
+meaning that in each layer there are 5, 4, 3 neurons respectively, $M=3$ and all nodes are connected to the previous layer. The width of the input layer is not yet defined, let it be $N=10$.
+Define an $L_2$ Loss function on the toy example. For one sample-label pair $(x,y)$ the $L_2$ Loss is:
+\begin{equation}
+    \mathcal{L}(\mathcal{F})^2 = \sum_{i} |\mathcal{F}(x)_i - y_i|^2
+\end{equation}
+$L_2$ is a universal Loss function, which is used in cases where the label space $\mathbb{Y}$ is continuous without further interpretation (e.g. floorspace and height of a house, based on the price: \mathbb{R}^1 \rightarrow \mathbb{R}^2).
+
 \section{Derivation} In the above evaluating of $\nabla_\phi \mathcal{F}$ can be done in two ways, namely by numerical approximation, or by analytical derivation, in the following I will discuss both.
 
 \subsection{Numeric} Evaluating the numerical gradient (or difference) is an elementary, yet powerful operation, in which we would \emph{perturbate}, or modify one parameter $\phi$ of our system $\mathcal{F}$ at once.
@@ -230,7 +245,11 @@ $$
 \end{equation}
 
 Which is a formula of the products of partial derivative of $g$, that treats $f$ like a variable, and $f$ explicitly operating on variable $x$.
-After this we can interchangeably use function values and variables with a constraint that at a point, in an arbitrary depth there must be a real variable.
+The derivative of $g$ with respect to variable $x$ is the product of the \emph{local derivative} of $g$ is $\frac{\partial g}{\partial f}=5$ and $\frac{\partial f}{\partial x}=2$ which equals $\frac{\partial g(x)}{\partial x}=\frac{\partial(5\cdot (2x + 3))}{\partial x} = 10$, the function strictly depending on $x$.
+The important message is that we can interchangeably use function values and variables with a constraint that at a point, in an arbitrary depth there must be a real variable.
 \emph{Note:} the statement above stands for computations with \emph{Acyclic Graph}, meaning that there should not be any feedbacks or loops -- no definitions like $f(g), g(f)$ or $f(f)$.
 We will see that these rules play a very fundamental role in training networks.
 
+\paragraph{Fully Connected Layer} 
+
+\paragraph{Activation Layer.} To have a better grasp on how to extend the definitions \ref{eq:addition, eq:multiply, eq:chain} for neural networks in practice, consider a 
