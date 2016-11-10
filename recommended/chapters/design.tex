@@ -145,7 +145,7 @@ Let $\mathcal{F}$ be a network with the following \emph{shape}: $\left[5, 4, 3\r
 meaning that in each layer there are 5, 4, 3 neurons respectively $M=3$, all connected to the previous layer. The width of the input layer is not yet defined, let be $N=10$.
 \section{Derivation} In the above evaluating of $\nabla_\phi \mathcal{F}$ can be done in two ways, namely by numerical approximation, or by analytical derivation, in the following I will discuss both.
 
-\subsection{Numerical} Evaluating the numerical gradient (or difference) is an elementary, yet powerful operation, in which we would \emph{perturbate}, or modify one parameter $\phi$ of our system $\mathcal{F}$ at once.
+\subsection{Numeric} Evaluating the numerical gradient (or difference) is an elementary, yet powerful operation, in which we would \emph{perturbate}, or modify one parameter $\phi$ of our system $\mathcal{F}$ at once.
 That is done by first adding $\phi^+$ and after subtracting $\phi^-$ a little amount $d\phi$ from the original $\phi$ and evaluate $\mathcal{L}^{\pm}=\mathcal{L}(\mathcal{F}_{\phi^{\pm}})$, namely the \emph{Loss} of the system in the modified state, yielding the numerical gradient in the following equation:
 
 \begin{equation} \label{eq:numgrad}
@@ -172,9 +172,9 @@ Because both $\#(\phi)$ and $\#(\mathrm{operations})$ has complexity of $\mathca
     \#(\mathrm{total})=\mathcal{O}(N^4)
 \end{equation}
 We can see that even for a shallow and relatively small network (industrial AI networks has billions of parameters, and uses much larger batches) described in the toy example the method is really costly.
-That encourages us to derive our differentials on paper first, and use \emph{numerical gradient approximation} for checking whether our implementation is correct.
+That encourages us to derive our differentials on paper first, and use \emph{numerical gradient approximation} for checking our solution. Using \emph{Gradient Check} is essential when implementing new architectures, because it is a very efficient tool for debugging in comparison with updating. The method in a few words is about setting an error rate $\epsilon$, and decrease $d\phi$ until the numeric solution does not match the analytic solution with $1-\epsilon$ significance. If the analytic solution is incorrect the cycle will not terminate.
 
-\subsection{Analytical}
+\subsection{Analytic}
 Deriving the update by hand requires basic knowledge in calculus extended to multivariate cases, though since the operations are elementary, in general we must understand only three basic definitions to do so. 
 Some formality before starting: we have three independent variables $x$, $y$, $z$, and functions $f$, $g$, $h$. The result of operations performed on variables, i.e. $x+2y$ can be represented by a function $f=x+2y$. 
 If the value depends on a variable then it can be written explicitly, passing the variable as \emph{the argument} of the function $f(x,y)=x+2y$. 
@@ -191,23 +191,44 @@ Consider a value $x\cdot y \cdot z$ represented by $f(x,y,z)$. $f$ is now depend
     = \lim_{dx\rightarrow 0} \frac{(x+dx)-(x-dx)}{2dx} y z&= \lim_{dx\rightarrow 0} \frac{2dx}{2dx} yz= yz
 \end{split}
 \end{equation*}
-
-We can apply the same method for each variable, the result will be the \emph{gradient} or $$
+We can apply the same method for each variable, the result will be the elements of the \emph{gradient} $\nabla f$
 \begin{equation}
     \frac{\partial f}{\partial x} = y z \qquad
     \frac{\partial f}{\partial y} = x z \qquad
     \frac{\partial f}{\partial z} = x y 
 \end{equation} 
-
-The important thing to understand that in a computational graph, a multiplicative node, which takes $N$ arbitrary parameters (or arguments), will have a \emph{partial derivative} for each variable its output is depending on. If we  Also the value of the derivative will be the product of all variables except the one of which we are computing the influence on the output.
+The important thing to understand that in a computational graph, a multiplicative node, which takes $N$ arbitrary parameters (or arguments), will have a \emph{partial derivative} for each variable its output is depending on. In general if these derivatives are represented as a vector, then it is called the gradient $\nabla f$ of $f$. Also the value of the derivative will be the product of all variables except the one of which we are computing the influence of on the output.
 
 \paragraph{Addition.}
 Consider a value $x\cdot y + x\cdot z$ represented by $g(x,y,z)$.
-The change of $g$ with respect to $x$ is:
+The change of $g$ with respect to $x$ is defined with the following shortened equation:
 \begin{equation}
     \frac{\partial g}{\partial x} = \lim_{dx\rightarrow 0} \frac{((x+dx)y +(x+dx)z)-((x-dx)y +(x-dx)z)}{dx}=y+z
 \end{equation}
 Notice that -- in the terms of computational graphs -- if a node contributes to other different operations (namely $x\cdot y$ and $x\cdot z$), 
 than the derivative of each occurrence in \emph{later} values will be summed up. 
 
-We will see that these rules plays a very fundamental role in training networks, especially when taking outer products or convolving.
+\paragraph{Chain rule.}
+Let $f(x)=2x+3$ and $g(f)=5f$. Suppose that we would like to know the derivative of $g$ with respect to $x$.
+At first we cannot do so, but there are two options: in the hope that substituting the value represented by $f$ into $g$ would not make the equation too complex we can unroll the references and rewrite $g(x)=5\cdot(2x + 3)$, or we could use the chain rule:
+$$
+    \frac{\partial g}{\partial x} = \lim_{dx \rightarrow 0} \frac{g(f(x+dx)) - g(f(x-dx))}{2dx}
+$$
+
+\begin{center}
+    Assume that $f(x+dx)-f(x-dx) \neq 0$.
+\end{center}
+
+$$
+    \lim_{dx \rightarrow 0} \frac{g(f(x+dx)) - g(f(x-dx) ) }{f(x+dx)-f(x-dx)} \cdot \frac{f(x+dx)-f(x-dx)}{2dx}
+$$
+
+\begin{equation}\label{eq:chain}
+    \frac{\partial g}{\partial x} = \frac{\partial g}{\partial f} \cdot \frac{\partial f}{\partial x}
+\end{equation}
+
+Which is a formula of the products of partial derivative of $g$, that treats $f$ like a variable, and $f$ explicitly operating on variable $x$.
+After this we can interchangeably use function values and variables with a constraint that at a point, in an arbitrary depth there must be a real variable.
+\emph{Note:} the statement above stands for computations with \emph{Acyclic Graph}, meaning that there should not be any feedbacks or loops -- no definitions like $f(g), g(f)$ or $f(f)$.
+We will see that these rules play a very fundamental role in training networks.
+
