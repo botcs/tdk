@@ -131,7 +131,7 @@ Updating $\phi$ by descending on the gradient slope with a small step size $\eps
 Enucleating the general form of Gradient Descent depends on the architecture of the network, but there is a main concept for doing so, called Backpropagation described by Werbos \emph{et al.} \cite{werbos1994roots}.
 
 \subsection{Backpropagation} 
-Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla_\phi \mathcal{F}_{FC}$ is well defined, explained in the following example.
+Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla_\phi F_{FC}$ is well defined, explained in the following example.
 
 \paragraph{Toy example.} Assume $\mathcal{L}$ is given, and we have a three-layer fully connected network $L=3$, which maps a $N$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \rightarrow \mathbb{R}^M$. The constraint on the parameters are:
 \begin{itemize}
