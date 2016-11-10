@@ -110,7 +110,7 @@ By doing so we may apply Machine Learning algorithms that would \emph{minimize} 
 
 \section{Adjusting parameters}
 Generally speaking, applying Machine Learning algorithms boils down to the process of iteratively altering parameters $\phi$ of $\mathcal{F}$ to optimize the Loss.
-Once $\mathcal{L}(\mathcal{F})$ is obtained, we can evaluate how changing the parameters would influence it -- evaluate the gradient of the parameters $\nabla \phi$ with regards to $\mathcal{L}$.
+Once $\mathcal{L}(\mathcal{F})$ is obtained, we can evaluate how changing the parameters would influence it -- evaluate the gradient $\nabla_\phi \mathcal{F}$ of the parameters  with regards to $\mathcal{L}$.
 
 \subsection{Supervised learning}
 In cases where the parameters of $\mathcal{F}^*$ is not known but we know how it would map the input space $\mathbb{X} \rightarrow \mathbb{Y}$, i.e. which character appears on the input image $x$, then we can define a set of previously \emph{labeled} pairs of input - solution sample which could be used later on for training, and evaluating performance of the network.
@@ -129,7 +129,7 @@ Updating $\phi$ by descending on the gradient steep with a small step size $\eps
 Enucleating the general form of Gradient Descent depends on the architecture of the network, but there is a main concept for doing so, called Backpropagation invented by Werbos \emph{et al.} \cite{werbos1994roots}.
 
 \subsection{Backpropagation} 
-Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla \phi_{FC}$ is well defined, explained in the following example.
+Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla_\phi \mathcal{F}_{FC}$ is well defined, explained in the following example.
 
 \paragraph{Toy example.} Assume $\mathcal{L}$ is given, and we have a three-layer fully connected network $L=3$, which maps a $N$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \rightarrow \mathbb{R}^M$. The constraint on the parameters are:
 \begin{itemize}
@@ -141,18 +141,20 @@ Though networks can vary in shape and function, the representation of the succee
 Then the evaluation unfolded would look like the following: 
 $$y = \mathcal{F}(x) = F_3(F_2(F_1(x))) = W_3(W_2(W_1(x)+b_1)+b_2)+b_3$$
 For further usage and simplicity, I would like to fix these numbers.
-Let $\mathcal{F}$ be a network with the following \emph{shape}: $5, 4, 3$
+Let $\mathcal{F}$ be a network with the following \emph{shape}: $\left[5, 4, 3\right] $
 meaning that in each layer there are 5, 4, 3 neurons respectively $M=3$, all connected to the previous layer. The width of the input layer is not yet defined, let be $N=10$.
-\section{Derivation} In the above evaluating of $\nabla \phi$ can be done in two ways, namely by numerical approximation, or by analytical derivation, in the following I will discuss both.
+\section{Derivation} In the above evaluating of $\nabla_\phi \mathcal{F}$ can be done in two ways, namely by numerical approximation, or by analytical derivation, in the following I will discuss both.
 
 \subsection{Numerical} Evaluating the numerical gradient (or difference) is an elementary, yet powerful operation, in which we would \emph{perturbate}, or modify one parameter $\phi$ of our system $\mathcal{F}$ at once.
 That is done by first adding $\phi^+$ and after subtracting $\phi^-$ a little amount $d\phi$ from the original $\phi$ and evaluate $\mathcal{L}^{\pm}=\mathcal{L}(\mathcal{F}_{\phi^{\pm}})$, namely the \emph{Loss} of the system in the modified state, yielding the numerical gradient in the following equation:
 
-\begin{equation}
+\begin{equation} \label{eq:numgrad}
     \frac{d\mathcal{L}(\mathcal{F})}{d\phi} = 
     \frac{\mathcal{L}^+ - \mathcal{L}^-}{2 d\phi} = 
     \frac{\mathcal{L}(\mathcal{F}_{\phi^+}) - \mathcal{L}(\mathcal{F}_{\phi^-})}{2 d\phi}
 \end{equation}
+
+\paragraph{Summary.} In a nutshell value of $\frac{d\mathcal{L}(\mathcal{F})}{d\phi}$ tells how changing the parameter $\phi$ by $d\phi$ would change the performance of the network. If it is positive then updating $\mathcal{F}$ by adding $d\phi$ to $\phi$ would result in higher Loss value, which is the opposite of our goal, so we just subtract it, if it is negative, than trivially we should add $d\phi$ to $\phi$ since it is making some good progress.
 
 \subsection{Complexity} 
 Though letting the computer do the hard work seems to be a good idea, it worths considering that the simple method above will be applied to every $\phi$ of $\mathcal{L}$.
@@ -169,7 +171,43 @@ Because both $\#(\phi)$ and $\#(\mathrm{operations})$ has complexity of $\mathca
 \begin{equation}
     \#(\mathrm{total})=\mathcal{O}(N^4)
 \end{equation}
+We can see that even for a shallow and relatively small network (industrial AI networks has billions of parameters, and uses much larger batches) described in the toy example the method is really costly.
+That encourages us to derive our differentials on paper first, and use \emph{numerical gradient approximation} for checking whether our implementation is correct.
 
-Which rather encourages us to derive our differentials on paper first, and use numerical gradient approximation for checking whether our implementation is correct.
 \subsection{Analytical}
-requires basic knowledge in calculus, though since the operations are very easy, in general it would require three theorems to 
+Deriving the update by hand requires basic knowledge in calculus extended to multivariate cases, though since the operations are elementary, in general we must understand only three basic definitions to do so. 
+Some formality before starting: we have three independent variables $x$, $y$, $z$, and functions $f$, $g$, $h$. The result of operations performed on variables, i.e. $x+2y$ can be represented by a function $f=x+2y$. 
+If the value depends on a variable then it can be written explicitly, passing the variable as \emph{the argument} of the function $f(x,y)=x+2y$. 
+For the sake of simplicity assume that the variables are not general objects from an abstract space, they are only real values: $x,y,z\in \mathbb{R}$. However the following description could be extended for the above-mentioned variables as well. For any one-dimensional function $f(x):\mathbb{R}\rightarrow\mathbb{R}$ we say that the value represented by the function depends on the variable by the extent of its derivative. The derivative (or differential) of the function can be seen as an ideal case of \ref{eq:numgrad} where the perturbation would approach zero, namely:
+\begin{equation}
+    \frac{\partial f}{\partial x} = \lim_{dx\rightarrow 0}\frac{df(x)}{dx}= \lim_{dx\rightarrow 0} \frac{f(x+dx)-f(x-dx)}{2dx}
+\end{equation}
+\paragraph{Multiplication rule.}
+Consider a value $x\cdot y \cdot z$ represented by $f(x,y,z)$. $f$ is now depending on three variables, we can define the measure of this dependency on one variable by the formal equation:
+\begin{equation*}
+\begin{split}
+    \frac{\partial f}{\partial x} = \lim_{dx\rightarrow 0} \frac{f(x+dx,y,z)-f(x-dx,y,z)}{dx}
+    &= \lim_{dx\rightarrow 0} \frac{((x+dx)\cdot y \cdot z)-((x-dx)\cdot y \cdot z)}{2dx} \\
+    = \lim_{dx\rightarrow 0} \frac{(x+dx)-(x-dx)}{2dx} y z&= \lim_{dx\rightarrow 0} \frac{2dx}{2dx} yz= yz
+\end{split}
+\end{equation*}
+
+We can apply the same method for each variable, the result will be the \emph{gradient} or $$
+\begin{equation}
+    \frac{\partial f}{\partial x} = y z \qquad
+    \frac{\partial f}{\partial y} = x z \qquad
+    \frac{\partial f}{\partial z} = x y 
+\end{equation} 
+
+The important thing to understand that in a computational graph, a multiplicative node, which takes $N$ arbitrary parameters (or arguments), will have a \emph{partial derivative} for each variable its output is depending on. If we  Also the value of the derivative will be the product of all variables except the one of which we are computing the influence on the output.
+
+\paragraph{Addition.}
+Consider a value $x\cdot y + x\cdot z$ represented by $g(x,y,z)$.
+The change of $g$ with respect to $x$ is:
+\begin{equation}
+    \frac{\partial g}{\partial x} = \lim_{dx\rightarrow 0} \frac{((x+dx)y +(x+dx)z)-((x-dx)y +(x-dx)z)}{dx}=y+z
+\end{equation}
+Notice that -- in the terms of computational graphs -- if a node contributes to other different operations (namely $x\cdot y$ and $x\cdot z$), 
+than the derivative of each occurrence in \emph{later} values will be summed up. 
+
+We will see that these rules plays a very fundamental role in training networks, especially when taking outer products or convolving.
