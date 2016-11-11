@@ -38,11 +38,54 @@ For the sake of simplicity I excluded Recurrent Networks from the space of $\mat
 \subsection{Language} Keeping in mind, that using a general high-level language (like MATLAB) can yield poor computational efficiency, making benchmarks, testing and applications impossible.
 Also considering a low-level language (like C) would distract us from the main goal, always optimizing further and further the basic algorithms -- else resulting in boilerplate codes. Either way it would make the implementation unclear for those, who did not participate in the designing of the library.
 I wanted to chose a lagnuage which offers an optimal solution for this challenge, is flexible, well documented and simple enough for newbies to catch up.
-Because of the support of both object-oriented and procedural approaches and offering the above, Python was the best choice.
+Because of the support of both object-oriented and procedural approaches and offering the above, I choose Python.
 
 \subsection{Design pattern} While carrying out blueprints of the implementation, I examined the Neural Networks as universal approximators in a \textsc{top-down} manner.
 I have disassembled them to basic blocks, abstracting the function of each level.
 Later I used these units in \textsc{bottom-up} approach to create an object-oriented hierarchic model that realize simple operations and is well defined on every level: granting a universal interface to be further extended.
+
+
+\section{Introductory example}
+For example if a small picture is given to a person, he or she guesses which it could and could not be. If that person is told that there are four classes, like \emph{Car, Plane, Cat, Kid}, he can tell how likely it is that the given picture falls in that class, so he can give a so-called \emph{confidence parameter}.
+
+Patterns which are associated with cats may be associated with kids too, but is unlikely to be associated with planes. Deciding whether a pattern improves the confidence on each class or not, yields a \textbf{sign} for the given pattern, and the measure how strongly it influences the likelihood is called the \textbf{weight} of the pattern.
+In \emph{neural networks} there are small nodes based on the biological model of neurons, that is responsible for recognizing and weighting the patterns. These nodes are called \textbf{perceptrons}. 
+
+\subsection{Defining the Perceptron} 
+Let $x$ be a preprocessed information, the perceptron $\mathbf{P}$ decides which of them are important in recognizing a cat: having a corresponding weight with large magnitude, and which of them are irrelevant: having a weight with magnitude close to zero. 
+Therefore a \emph{perceptron} has a weight $w_i$ for each input $x_i$ and its transient state can be now formally written:
+$$
+	\mathbf{P}_{transient}=\sum_i x_i w_i
+$$
+Which can be also rewritten as the inner product of $\mathbf{x}$ and $\mathbf{w}$
+
+$$
+	\mathbf{P}_{transient}=<\mathbf{x}, \mathbf{w}>=\mathbf{x}^T\mathbf{w}
+$$
+
+To enhance the stability of $N$  \emph{non-linearities} may be introduced as activation functions. Without further investigation, accept the fact, that wiring many perceptrons together results in a numerically unstable system, caused by the lack of any restriction on the magnitude of the weights. In the following examples perceptrons will be arranged in a special way, to form a \textbf{Feed Forward} network, meaning that the information flow will occur in a direct way, without feedbacks, see figure \ref{fig:ff}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.45\textwidth]{network.jpg}
+	\caption{A small feed-forward network with one hidden layer, and single output perceptron.
+	Source: \href{http://www.codeproject.com/KB/dotnet/predictor/network.jpg}{Codeproject} 	}
+	\label{fig:ff}
+\end{figure}
+
+\subsection{Basics of Learning}
+After describing the model, the first question is:\\
+\emph{what are the correct values for $\mathbf{w_P}$ for each $\mathbf{P}$ in network $N$?}
+
+There are a lot of intuitive explanation how this problem should be approached and solved. For exhaustive investigation of the topic, read the chapters from \href{http://neuralnetworksanddeeplearning.com/}{Michael Nielsen's site}. 
+Anyhow, in general this is still the most studied question in machine learning. 
+Luckily if $N$'s performance can be measured, thanks to its feed-forward structure a \emph{numerical suggestion} can be defined as well, which tells how to change $\mathbf{w_P}$ to improve efficiency of $N$. In practice an $\mathbf{E}$ error function is defined, and the objective of the training is to reduce it. Without digging deep in math we can find an intuitive situation with the same results.\\
+
+Take a perceptron $\mathbf{P}$ with input $\mathbf{x}$ of objects on a given picture of a cat. Suppose that this perceptron \emph{fires} (has high output value) when wheels are on the picture. It should remain silent when there are no round objects listed in 
+$\mathbf{x}$, still it turns on, ruining the output of $N$, producing high $\mathbf{E}$.
+Since we know the original label of the picture, we can tell which assumptions were wrong, and which were good - which to decrease, which to increase if the next time $N$ is given the same input. This information is distributed between the previous perceptrons which caused the actual to fail by simply multiplying the error with the weight corresponding to the previous node. Also with the information of how much the output of the actual node influenced the error, and with its input values, the significance of wrong $\mathbf{x_i}$s can be reduced, and important features' weights can be increased, which is actually finding a better $\mathbf{w_P}$.
+
+The example concluded to the practical application of the so called \emph{Stochastic Gradient Descent}. Originally every samples in the training set should be introduced to the system before updating its weights and that would be the \emph{Gradient Descent}, but in  the hope that the samples falls in a subset of the whole space of all possible inputs, the algorithm uses mini-batches for the learning process. When the number of samples in the batches reduces to 1, the training is called on-line training. And if it happens on $N$ containing a single perceptron it is called \emph{Rosenblatt perceptron learning algorithm}.
 
 
 \section{Inference}
@@ -141,7 +184,8 @@ Enucleating the general form of Gradient Descent depends on the architecture of 
 \subsection{Backpropagation} 
 Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla_\phi F_{FC}$ is well defined, explained in the following example.
 
-\paragraph{Toy example.} Assume $\mathcal{L}$ is given, and we have a three-layer fully connected network $L=3$, which maps a $N$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \rightarrow \mathbb{R}^M$. The constraint on the parameters are:
+\paragraph{Toy example.} 
+Assume $\mathcal{L}$ is given, and we have a three-layer fully connected network $L=3$, which maps a $N$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \rightarrow \mathbb{R}^M$. The constraint on the parameters are:
 \begin{itemize}
     \item[] $W_1$ of the first layer must have $N$ columns
     \item[] $W_3$ and the bias $b_3$ of the last layer must have $M$ rows, dimensions respectively.
@@ -255,13 +299,5 @@ Intuitively in the case we would like to correct the weights of a decision, it w
     \item[] The original situation (the input $x$), which the decision was made in.
     \item[] The error on the decision -- the derivative $\delta$ of the Loss with regards to the decision.
 \end{itemize}
-
-
-
-\begin{pmatrix}
- \\ 
-• \\ 
-•
-\end{pmatrix} 
 
 \paragraph{Activation Layer.} To have a better grasp on how to extend the definitions \ref{eq:addition, eq:multiply, eq:chain} for neural networks in practice, consider a 
