@@ -11,6 +11,14 @@ The networks were trained on the MNIST dataset \cite{mnist}, with varying the fo
     \item Regularization - $L_p$
 \end{itemize}
 
+The experiments width shapes and corresponding results are shown on \emph{Figure (\ref{fig:even}, \ref{fig:dec}, \ref{fig:inc})}.
+In the very beginning it turned out that networks with 3 layer are the most stable for MNIST character recognition. 
+Shallow networks, with fewer layers that had theoretically larger capacity than 3 layered ones, were unable to generalize the digits.
+Deeper networks, with more layers either were numerically unstable, and exhibited vanishing gradient, or overfitting occurred early in the training process.
+The 3 layered networks were trained with the following constraints: Stochastic gradient descent with $mini-batch=64$, learning rate $\epsilon = 0.05$ and total number of $epochs=25$.
+Despite the varying capacity, the results rather depend on the shape of the network. The best of the three networks are compared in \emph{Figure \ref{fig:comp}} 
+
+
 \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{shapeNN-even.png}
@@ -29,15 +37,6 @@ The networks were trained on the MNIST dataset \cite{mnist}, with varying the fo
     \caption{During forward propagation the data is compressed in early layers, the later neurons rely on activation patterns of the coding layer. Networks which width of layer increase in order tends learn slower, the process is inefficient, since information is lost in the beginning.}
     \label{fig:inc}
 \end{figure}
-
-
-
-The experiments width shapes and corresponding results are shown on \emph{Figure (\ref{fig:even}, \ref{fig:dec}, \ref{fig:inc})}.
-In the very beginning it turned out that networks with 3 layer are the most stable for MNIST character recognition. 
-Shallow networks, with fewer layers that had theoretically larger capacity than 3 layered ones, were unable to generalize the digits.
-Deeper networks, with more layers either were numerically unstable, and exhibited vanishing gradient, or overfitting occurred early in the training process.
-The 3 layered networks were trained with the following constraints: Stochastic gradient descent with $mini-batch=64$, learning rate $\epsilon = 0.05$ and total number of $epochs=25$.
-Despite the varying capacity, the results rather depend on the shape of the network. The best of the three networks are compared in \emph{Figure \ref{fig:comp}} 
 
 \begin{figure}
     \centering
@@ -76,35 +75,43 @@ Simply mean averaging the candidates would not reveal the true signals which eac
     \label{fig:n2}
 \end{figure}
 Gradient ascent is an iterative method for enhancing the input to emphasize the patterns that are recognized by the neurons. A method which utilizes a network on top of the original to extract the recognition patterns, called DeConvnet, is described by Zeiler \emph{et al.} \cite{zeiler2014visualizing}. The mentioned algorithm can be reduced to the following, by leaving out the sparsity encouraging regularization term - making parallel processing more efficient:
-for fully connected layers the method boils down to backward propagating an \emph{arbitrary} delta vector - instead of calculating the gradient of the loss function described in \cite{zeiler2014visualizing}:
-$$
-\delta_l = \mathbf{e_{i}}
-$$
+for fully connected layers the method boils down to backward propagating an \emph{arbitrary} delta vector (instead of calculating the gradient of the loss function described in \cite{zeiler2014visualizing}): 
+$\delta_l = \mathbf{e}$ or $\delta_l =\mathbf{b}$
 from the $l^{th}$ layer toward the input layer to get gradient of the input w.r.t the $i^{th}$ neuron of the $l^{th}$ layer. 
+By choosing $\mathbf{e}_{i} = [0, 0 \cdots 1 \cdots 0]^T$ the enhancement would not take other activations into account, while letting $\delta_l = \mathbf{b}_i = [-1, -1 \cdots 1 \cdots -1]^T$ would result in activation where other neurons' output would decrease over amplification. 
 
-By choosing $\mathbf{e_{i}} = [0, 0 \cdots 1 \cdots 0]^T$ the enhancement would not take other activations into account, while letting $\mathbf{e_i} = \mathbf{e^-_i} = [-1, -1 \cdots 1 \cdots -1]^T$ would result in activation where other neurons' output would decrease over amplification. 
+Both methods were tested by the following procedure: The top 1 digit was selected for each neurons in the last layer of the best performing network, totaling in 10 samples. Skipping the candidate search of the top 10 samples were enhanced by the GA algorithm, with different number of iterations and with $\mathbf{e}$ and $ \mathbf{b}$. The results are shown on Figure \ref{fig:bias-nobias}. 
 
-Both methods were tested by the following procedure: The top 1 digit was selected for each neurons in the last layer of the best performing network, totaling in 10 samples. Skipping the candidate search of the top 10 samples were enhanced by the G.A. algorithm, with different number of iterations and with $\mathbf{e}$ and $ \mathbf{e^-}$. The results are shown on Figure \ref{fig:bias-nobias}. 
-%
-%\begin{figure}
-%    \centering
-%    \includegraphics[width=0.9\textwidth]{bias-nobias.pdf}
-%    \caption{
-%        The different results of visualizing the last layer of a 3 layered network with 40 iterations of \emph{Gradient Ascent}. 
-%        Samples highlighted in green are the samples which were recognized with the highest confidence by each classifier perceptron in the last layer.
-%        These samples are organized in increasing order w.r.t. response of each neuron resulting in a $10 \times 10$ figure.
-%        %\emph{On the top diagram (highlighted in red)}: are the samples of the 10 candidate sample which caused the lowest activation.
-%        %\emph{On the bottom of the diagram (below the green box)}: there is a row of mean average of the samples above it, for each neuron.
-%%        The arrows are pointing to diagrams, organized in a similar fashion, depicts samples enhanced by G.A. applied with the corresponding gradient on the latent layer. 
-%%        \emph{On the left diagram} Samples enhanced by \textbf{biased} G.A. 
-%    }
-%    \label{fig:bias-nobias}
-%\end{figure}
-
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{bias-nobias.pdf}
+    \caption{
+        The different results of visualizing the last layer of a 3 layered network with 40 iterations of \emph{Gradient Ascent}. 
+        Samples highlighted in green are the samples which were recognized with the highest confidence by each classifier perceptron in the last layer.
+        These samples are organized in increasing order w.r.t. response of each neuron resulting in a $10 \times 10$ figure.
+        \emph{Top diagram (highlighted in red)}: are the samples of the 10 candidate sample which caused the lowest activation.
+        \emph{Bottom of the diagram (below the green box)}: there is a row of mean average of the samples above it, for each neuron.
+        The arrows are pointing to diagrams, organized in a similar fashion, depicts samples enhanced by 
+            G.A. applied with the corresponding gradient on the latent layer. 
+        \emph{Left diagram}: samples enhanced by \textbf{biased} GA
+        \emph{Right diagram}: samples enhanced by \textbf{unbiased} GA
+    }
+    \label{fig:bias-nobias}
+\end{figure}
 It is important to notice, that the algorithm initialized with different samples will introduce artifact features on the samples. 
-These features will bring closer the input towards an artificial sample which will much more likely be recognized as a sample from the class of the corresponding neuron. The method of distortion can be exploited as well, which is called \emph{generating Adversarial} samples (detailed explanation in the end of the section). 
-By qualitative analysis I concluded that the.
+These features will bring closer the input towards an artificial sample which will much more likely be recognized as a sample from the class of the corresponding neuron. 
+The method of distortion can be exploited as well, which is called \emph{generating Adversarial} samples (detailed explanation in the end of the section).
+However applying GA on the sample with the corresponding neuron (samples in the green box on Figure \ref{fig:bias-nobias}) results in much better visualization of \emph{what each node is looking for} on the input.
+By qualitative analysis we concluded that biased Gradient Ascent takes less iterations to transform the sample, however applying it should be  only restricted in the classifying layer, since it is diminishing activation of neighboring neurons. 
+A comparison of how the algorithms work iteration by iteration, on noise and misleading samples is shown on Figure \ref{fig:noise-GA.pdf}
+    
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{noise-GA.pdf}
+    \caption{...}
+    \label{fig:noise-GA}
+\end{figure}
 
 Therefore for further analysis $\mathbf{e_i} = [0, 0 \cdots 1 \cdots 0]^T$ is used.
 $$x = x + \mathbf{\eta}\cdot\nabla_l^i x$$

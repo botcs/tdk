@@ -1,6 +1,8 @@
 \chapter{Design and Implementation}
 
-After researching literature on building libraries from scratch, and analyzing pet project source-codes \cite{convnetjs, gibianskysource} and implementations of professional libraries \cite{TF, caffe, torch}
+\epigraph{\textit{... where in this snippet $W1$ and $W2$ are two matrices that we initialize randomly. We're not using biases because meh.}}{\rightline{{\rm --- Andrej Karpathy}}}
+
+After researching literature on building libraries from scratch, and analyzing pet project source-codes \cite{convnetjs, gibianskysource} and dozens of implementations of professional libraries \cite{TF, caffe, torch},
 I concluded that the best way to acquire an in-dept understanding of neural networks is to build my own Deep Learning framework.
 This way I had a chance to understand why novel solutions in Machine Learning are formed the way they are.
 I also gained insight into what main paradigms are popular libraries based on, such as \emph{computational graphs, parallel processing}, 
@@ -16,7 +18,7 @@ Most thankfully, by starting from scratch I have faced situations when theoretic
     \item[] to stay as close to pure mathematical formulation of the classical paradigms as possible
     \item[] put emphasis on ease of use and understanding
 \end{itemize}
-\paragraph{Disclaimer.} Apart from \textbf{NumPy} and its complementary package \textbf{SciPy}, no external libraries and dependencies are used the implementation. 
+\paragraph{Disclaimer.} Apart from \textbf{NumPy} and its complementary package \textbf{SciPy}, no external libraries and dependencies are used in the implementation. 
 I want to emphasize that this work was not written to compete with contemporary state-of-the-art frameworks, rather to help perceive the general ideas behind novel researches, and to encourage interested fellows to carry out researches on their own.
 
 \section{Choice of design pattern and language}
