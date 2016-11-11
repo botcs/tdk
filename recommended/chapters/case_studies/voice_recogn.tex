@@ -1,6 +1,6 @@
 \section{Voice recognition}
 
-Today's neural networks work on algorithmically very complex, yet intuitive tasks. These objectives can be categorized into two main classes: \emph{supervised} and \emph{unsupervised}. The trend shows that labeling slavery becomes unfavored therefore classical supervised learning is getting less attention over time. Still understanding how these models (should) work is essential and demonstrating via the simplest examples ends in some interesting case studies. In the following an informal introduction presents results of such experiments.
+Today's neural networks work on algorithmically very complex, yet intuitive tasks. These objectives can be categorized into two main classes: \emph{supervised} and \emph{unsupervised}. The trend shows that sample labeling slavery becomes unfavored therefore classical supervised learning is getting less attention over time. Still understanding how these models (should) work is essential and demonstrating via the simplest examples ends in some interesting case studies. In the following an informal introduction presents results of such experiments.
 
     {Technical background}
 For the sake of readability the detailed implementation of the perceptron framework is excluded from this writing (although can be found at \href{https://github.com/botcs/deepvision/tree/master/demo/audio}{github}). 
@@ -20,48 +20,6 @@ The writing assumes basic knowledge in linear algebra, the model will be describ
 
 For a given network $N$ and fixed length input $x$ the system's assumption, the output is computed as $y=N(x)$, where $y$ is a fixed length vector.
 $N$ can be seen as a \emph{black box}, that takes $dim(x)$ information, somehow processes it and - if $N$ is trained correctly it returns the class of $x$. Practically $dim(y)=|\{\textrm{classes}\}|$ - therefore $y$ represents the network's confidence on each class.
-
-\paragraph{Introductory example}
-For example if a small picture is given to a person, he or she guesses which it could and could not be. If that person is told that there are four classes, like \emph{Car, Plane, Cat, Kid}, he can tell how likely it is that the given picture falls in that class, so he can give a so-called \emph{confidence parameter}.
-
-Patterns which are associated with cats may be associated with kids too, but is unlikely to be associated with planes. Deciding whether a pattern improves the confidence on each class or not, yields a \textbf{sign} for the given pattern, and the measure how strongly it influences the likelihood is called the \textbf{weight} of the pattern.
-In \emph{neural networks} there are small nodes based on the biological model of neurons, that is responsible for recognizing and weighting the patterns. These nodes are called \textbf{perceptrons}. 
-
-\paragraph{Formal definition} 
-Let $x$ be a preprocessed information, the perceptron $\mathbf{P}$ decides which of them are important in recognizing a cat: having a corresponding weight with large magnitude, and which of them are irrelevant: having a weight with magnitude close to zero. 
-Therefore a \emph{perceptron} has a weight $w_i$ for each input $x_i$ and its transient state can be now formally written:
-$$
-	\mathbf{P}_{transient}=\sum_i x_i w_i
-$$
-Which can be also rewritten as the inner product of $\mathbf{x}$ and $\mathbf{w}$
-
-$$
-	\mathbf{P}_{transient}=<\mathbf{x}, \mathbf{w}>=\mathbf{x}^T\mathbf{w}
-$$
-
-To enhance the stability of $N$  \emph{non-linearities} may be introduced as activation functions. Without further investigation, accept the fact, that wiring many perceptrons together results in a numerically unstable system, caused by the lack of any restriction on the magnitude of the weights. In the following examples perceptrons will be arranged in a special way, to form a \textbf{Feed Forward} network, meaning that the information flow will occur in a direct way, without feedbacks, see figure \ref{fig:ff}.
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.45\textwidth]{network.jpg}
-	\caption{A small feed-forward network with one hidden layer, and single output perceptron.
-	Source: \href{http://www.codeproject.com/KB/dotnet/predictor/network.jpg}{Codeproject} 	}
-	\label{fig:ff}
-\end{figure}
-
-\paragraph{Learning, Training}
-After describing the model, the first question is:\\
-\emph{what are the correct values for $\mathbf{w_P}$ for each $\mathbf{P}$ in network $N$?}
-
-There are a lot of intuitive explanation how this problem should be approached and solved. For exhaustive investigation of the topic, read the chapters from \href{http://neuralnetworksanddeeplearning.com/}{Michael Nielsen's site}. 
-Anyhow, in general this is still the most studied question in machine learning. 
-Luckily if $N$'s performance can be measured, thanks to its feed-forward structure a \emph{numerical suggestion} can be defined as well, which tells how to change $\mathbf{w_P}$ to improve efficiency of $N$. In practice an $\mathbf{E}$ error function is defined, and the objective of the training is to reduce it. Without digging deep in math we can find an intuitive situation with the same results.\\
-
-Take a perceptron $\mathbf{P}$ with input $\mathbf{x}$ of objects on a given picture of a cat. Suppose that this perceptron \emph{fires} (has high output value) when wheels are on the picture. It should remain silent when there are no round objects listed in 
-$\mathbf{x}$, still it turns on, ruining the output of $N$, producing high $\mathbf{E}$.
-Since we know the original label of the picture, we can tell which assumptions were wrong, and which were good - which to decrease, which to increase if the next time $N$ is given the same input. This information is distributed between the previous perceptrons which caused the actual to fail by simply multiplying the error with the weight corresponding to the previous node. Also with the information of how much the output of the actual node influenced the error, and with its input values, the significance of wrong $\mathbf{x_i}$s can be reduced, and important features' weights can be increased, which is actually finding a better $\mathbf{w_P}$. For further intuitive examples on distributing the error, and finding the so called \emph{gradient} for each weight visit \href{http://karpathy.github.io/neuralnets/}{Andrej Karpathy's guide}.\\
-
-The example concluded to the practical application of the so called \emph{Stochastic Gradient Descent}. Originally every samples in the training set should be introduced to the system before updating its weights and that would be the \emph{Gradient Descent}, but in  the hope that the samples falls in a subset of the whole space of all possible inputs, the algorithm uses mini-batches for the learning process. When the number of samples in the batches reduces to 1, the training is called on-line training. And if it happens on $N$ containing a single perceptron it is called \emph{Rosenblatt perceptron learning algorithm}.
 
 \subsection{Separating sine waves}
 After defining the model, the first implementation should be able to classify the low- and high-pitch samples. For starting let the low-pitch sample, $\mathbf{x^1}$ be a sine function with frequency $F1$, and high-pitch sample $\mathbf{x^2}$ a sine with frequency $F2$. For mimicking the nature's living systems, the sample is transformed to frequency domain with an algorithm called \emph{N-point Fast Fourier Transform}. Without further explanation it just tells which frequencies were dominant in the time domain, which is a better clue for both the living, and the machines too. The architecture will be two perceptrons in the same layer. For each $\mathbf{x_i}$ they have different weights, which helps them decide when to turn on, and when to output lower value. After training them the results are promising. The training set is totally fed to the network. For details see Figure \ref{fig:N500}. For the script which was used to produce the figures check out \href{https://github.com/botcs/deepvision/tree/master/demo/audio}{demo}

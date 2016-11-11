@@ -1,7 +1,5 @@
-
-\section{Handwritten digit recognizing}
+\section{Visualizing handwritten digit recognizer}
 First layer can be easily visualized by just simply reshaping the weights, but extracting patterns which are recognized by further layers are not trivial. The main goal is to find an algorithm which with the input images can be enhanced to highlight the patterns that causes strongest activation in each neuron.
-
 
 \subsection{Training}
 \label{train}
@@ -33,8 +31,12 @@ The networks were trained on the MNIST dataset \cite{mnist}, with varying the fo
 \end{figure}
 
 
+
 The experiments width shapes and corresponding results are shown on \emph{Figure (\ref{fig:even}, \ref{fig:dec}, \ref{fig:inc})}.
-The networks were trained with the following constraints: Stochastic gradient descent with $mini-batch=64$, learning rate $\lambda = 0.05$, no regularization, total number of $epochs=25$.
+In the very beginning it turned out that networks with 3 layer are the most stable for MNIST character recognition. 
+Shallow networks, with fewer layers that had theoretically larger capacity than 3 layered ones, were unable to generalize the digits.
+Deeper networks, with more layers either were numerically unstable, and exhibited vanishing gradient, or overfitting occurred early in the training process.
+The 3 layered networks were trained with the following constraints: Stochastic gradient descent with $mini-batch=64$, learning rate $\epsilon = 0.05$ and total number of $epochs=25$.
 Despite the varying capacity, the results rather depend on the shape of the network. The best of the three networks are compared in \emph{Figure \ref{fig:comp}} 
 
 \begin{figure}
@@ -47,8 +49,9 @@ Despite the varying capacity, the results rather depend on the shape of the netw
 
 \subsection{Candidates for enhancing}
 \label{method}
-For a given network and set of input samples, a set of candidates can be found, which yield the highest output w.r.t. each neuron. 
-For a given layer, the search can be done parallel, and for more general results, not only the best samples are taken into account, but the top $T$ inputs yielding the highest activation of all samples from the given search set.
+The most basic method for visualizing a perceptron is cherry-picking those pictures which results in the highest output.
+Formally: for a given network and set of input samples, a set of candidates can be found, which yield the highest output w.r.t. each neuron. 
+For a given layer, the search can be done parallel, and for more general results, not only the best samples are taken into account, but the top $T$ inputs yielding the highest activation of all samples from the given search set, see Figure \ref{fig:n1}. 
 \begin{figure}
     \centering
     \includegraphics[width=0.6\textwidth]{NN1.png}
@@ -79,7 +82,31 @@ $$
 $$
 from the $l^{th}$ layer toward the input layer to get gradient of the input w.r.t the $i^{th}$ neuron of the $l^{th}$ layer. 
 
-By choosing $\mathbf{e_{i}} = [0, 0 \cdots 1 \cdots 0]^T$ the enhancement would not take other activations into account, while letting $\mathbf{e_i} = [-1, -1 \cdots 1 \cdots -1]^T$ would result in activation where other neurons' output would decrease over amplification. For further analysis $\mathbf{e_i} = [0, 0 \cdots 1 \cdots 0]^T$ is used.
+By choosing $\mathbf{e_{i}} = [0, 0 \cdots 1 \cdots 0]^T$ the enhancement would not take other activations into account, while letting $\mathbf{e_i} = \mathbf{e^-_i} = [-1, -1 \cdots 1 \cdots -1]^T$ would result in activation where other neurons' output would decrease over amplification. 
+
+Both methods were tested by the following procedure: The top 1 digit was selected for each neurons in the last layer of the best performing network, totaling in 10 samples. Skipping the candidate search of the top 10 samples were enhanced by the G.A. algorithm, with different number of iterations and with $\mathbf{e}$ and $ \mathbf{e^-}$. The results are shown on Figure \ref{fig:bias-nobias}. 
+%
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.9\textwidth]{bias-nobias.pdf}
+%    \caption{
+%        The different results of visualizing the last layer of a 3 layered network with 40 iterations of \emph{Gradient Ascent}. 
+%        Samples highlighted in green are the samples which were recognized with the highest confidence by each classifier perceptron in the last layer.
+%        These samples are organized in increasing order w.r.t. response of each neuron resulting in a $10 \times 10$ figure.
+%        %\emph{On the top diagram (highlighted in red)}: are the samples of the 10 candidate sample which caused the lowest activation.
+%        %\emph{On the bottom of the diagram (below the green box)}: there is a row of mean average of the samples above it, for each neuron.
+%%        The arrows are pointing to diagrams, organized in a similar fashion, depicts samples enhanced by G.A. applied with the corresponding gradient on the latent layer. 
+%%        \emph{On the left diagram} Samples enhanced by \textbf{biased} G.A. 
+%    }
+%    \label{fig:bias-nobias}
+%\end{figure}
+
+It is important to notice, that the algorithm initialized with different samples will introduce artifact features on the samples. 
+These features will bring closer the input towards an artificial sample which will much more likely be recognized as a sample from the class of the corresponding neuron. The method of distortion can be exploited as well, which is called \emph{generating Adversarial} samples (detailed explanation in the end of the section). 
+By qualitative analysis I concluded that the.
+
+
+Therefore for further analysis $\mathbf{e_i} = [0, 0 \cdots 1 \cdots 0]^T$ is used.
 $$x = x + \mathbf{\eta}\cdot\nabla_l^i x$$
 Applying the gradient to the input $x$ is the first step of the iteration (see Figure \ref{fig:n2}). Next step is forwarding the enhanced input, applying the $\delta$ on the $l^{th}$ layer and backwarding, and applying it on the input again makes a full cycle.
 The hyperparameters of the method are the \emph{rate of amplification $\mathbf{\eta}$} and \emph{number of iterations $I$}
@@ -147,10 +174,11 @@ Therefore finding the best $I$ is also essential for extracting important inform
 
 \subsection{Analyzing the best performing network}
 The best result belongs to a network with hidden layer width: 784-784-100. 
+The layers were visualized with the following parameters:
+$T=100$
+$\eta=0.1$
+$I=10, 50$
+and the training set was used for choosing candidates.
 
-The layers were visualized with the following parameters, the training set was used for choosing candidates:
-\begin{itemize}
-    \item[] $T=100$
-    \item[] $\eta=0.1$
-    \item[] $I=10, 50$
-\end{itemize}
+The suggestion while looking for evidences is that the reason behind the good performance of the network is relying on different levels of abstraction.
+I visualized
