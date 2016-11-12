@@ -33,7 +33,7 @@ After defining the model, the first implementation should be able to classify th
 \end{figure}
 
 \paragraph{Varying the precision of the Fourier Transform, N}
-For such arbitrary cases, where no noise is added to the signal, larger precision is unnecessary, for validation check Figure \ref{fig:N5000}, \ref{fig:N50}. However the importance of choosing the right N should not be underestimated: in environments with high \emph{Signal-to-Noise ratio} it is advised to use high \emph{sampling rate}, and large $N$, however for real-time applications it is a trade-off between quality and speed, because the computation complexity for this architecture is $O(N^2)$, therefore choosing too large N results in slow processing.
+For such arbitrary cases, where no noise is added to the signal, larger precision is unnecessary, for validation check Figure \ref{fig:N5000}, \ref{fig:N50}. However the importance of choosing the right N should not be underestimated: in environments with high \emph{Signal-to-Noise ratio} it is advised to use high \emph{sampling rate}, and large $N$, however for real-time applications it is a trade-off between quality and speed, because the computation complexity for this architecture is $\mathcal{O}(N^2)$, therefore choosing too large N results in slow processing.
 
 \begin{figure}
 	\centering
@@ -129,7 +129,7 @@ The network trains on the given set, and the system is ready for testing. End th
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\textwidth]{improved.pdf}
-	\caption{An improved perceptron model, operating on 8 clues of the input $\mathbf{x}$ , deciding which class it belongs to. The weight anti-symmetry is not so trivial in this case because perceptrons of multiple classes can be turned on by one single feature while other perceptrons are inhibited by the same feature or perceptrons may even discard it. Meaning that colors on this figure are a bit tricky, because each input node can be shared between the classes.}
+	\caption{An improved perceptron model, operating on 8 clues of the input $\mathbf{x}$ , deciding which class it belongs to. The weight anti-symmetry is not so trivial in this case because perceptrons of multiple classes can be turned on by one single feature while other perceptrons are inhibited by the same feature or may even discard it. Meaning that the colors on this figure are a bit tricky, because each input node can be shared between the classes.}
 	
 	\label{fig:improved}
 \end{figure}
