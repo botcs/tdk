@@ -101,13 +101,13 @@ $ y = \mathcal{F}(x)$
 The core concept is that we can compose such an $\mathcal{F}$ function by applying multiple projections to $x$.
 Practically that means sending input through the first layer, the second and all the way through to the last layer $L^{th}$, which output would be the value of $\mathcal{F}(x)$, the response of the network.
 Therefore in terms of evaluating $\mathcal{F}(x)$ layer by layer, actually translates to a single function call, which can be unfolded to a sequence of embedded projections:
-\begin{equation*}
-\begin{split}
-    \mathcal{F}(x) &= F_L \left( x_L \right) = F_L \left( y_{(L-1)} \right)\\
+$$
+    \mathcal{F}(x) = F_L \left( x_L \right) = F_L \left( y_{(L-1)} \right)
+$$
+$$
     F_L \left( y_{(L-1)} \right) = 
-    F_L \left( F_{(L-1)} \left( x_{(L-1)} \right) \right) &= F_L \left( F_{(L-1)}\left( \cdots F_1(x)\right)\right)
-\end{split}
-\end{equation*}
+    F_L \left( F_{(L-1)} \left( x_{(L-1)} \right) \right) = F_L \left( F_{(L-1)}\left( \cdots F_1(x)\right)\right)
+$$
 Using the function composition operator $\circ$, rewritten in the classical notation:
 \begin{equation}\label{eq:forward}
 \begin{split}
@@ -302,4 +302,4 @@ Intuitively in the case we would like to correct the weights of a decision, it w
     \item[] The error on the decision -- the derivative $\delta$ of the Loss with regards to the decision.
 \end{itemize}
 
-\paragraph{Activation Layer.} To have a better grasp on how to extend the rules \ref{eq:addition, eq:multiply, eq:chain} for neural networks in practice, consider a 
+\paragraph{Activation Layer.} To have a better grasp on how to extend the rules (\ref{eq:addition}, \ref{eq:multiply}, \ref{ eq:chain}) for neural networks in practice, consider a 
