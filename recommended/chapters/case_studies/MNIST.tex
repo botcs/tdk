@@ -1,5 +1,13 @@
 \section{Visualizing handwritten digit recognizer}
-First layer can be easily visualized by just simply reshaping the weights, but extracting patterns which are recognized by further layers are not trivial. The main goal is to find an algorithm which with the input images can be enhanced to highlight the patterns that causes strongest activation in each neuron.
+First layer can be easily visualized by just simply reshaping the weights (see Figure \ref{fig:regression}), but extracting patterns which are recognized by further layers are not trivial. The main goal is to find an algorithm which with the input images can be enhanced to highlight the patterns that causes strongest activation in each neuron.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{regression.png}
+    \caption{Logistic regression: single layered network trained with $L_2$ regularization can be easily visualized, because the classifier neurons are strictly connected to the input pixels. Therefore by just simply reshaping their weights to make a $28 \times 28$ image will exactly show, what each neuron is looking for on the pictures.}
+    \label{fig:regression}
+\end{figure}
 
 \subsection{Training}
 \label{train}
@@ -55,7 +63,7 @@ For a given layer, the search can be done parallel, and for more general results
     \centering
     \includegraphics[width=0.6\textwidth]{NN1.png}
     \caption{First step of visualizing the $l^{th}$ layer: selecting each neuron's most confident choice from the image set}
-    \label{fig:n1}
+    \label{fig:ga-method1}
 \end{figure}
 
 \subsection{Enhancing - gradient ascent}
@@ -64,7 +72,7 @@ Simply mean averaging the candidates would not reveal the true signals which eac
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\textwidth]{mean-ga-comparison.png}
+    \includegraphics[width=\textwidth]{mean-ga-comparison.png}
     \caption{On the first set of pictures the mean of the $T=100$ candidates are shown, they are the most preferred inputs of the candidate set for the last layer's neurons. On the set depicted below the enhanced images are shown}
     \label{fig:mean-ga-comp}
 \end{figure}
@@ -72,14 +80,27 @@ Simply mean averaging the candidates would not reveal the true signals which eac
     \centering
     \includegraphics[width=0.8\textwidth]{NN2.png}
     \caption{One iteration shown: a hidden layer's weights cannot be reshaped into images, but applying their activation gradient on the input images will emphasize, and amplify the patterns which yields the highest output w.r.t each neuron}
-    \label{fig:n2}
+    \label{fig:ga-method2}
 \end{figure}
 Gradient ascent is an iterative method for enhancing the input to emphasize the patterns that are recognized by the neurons. A method which utilizes a network on top of the original to extract the recognition patterns, called DeConvnet, is described by Zeiler \emph{et al.} \cite{zeiler2014visualizing}. The mentioned algorithm can be reduced to the following, by leaving out the sparsity encouraging regularization term - making parallel processing more efficient:
 for fully connected layers the method boils down to backward propagating an \emph{arbitrary} delta vector (instead of calculating the gradient of the loss function described in \cite{zeiler2014visualizing}): 
 $\delta_l = \mathbf{e}$ or $\delta_l =\mathbf{b}$
-from the $l^{th}$ layer toward the input layer to get gradient of the input w.r.t the $i^{th}$ neuron of the $l^{th}$ layer. 
-By choosing $\mathbf{e}_{i} = [0, 0 \cdots 1 \cdots 0]^T$ the enhancement would not take other activations into account, while letting $\delta_l = \mathbf{b}_i = [-1, -1 \cdots 1 \cdots -1]^T$ would result in activation where other neurons' output would decrease over amplification. 
+from the $l^{th}$ layer toward the input layer to get gradient of the input w.r.t the $i^{th}$ neuron's activation of the $l^{th}$ layer, and iteratively update the original sample by the gradient multiplied with \emph{modification rate}. The method is depicted on Figure \ref{fig:ga-method1} and \ref{fig:ga-method2}, 
+for visual guide for understanding how the applied gradient looks like, see Figure \ref{fig:grad-sub}.
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{grad-sub.pdf}
+    \caption{After one iteration the enhancement is evanescent, still the gradient holds important information of the layer.
+    By looking at the gradient, we can tell which parts will be emphasized and which will be diminished during the process.
+    The depicted gradients are extracted from the randomly picked neurons from the first hidden layer of a two layered network.
+    For the smooth image result \texttt{bicubic} interpolation was used, with \texttt{seismic} color map.
+    }
+    \label{fig:bias-nobias}
+\end{figure}
+
+
+By choosing $\mathbf{e}_{i} = [0, 0 \cdots 1 \cdots 0]^T$ the enhancement would not take other activations into account, while letting $\delta_l = \mathbf{b}_i = [-1, -1 \cdots 1 \cdots -1]^T$ would result in activation where other neurons' output would decrease over amplification. 
 Both methods were tested by the following procedure: The top 1 digit was selected for each neurons in the last layer of the best performing network, totaling in 10 samples. Skipping the candidate search of the top 10 samples were enhanced by the GA algorithm, with different number of iterations and with $\mathbf{e}$ and $ \mathbf{b}$. The results are shown on Figure \ref{fig:bias-nobias}. 
 
 \begin{figure}
@@ -103,7 +124,7 @@ These features will bring closer the input towards an artificial sample which wi
 The method of distortion can be exploited as well, which is called \emph{generating Adversarial} samples (detailed explanation in the end of the section).
 However applying GA on the sample with the corresponding neuron (samples in the green box on Figure \ref{fig:bias-nobias}) results in much better visualization of \emph{what each node is looking for} on the input.
 By qualitative analysis we concluded that biased Gradient Ascent takes less iterations to transform the sample, however applying it should be  only restricted in the classifying layer, since it is diminishing activation of neighboring neurons. 
-A comparison of how the algorithms work iteration by iteration, on noise and misleading samples is shown on Figure \ref{fig:noise-GA.pdf}
+A comparison of how the algorithms work iteration by iteration, on noise and misleading samples is shown on Figure \ref{fig:noise-GA}
     
 
 \begin{figure}
