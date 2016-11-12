@@ -2,7 +2,7 @@
 
 \epigraph{\textit{... where in this snippet $W1$ and $W2$ are two matrices that we initialize randomly. We're not using biases because meh.}}{\rightline{{\rm --- Andrej Karpathy}}}
 
-After researching literature on building libraries from scratch, and analyzing pet project source-codes \cite{convnetjs, gibianskysource} and dozens of implementations of professional libraries \cite{TF, caffe, torch},
+After researching literature on building libraries from scratch, analyzing pet project source-codes \cite{convnetjs, gibianskysource} and dozens of implementations of professional libraries \cite{TF, caffe, torch},
 I concluded that the best way to acquire an in-dept understanding of neural networks is to build my own Deep Learning framework.
 This way I had a chance to understand why novel solutions in Machine Learning are formed the way they are.
 I also gained insight into what main paradigms are popular libraries based on, such as \emph{computational graphs, parallel processing}, 
@@ -115,7 +115,7 @@ Using the function composition operator $\circ$, rewritten in the classical nota
 \end{split}
 \end{equation}
 
-The \ref{eq:forward} equation is the most fundamental idea behind feed-forward neural networks.
+The \ref{eq:forward} equation is the most fundamental idea behind feed-forward neural networks, namely the \emph{inference} or \emph{forward-propagation}
 As mentioned above, every layer $l$ is represented by an $F_l$. 
 The most basic layers are the \emph{Fully Connected} and \emph{Activation} layers.
 
@@ -208,7 +208,7 @@ $L_2$ is a universal Loss function, which is used in cases where the label space
 
 \section{Derivation} In the above evaluating of $\nabla_\phi \mathcal{F}$ can be done in two ways, namely by numerical approximation, or by analytical derivation, in the following I will discuss both.
 
-\subsection{Numeric} Evaluating the numerical gradient (or difference) is an elementary, yet powerful operation, in which we would \emph{perturb}, or modify one parameter $\phi$ of our system $\mathcal{F}$ at once.
+\subsection{Numeric differentiation} Evaluating the numerical gradient (or difference) is an elementary, yet powerful operation, in which we would \emph{perturb}, or modify one parameter $\phi$ of our system $\mathcal{F}$ at once.
 That is done by first adding $\phi^+$ and after subtracting $\phi^-$ a little amount $d\phi$ from the original $\phi$ and evaluate $\mathcal{L}^{\pm}=\mathcal{L}(\mathcal{F}_{\phi^{\pm}})$, namely the \emph{Loss} of the system in the modified state, yielding the numerical gradient in the following equation:
 
 \begin{equation} \label{eq:numgrad}
@@ -237,7 +237,7 @@ Because both $\#(\phi)$ and $\#(\mathrm{operations})$ has complexity of $\mathca
 We can see that even for a shallow and relatively small network (industrial AI networks has billions of parameters, and uses much larger batches) described in the toy example the method is really costly.
 That encourages us to derive our differentials on paper first, and use \emph{numerical gradient approximation} for checking our solution. Using \emph{Gradient Check} is essential when implementing new architectures, because it is a very efficient tool for debugging in comparison with updating. The method in a few words is about setting an error rate $\epsilon$, and decrease $d\phi$ until the numeric solution does not match the analytic solution with $1-\epsilon$ significance. If the analytic solution is incorrect the cycle will not terminate.
 
-\subsection{Analytic}
+\subsection{Analytic differentiation}
 Deriving the update by hand requires basic knowledge in calculus extended to multivariate cases, though since the operations are elementary, in general we must understand only three basic definitions to do so. 
 Some formality before starting: we have three independent variables $x$, $y$, $z$ and functions $f$, $g$, $h$. The result of operations performed on variables, i.e. $x+2y$ can be represented by a function $f=x+2y$. 
 If the value depends on a variable then it can be written explicitly, passing the variable as \emph{the argument} of the function $f(x,y)=x+2y$. 
@@ -296,11 +296,30 @@ The important message is that we can interchangeably use function values and var
 \emph{Note:} the statement above stands for computations with \emph{Acyclic Graph}, meaning that there should not be any feedbacks or loops -- no definitions like $f(g), g(f)$ or $f(f)$.
 We will see that these rules play a very fundamental role in training networks.
 
-\paragraph{Fully Connected Layer} Return to the toy example and begin with the last layer, with $3$ nodes. If a sample $x$ is inferred $\mathcal{F}(x)=y$, then the response of the network will be a vector of $dim(y) = 3$. If we took the $L_2$ \emph{distance} between the response and the goal $y^*$, then it would tell how far we are from the ideal, by a single scalar value. Since we want to minimize it, we have to adjust the parameters of the network, namely descend on the gradient slope. To get the small extent of the update we have to evaluate $\frac{\partial\mathcal{L}}{\partial \phi}$. 
+\paragraph{vector notation}
+Before drilling deep into mathematical equations, a small reminder: the following vector and matrix formulation is just a special annotation, 
+using the rules above, which helps to make clear both the definition, and the computations done by the network when it is implemented. 
+The vectors with partially derivatives inside are just representing \emph{real values}, arranged in a fancy way.
+Every vector and matrix defined in forward propagation, has its corresponding derivative w.r.t. the Loss.
+More trivially, if any value is depending on a list of variables $f(x_1, x_2 \cdots x_n) = f(\mathbf{x})$ (a vector) then there is a list of \emph{partial derivatives} w.r.t. to $f$ -- forming the gradient $\nabla f = \left(\frac{\partial f}{x_1}, \frac{\partial f}{x_1} \cdots \frac{\partial f}{x_n}\right)$. 
+\emph{Notation}: When the vector notation is emphasized the variable name is conventionally written in bold font $\mathbf{x}$, or is underlined \underline{$x$}.
+Because later the indexing would become too crowded, we only use the indexed notation when it is necessary, otherwise using $x$.
+
+The next step is formulating the dependency of multiple functions on multiple variables.
+As seen above, a multivariate function has its gradient vector --
+in the same fashion as the list of variables were organized into vectors $\mathbf{x}$, values composed of them can also form a vector $F = (f_1, f_2 \cdots f_N)$, composing a multivalued function depending on the same variables.
+Doing so yields a first-order derivative matrix, composed of gradient vectors $J=(\nabla f_1, \nabla f_2 \cdots \nabla f_N)$, called the \emph{Jacobian of $F$}.
+The Jacobian has as many rows as output values $F$ has, and the same number of columns of the variables that $f_i$ is a function of.
+The matrix and vector operations (such as addition and inner product) that can be performed on the derivative \emph{arrays} are identical defined in the inference section. That is important because product of derivatives introduced by the chain rule, can be applied as well for multidimensional array of derivatives too.
+
+\paragraph{Fully Connected Layer}
+Return to the toy example and begin with the last layer, with $3$ nodes. If a sample $x$ is inferred $\mathcal{F}(x)=y$, then the response of the network will be a vector of $dim(y) = 3$. If we took the $L_2$ \emph{distance} between the response and the goal $y^*$, then it would tell how far we are from the ideal, by a single scalar value. Since we want to minimize it, we have to adjust the parameters of the network, namely descend on the gradient slope. To get the small extent of the update we have to evaluate $\frac{\partial\mathcal{L}}{\partial \phi}$. 
 Intuitively in the case we would like to correct the weights of a decision, it would require two things:
 \begin{itemize}
-    \item[] The original situation (the input $x$), which the decision was made in.
-    \item[] The error on the decision -- the derivative $\delta$ of the Loss with regards to the decision.
+    \item[] The original situation (the input of the $l^{th}$ layer $x_l$), which the decision was made in.
+    \item[] The error on the decision -- the derivative $\delta_l$ of the Loss with regards to the decision.
 \end{itemize}
+Since $x_l$ is obtained via inference, we have to calculate $\delta_l$ for the $l^{th}$ layer in order to acquire the parameter gradient.
+The first step is to evaluate the $delta_L$, or the \emph{error} of the last layers response, namely $\delta_3 = \nabla_{y_3} \mathcal{L}$.
 
 \paragraph{Activation Layer.} To have a better grasp on how to extend the rules (\ref{eq:multiplication}, \ref{eq:addition}, \ref{eq:chain}) for neural networks in practice, consider a 
