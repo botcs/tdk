@@ -8,11 +8,11 @@ The writing assumes basic knowledge in linear algebra, the model will be describ
  
 \begin{figure}
 	\centering
-	\includegraphics[width=0.45\textwidth]{workflow.pdf}
+	\includegraphics[width=0.9\textwidth]{workflow.pdf}
 	\caption{
 	The basic conception of voice recognition: 
 	the original message is first expressed in physical waveforms which may introduce a lot of noise in real life. 
-	After recording the wave from time domain is transferred to \emph{frequency domain} that tells which frequencies were dominant in the captured signal sample.
+	After recording, the wave from time domain is transferred to \emph{frequency domain} that tells which frequencies were dominant in the captured signal sample.
 	According to nature's biological systems in this form the same information can be better processed.
 	}
 	\label{fig:workflow}
@@ -26,7 +26,7 @@ After defining the model, the first implementation should be able to classify th
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\textwidth]{N500-L2e-1.png}
+	\includegraphics[width=0.95\textwidth]{N500-L2e-1.png}
 	\caption{On the first row the original sample is shown in time domain. On the second row the N-FFT of it. On the last row the plot of the weights of the corresponding perceptron. The first feature to recognize, that each perceptron learned that not just to turn on for the corresponding input sample, but to output negative values when samples of the opposite class are shown to the network. The network was initialized with Gaussian random noise with mean at 0 and deviation $1/2$, and trained with mini-batch size 1, learning rate $\eta=0.5$, \emph{regularization} factor $\lambda=0.1$ for 10 epoch with \emph{cross-likelihood} error function}
 	
 	\label{fig:N500}
@@ -94,7 +94,7 @@ Approaching to real life problems, more parallel signals should be introduced to
 	\label{fig:multi-common}
 \end{figure}
 
-\subsection{Samples from outside}
+\subsection{Real Samples}
 For acquiring samples from the environment the architecture should be wired to a physical sensor which will transfer signals from analog to digital. 
 Practically outer libraries are applied to perform the capturing, the only thing remaining is to write an adapter to make the information format compatible with the network's architecture.
 
@@ -145,7 +145,7 @@ So far it is shown how single layer neural networks work. How they should be tho
 	\label{fig:hello}
 \end{figure}
 
-\begin{figure}s
+\begin{figure}
 	\centering
 	\includegraphics[width=0.9\textwidth]{hello-5lang-3each}
 	\caption{On this figure the sample time, frequency and the perceptrons' weight plots are depicted of the network that recognizes greetings in 5 languages. For human eyes it is hard to tell from either the time and frequency domain plot the corresponding language. The recorded greetings were sampled by me saying \emph{Bonjour, Salem, Hola, Halo} and \emph{Csá}}
