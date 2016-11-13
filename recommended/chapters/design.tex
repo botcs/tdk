@@ -339,7 +339,7 @@ Begin with the first element:
 $$
     \delta_1^3 = 
     \frac{\partial \mathcal{L}}{\partial y_1} = 
-    \frac{\partial}{\partial y_1}\frac{1}{2}\left((y^*_1 - y_1)^2 + (y^*_2 - y_2)^2 + (y^*_3 - y_3)^2\right) = y^*_1 - y_1
+    \frac{\partial}{\partial y_1}\frac{1}{2}\left((y^*_1 - y_1)^2 + (y^*_2 - y_2)^2 + (y^*_3 - y_3)^2\right) = y_1 - y^*_1
 $$
 \begin{center}
 Expanding it to the whole array:
@@ -354,9 +354,9 @@ $$
     \frac{\partial}{\partial y_2} \frac{1}{2}\sum_i(y_i^*-y_i)^2 \\ \\
     \frac{\partial}{\partial y^3_3}  \frac{1}{2}\sum_i(y_i^*-y_i)^2
     \end{pmatrix} = \begin{pmatrix}
-     {y^*_1-y_1}\\ \\
-     {y^*_2-y_2}\\ \\
-     {y^*_3-y_3}
+     {y_1-y^*_1}\\ \\
+     {y_2-y^*_2}\\ \\
+     {y_3-y^*_3}
     \end{pmatrix} 
 $$
 Consider the following notation:
@@ -365,5 +365,22 @@ $
 $, 
 called parametric vector notation. Writing arrays in this way, saves a lot of space. However, when this notation gets jammed with indexes, it is useful to write down explicitly the whole array for clarification.
 
-Now we have exact values of $\delta^3$ and $\x^3$, so we can calculate in what ways should the weights in $W^3$
+Now we have exact values of $\delta^3$ and $x^3$, so we can calculate how should the weights in $W^3$ be changed in order to get a better network.
+Taking the first perceptron of the layer, it has a weight $W^3_1=(w_{1,1}, w_{1,2}, w_{1,3}, w_{1,4})$ for each output of the previous layer.
+Suppose that this neuron had to tell how rounded is the object on an image sample, 
+and the $i^{th}$ neuron of the $2^{nd}$ layer fires when it recognizes sharp edges.
+Of course it would be bad if our neuron had a large weight on $x^3_i$. 
+If this node performs poorly because of $x^3_i$, then it would contribute a lot to the Loss function while inferring sharp objects, with its output $y_1$ being far away from $y^*_1$, resulting in a positive $\delta^3_1$. 
+In case of $x^3_i = 0$, the weight $w_{1,i}$ has nothing to do with the error $\delta^3_1$ of the neuron.
+Notice that the error of each weight (w.r.t $\mathcal{L}$) should be proportional to the error and the input as well: $\frac{\partial \mathcal{L}}{\partial w_{1,i}}=\delta^3_1 \cdot x^3_i$.
+Now assume that a picture of an origami sculpture was inferred and the $i^{th}$ node of the second layer worked correctly. Both $\delta^3_1$ and $x^3_i$ is positive but the weight should be decreased: that is why we will take the negative of the derivative for updating $w_{1,i}$.
+Substituting $i=1,2,3,4$ into $\frac{\partial \mathcal{L}}{\partial w_{1,i}}$ yields a gradient of $\mathcal{L}$ with regards to the weights of the first neuron of the last layer. Doing so for each neurons in the layer would result in 3 gradient vectors $\nabla_W_1 \mathcal{L}$, $\nabla_W_2 \mathcal{L}$ and $\nabla_W_1 \mathcal{L}$ which is practically stacked to make a matrix which can be later added element-wisely to the weight matrix $W$.
+\begin{equation}
+\nabla_W \mathcal{L} = \left(\frac{\partial \mathcal{L}}{\partial W_{i,j}}\right) = \begin{pmatrix}
+\frac{\partial \mathcal{L}}{\partial W_{1,1} & \frac{\partial \mathcal{L}}{\partial W_{1,2} & \frac{\partial \mathcal{L}}{\partial W_{1,3} & \frac{\partial \mathcal{L}}{\partial W_{1,4} \\ 
+\frac{\partial \mathcal{L}}{\partial W_{2,1} & \frac{\partial \mathcal{L}}{\partial W_{2,2} & \frac{\partial \mathcal{L}}{\partial W_{2,3} & \frac{\partial \mathcal{L}}{\partial W_{2,4} \\ 
+\frac{\partial \mathcal{L}}{\partial W_{3,1} & \frac{\partial \mathcal{L}}{\partial W_{3,2} & \frac{\partial \mathcal{L}}{\partial W_{3,3} & \frac{\partial \mathcal{L}}{\partial W_{3,4}
+\end{pmatrix} 
+\end{equation}
+
 \paragraph{Activation Layer.} To have a better grasp on how to extend the rules (\ref{eq:multiplication}, \ref{eq:addition}, \ref{eq:chain}) for neural networks in practice, consider a 
