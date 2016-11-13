@@ -132,14 +132,23 @@ Therefore evaluating the output of the Fully Connected layer is the defined by t
 \end{split}
 \end{equation}
 \subsection{Activation layer} 
-Nodes in activation layers are introducing non-linearity to the network, by applying the same non-linear activation function to the corresponding output of the previous layer, performing element-wise operation.
+Nodes in activation layers are introducing non-linearity to the network, 
+by applying the same non-linear activation function to the corresponding output of the previous layer, performing element-wise operation.
+Let $F$ be an activation layer with activation function $f$ after a fully connected layer with 3 neurons:
+\begin{equation*}
+    F(x) = \begin{pmatrix}
+    f(x_1) \\ 
+    f(x_2) \\
+    f(x_3)
+    \end{pmatrix}
+\end{equation*}
 These functions are essential for the network, since they increase the numerical stability: they \emph{squeeze} or \emph{mitigate} the input preventing the network from \emph{saturation} or \emph{explosion} (numerical of course). Conventionally the following functions are applied most often as activation function:
-\begin{align*}
+\begin{align}\label{eq:actfunc}
     \mathrm{Rectified Linear Unit (ReLU) := } &max(0, x) \\
     \mathrm{Hyperbolic Tangent (TanH) := }   &tanh(x) = \frac{2}{1+e^{-2x}}-1 \\
     \mathrm{SoftPlus (SP) := }   &ln(1+e^x) \\
     \mathrm{Sigmoid (S) := }  &\frac{1}{1+e^{-x}}
-\end{align*}
+\end{align}
 The only constraint on these functions that they have to keep the dimension of the input, namely $F_{act}:\mathbb{R}^N \mapsto \mathbb{R}^N$.
 \emph{Note:} These functions do not have any variable parameters, therefore activation layers cannot be trained.
 
@@ -184,7 +193,7 @@ Enucleating the general form of Gradient Descent depends on the architecture of 
 
 \paragraph{Train policies} 
 
-\subsection{Backpropagation} 
+\subsection{Networks in practice} 
 Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla_\phi F_{FC}$ is well defined, explained in the following example.
 
 \paragraph{Toy example.} 
@@ -443,6 +452,7 @@ regular \emph{inner product} of the values they are composed of.
 \end{split}
 \end{equation}
 \subsection{Backpropagation}
+The backpropagation algorithm, first described by Werbos \emph{et. al} \cite{werbos1994roots}
 \paragraph{The $l^{th}$ layer.} 
 The contribution to the Loss of the general $l^{th}$ layer $\delta^l$ can be retrieved by unfolding $\frac{\partial \mathcal{L}}{\partial y^l}$ applying the chain rule, namely the backpropagation:
 \begin{equation}\label{backprop}
@@ -473,5 +483,13 @@ It is because if $J(F_l)$ is not linear, then it requires the input $x_l$ to eva
 Though the activation layer operates on the input, it has no adjustable parameter. 
 Since we have to evaluate $\delta$ for layers behind activation layers, the error must pass through $J(F_{activation}$ as well.
 Luckily activation layers applies a scalar function element-wise on the inputs, 
-the Jacobian of the composite function $F$ has a special attribute: it is \textbf{diagonal}
-
+the Jacobian of the composite function $F$ has a special attribute: it is \textbf{diagonal}, meaning that:
+$$
+    J(F) = \frac{\partial F_i}{\partial x_j} = 
+    \begin{cases}
+        \frac{\partial f(x_i)}{\partial x_i} & i = j\\
+        0 & i \neq j
+    \end{cases}
+$$
+We can exploit this function when implementing activation layers, by simply using element-wise product $\frac{\partial f(x_i)}{\partial x_i}$ instead of a matrix multiplication.
+The mentioned activation functions (\ref{eq:actfunc})
