@@ -202,7 +202,7 @@ meaning that in each layer there are 5, 4, 3 neurons respectively, $M=3$ and all
 \emph{Note:} It is usually distracting and redundant to explicitly write the width of the outermost layers when testing different networks, because the input and the output layers must have fixed dimension for the same task, while the width of the hidden layers are varied.
 Define an $L_2$ Loss function on the toy example. For one sample-label pair $(x,y^*)$ the $L_2$ Loss is:
 \begin{equation}
-    \mathcal{L}_2(\mathcal{F})^2 = \sum_{i} |\mathcal{F}(x)_i - y_i^*|^2
+    \mathcal{L}_2(\mathcal{F}) = \frac{1}{2} \sum_{i} (y_i^* - \mathcal{F}(x)_i)^2 = \frac{1}{2} \sum_{i} (y_i^* - y_i)^2
 \end{equation}
 $L_2$ is a universal Loss function, which is used in cases where the label space $\mathbb{Y}$ is continuous (e.g. floorspace, consumption and height of a house, based on the price: $\mathbb{R}^1 \rightarrow \mathbb{R}^3$).
 
@@ -301,15 +301,29 @@ Before drilling deep into mathematical equations, a small reminder: the followin
 using the rules above, which helps to make clear both the definition, and the computations done by the network when it is implemented. 
 The vectors with partially derivatives inside are just representing \emph{real values}, arranged in a fancy way.
 Every vector and matrix defined in forward propagation, has its corresponding derivative w.r.t. the Loss.
-More trivially, if any value is depending on a list of variables $f(x_1, x_2 \cdots x_n) = f(\mathbf{x})$ (a vector) then there is a list of \emph{partial derivatives} w.r.t. to $f$ -- forming the gradient $\nabla f = \left(\frac{\partial f}{x_1}, \frac{\partial f}{x_1} \cdots \frac{\partial f}{x_n}\right)$. 
+More trivially, if any value is depending on a list of variables $f(x_1, x_2 \cdots x_n) = f(\mathbf{x})$ (a vector) then there is a list of \emph{partial derivatives} w.r.t. to $f$ -- forming the gradient $\nabla f = \left(\frac{\partial f}{x_1}, \frac{\partial f}{x_1} \cdots \frac{\partial f}{x_N}\right)$. 
 \emph{Notation}: When the vector notation is emphasized the variable name is conventionally written in bold font $\mathbf{x}$, or is underlined \underline{$x$}.
 Because later the indexing would become too crowded, we only use the indexed notation when it is necessary, otherwise using $x$.
 
 The next step is formulating the dependency of multiple functions on multiple variables.
 As seen above, a multivariate function has its gradient vector --
-in the same fashion as the list of variables were organized into vectors $\mathbf{x}$, values composed of them can also form a vector $F = (f_1, f_2 \cdots f_N)$, composing a multivalued function depending on the same variables.
-Doing so yields a first-order derivative matrix, composed of gradient vectors $J=(\nabla f_1, \nabla f_2 \cdots \nabla f_N)$, called the \emph{Jacobian of $F$}.
+in the same fashion as the list of variables were organized into vectors $\mathbf{x}$, values composed of them can also form a vector $F = (f_1, f_2 \cdots f_M)$, composing a multivalued function depending on the same variables.
+Doing so yields a first-order derivative matrix, composed of gradient vectors $J=(\nabla f_1, \nabla f_2 \cdots \nabla f_M)^T$, called the \emph{Jacobian of $F$}.
 The Jacobian has as many rows as output values $F$ has, and the same number of columns of the variables that $f_i$ is a function of.
+$$
+    J(F) = 
+    \begin{pmatrix}
+    \quad \nabla f_1 \quad \\ 
+    \vdots \\ 
+    \nabla f_M
+    \end{pmatrix} 
+    =
+    \begin{pmatrix}
+    \frac{\partial f_1}{\partial x_1} & \cdots & \frac{\partial f_1}{\partial x_N} \\ 
+    \vdots & \ddots & \vdots \\ 
+    \frac{\partial f_M}{\partial x_1} & \cdots & \frac{\partial f_M}{\partial x_N}
+    \end{pmatrix} 
+$$
 The matrix and vector operations (such as addition and inner product) that can be performed on the derivative \emph{arrays} are identical defined in the inference section. That is important because product of derivatives introduced by the chain rule, can be applied as well for multidimensional array of derivatives too.
 
 \paragraph{Fully Connected Layer}
@@ -317,9 +331,38 @@ Return to the toy example and begin with the last layer, with $3$ nodes. If a sa
 Intuitively in the case we would like to correct the weights of a decision, it would require two things:
 \begin{itemize}
     \item[] The original situation (the input of the $l^{th}$ layer $x_l$), which the decision was made in.
-    \item[] The error on the decision -- the derivative $\delta_l$ of the Loss with regards to the decision.
+    \item[] The error on the decision -- the derivative $\delta^l$ of the Loss with regards to the decision.
 \end{itemize}
-Since $x_l$ is obtained via inference, we have to calculate $\delta_l$ for the $l^{th}$ layer in order to acquire the parameter gradient.
-The first step is to evaluate the $delta_L$, or the \emph{error} of the last layers response, namely $\delta_3 = \nabla_{y_3} \mathcal{L}$.
+Since $x_l$ is obtained via inference, what we have to calculate is $\delta^l$ for the $l^{th}$ layer in order to acquire the parameter gradient.
+The first step is to evaluate the $\delta_L$, or the \emph{error} of the last layer's response $y^3$, namely $\delta^3 = \nabla_{y^3} \mathcal{L}$.
+Begin with the first element: 
+$$
+    \delta_1^3 = 
+    \frac{\partial \mathcal{L}}{\partial y_1} = 
+    \frac{\partial}{\partial y_1}\frac{1}{2}\left((y^*_1 - y_1)^2 + (y^*_2 - y_2)^2 + (y^*_3 - y_3)^2\right) = y^*_1 - y_1
+$$
+\begin{center}
+Expanding it to the whole array:
+\end{center}
+$$
+    \delta^3 = \begin{pmatrix}
+     \frac{\partial \mathcal{L}}{\partial y_1}\\ \\
+    \frac{\partial \mathcal{L}}{\partial y_2} \\ \\
+    \frac{\partial \mathcal{L}}{\partial y_3}
+    \end{pmatrix} = \begin{pmatrix}
+     \frac{\partial}{\partial y_1} \frac{1}{2}\sum_i(y_i^*-y_i)^2\\ \\
+    \frac{\partial}{\partial y_2} \frac{1}{2}\sum_i(y_i^*-y_i)^2 \\ \\
+    \frac{\partial}{\partial y^3_3}  \frac{1}{2}\sum_i(y_i^*-y_i)^2
+    \end{pmatrix} = \begin{pmatrix}
+     {y^*_1-y_1}\\ \\
+     {y^*_2-y_2}\\ \\
+     {y^*_3-y_3}\\ \\
+    \end{pmatrix} 
+$$
+Consider the following notation:
+$
+    \delta^3_i = (y^*_i - y_i)
+$,
+called parametric vector notation. Writing arrays in this way saves a lot of space however, when this notation gets jammed with indexes it is useful to write explicitly the whole array for clarification.
 
 \paragraph{Activation Layer.} To have a better grasp on how to extend the rules (\ref{eq:multiplication}, \ref{eq:addition}, \ref{eq:chain}) for neural networks in practice, consider a 
