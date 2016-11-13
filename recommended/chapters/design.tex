@@ -126,8 +126,9 @@ The parameters of the layer $\phi_{FC}=(W, b)$ are the corresponding weights and
 Therefore evaluating the output of the Fully Connected layer is the defined by the following:
 \begin{equation}\label{eq:FC}
 \begin{split}
-    y_i = \left(\sum_i W_{i,j} \cdot x_j \right) + b_i \qquad &\in \mathbb{R}\\
-    y = Wx + b \qquad &\in \mathbb{R}^M
+    y_i &= \left(\sum_j  W_{i,j} \; x_j \right) + b_i \\
+    y &= W \cdot x_j + b \\
+    \left[M\right] &= \left[M \times N\right] \cdot \left[N\right] + \left[M\right]
 \end{split}
 \end{equation}
 \subsection{Activation layer} 
@@ -206,7 +207,7 @@ Define an $L_2$ Loss function on the toy example. For one sample-label pair $(x,
 \end{equation}
 $L_2$ is a universal Loss function, which is used in cases where the label space $\mathbb{Y}$ is continuous (e.g. floorspace, consumption and height of a house, based on the price: $\mathbb{R}^1 \mapsto \mathbb{R}^3$).
 
-\section{Derivation} In the above evaluating of $\nabla_\phi \mathcal{F}$ can be done in two ways, namely by numerical approximation, or by analytical derivation, in the following I will discuss both.
+\section{Differentiation} In the above evaluating of $\nabla_\phi \mathcal{F}$ can be done in two ways, namely by numerical approximation, or by analytical derivation, in the following I will discuss both.
 
 \subsection{Numeric differentiation} Evaluating the numerical gradient (or difference) is an elementary, yet powerful operation, in which we would \emph{perturb}, or modify one parameter $\phi$ of our system $\mathcal{F}$ at once.
 That is done by first adding $\phi^+$ and after subtracting $\phi^-$ a little amount $d\phi$ from the original $\phi$ and evaluate $\mathcal{L}^{\pm}=\mathcal{L}(\mathcal{F}_{\phi^{\pm}})$, namely the \emph{Loss} of the system in the modified state, yielding the numerical gradient in the following equation:
@@ -296,7 +297,7 @@ The important message is that we can interchangeably use function values and var
 \emph{Note:} the statement above stands for computations with \emph{Acyclic Graph}, meaning that there should not be any feedbacks or loops -- no definitions like $f(g), g(f)$ or $f(f)$.
 We will see that these rules play a very fundamental role in training networks.
 
-\paragraph{vector notation}
+\paragraph{Vector Notation.}
 Before drilling deep into mathematical equations, a small reminder: the following vector and matrix formulation is just a special annotation, 
 using the rules above, which helps to make clear both the definition, and the computations done by the network when it is implemented. 
 The vectors with partially derivatives inside are just representing \emph{real values}, arranged in a fancy way.
@@ -404,33 +405,56 @@ The last part of the equation can be also expressed as:
 \nabla_W \mathcal{L} = \left(\frac{\partial \mathcal{L}}{\partial W_{i,j}}\right) = \left(x_j \delta_i\right) = x \wedge \delta
 \end{equation}
 Where $\wedge$ denotes the \emph{outer product} operator. 
+The gradient of the bias is simply $\nabla_{b^L} \mathcal{L} = \delta^L$.
 
 \paragraph{The $(L-1)^{th}$ layer.} Gradient descent can be applied on networks with more than one layer, 
 however continuing the example of the image descriptor network requires a bit more abstraction. 
 In the previous explanation we assumed that the $i^{th}$ neuron of the second layer worked properly.
 In general cases this assumption is incorrect, if the whole network is initialized at once.
 If we think about that also the mentioned neuron in the \emph{last hidden layer} should be trained, 
-then we can apply the same method with a 4 dimensional $\delta_{(L-1)}$ and with a 5 dimensional $x_{(L-1)}$ input.
+then we can apply the same method with a 4 dimensional $\delta^{(L-1)}$ and with a 5 dimensional $x^{(L-1)}$ input.
 
 \emph{Note}: Capital $L$ is representing the number of layers. In the toy example $L = 3$.\\
-Acquiring the $\delta_{(L-1)}$ is where the chain rule \eqref{eq:chain} steps into the scene.
+Acquiring the $\delta^{(L-1)}$ is where the chain rule \eqref{eq:chain} steps into the scene.
 While in the example before we could find an intuitive workaround, in this case it would be quite strained, since $\mathcal{L}$ does not depend directly on $y_{(L-1)}$.
 Utilizing the chain rule:
-\begin{equation}
-    \delta_{(L-1)} = 
-    \frac{\partial \mathcal{L}}{\partial y_{(L-1)}} = 
-    \frac{\partial \mathcal{L}}{\partial y_{L}} \cdot
-    \frac{\partial y_{L}}{\partial y_{(L-1)}} = 
-    \delta_L \cdot J(F_L)
-\end{equation}
+\begin{equation*}
+    \delta^{(L-1)} = 
+    \frac{\partial \mathcal{L}}{\partial y^{(L-1)}} = 
+    \frac{\partial \mathcal{L}}{\partial y^{L}} \cdot
+    \frac{\partial y^{L}}{\partial y^{(L-1)}} = 
+    \delta^L \cdot J(F_L)
+\end{equation*}
 Where $J(F_L)$ denotes the \emph{Jacobian} \eqref{eq:jacobian} of the function representing the projection of the last layer $F_L:\mathbb{R}^4\mapsto \mathbb{R}^3$.
 It is a map of how each input variable affects the output of the layer.
-Numerically it can be represented as a $3 \times 4$ matrix, analytically a \emph{local derivative} of function $F$.
-In case of \emph{Fully Connected} layers 
+In general: the Jacobian numerically can be represented as a $3 \times 4$ matrix, analytically as a \emph{local derivative} of function $F$.
+In case of \emph{Fully Connected} layers the Jacobian is simply the weight matrix $F(F_l)=W_l$ (the bias drops out here).
 
 For derivative of scalar values ($\mathbb{R}$) the \emph{product} operator is well defined, 
 and it can be expanded the same way to derivatives of multidimensional values as 
-regular \emph{inner product} of the values they are composed of -- defined in \eqref{eq:FC}.
+regular \emph{inner product} of the values they are composed of.
+\emph{Note}: In order to stay consistent with the dimensions of the computation, we have to switch sides of the matrix multiplication defined in \eqref{eq:FC}:
+\begin{equation}\label{eq:reverse}
+\begin{split}
+\delta^{(L-1)}_j &= 
+    \sum_j \delta^L_i \; W^L_{i,j} \\
+    \delta^{(L-1)} &= \delta^L \cdot W^L\\
+    \left[4\right] &= \left[3\right] \cdot \left[3 \times 4\right] 
+\end{split}
+\end{equation}
+\subsection{The $l^{th}$ layer.} 
+The contribution to the Loss of the general $l^{th}$ layer $\delta^l$ can be retrieved by unfolding $\frac{\partial \mathcal{L}}{\partial y^l}$ by applying the chain rule:
+\begin{equation}\label{backprop}
+\begin{split}
+    \delta^l &= 
+    \frac{\partial \mathcal{L}}{\partial y^{(L-1)}} = 
+    \frac{\partial \mathcal{L}}{\partial y^{L}} \cdot
+    \frac{\partial y^{L}}{\partial y^{(L-1)}} \quad \cdots 
+    \frac{\partial y^{(l+1)}}{\partial y^{l}} \\
+    \delta^l &= \delta^L \cdot J(F_L) \cdot J(F_{(L-1)}) \cdots J(F_{(L-1)})
+\end{split}   
+\end{equation}
 
-\subsection{Activation Layer.} To have a better grasp on how to extend the rules (\ref{eq:multiplication}, \ref{eq:addition}, \ref{eq:chain}) for neural networks in practice, consider a 
+\subsection{Activation Layer.} 
+Though the activation layer operates on the input, it has no adjustable parameter. Since we have to evaluate $\delta$ for layers behind activation layers.
 
