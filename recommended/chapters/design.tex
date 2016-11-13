@@ -442,19 +442,36 @@ regular \emph{inner product} of the values they are composed of.
     \left[4\right] &= \left[3\right] \cdot \left[3 \times 4\right] 
 \end{split}
 \end{equation}
-\subsection{The $l^{th}$ layer.} 
-The contribution to the Loss of the general $l^{th}$ layer $\delta^l$ can be retrieved by unfolding $\frac{\partial \mathcal{L}}{\partial y^l}$ by applying the chain rule:
+\subsection{Backpropagation}
+\paragraph{The $l^{th}$ layer.} 
+The contribution to the Loss of the general $l^{th}$ layer $\delta^l$ can be retrieved by unfolding $\frac{\partial \mathcal{L}}{\partial y^l}$ applying the chain rule, namely the backpropagation:
 \begin{equation}\label{backprop}
 \begin{split}
     \delta^l &= 
     \frac{\partial \mathcal{L}}{\partial y^{(L-1)}} = 
     \frac{\partial \mathcal{L}}{\partial y^{L}} \cdot
-    \frac{\partial y^{L}}{\partial y^{(L-1)}} \quad \cdots 
+    \frac{\partial y^{L}}{\partial y^{(L-1)}} \quad \cdots \quad
     \frac{\partial y^{(l+1)}}{\partial y^{l}} \\
-    \delta^l &= \delta^L \cdot J(F_L) \cdot J(F_{(L-1)}) \cdots J(F_{(L-1)})
+    \delta^l &= \delta^L \cdot J(F_L) \cdot J(F_{(L-1)}) \qquad \cdots \qquad J(F_{(L-1)})\\
+    \left[dim(l)\right] &= \left[dim(L)\right] \cdot \left[dim(L)\times dim(L-1)\right] \cdots \left[dim(l+1)\times dim(l)\right]
 \end{split}   
 \end{equation}
 
-\subsection{Activation Layer.} 
-Though the activation layer operates on the input, it has no adjustable parameter. Since we have to evaluate $\delta$ for layers behind activation layers.
+\emph{Note}: the order of evaluating these derivatives is theoretically irrelevant, 
+however computationally there is an opportunity to implement it in two ways \cite{akthesis}:
+\begin{enumerate}
+    \item[] \emph{forward-mode differentiation}: evaluating in the order of layers is efficient in cases where the output of the network is much larger than the input
+    \item[] \emph{reverse-mode differentiation}: evaluating in reversed order for networks with fewer outputs than inputs.
+\end{enumerate}
+As pointed out in the thesis, the former would require $(L-l)$  times evaluating a \emph{matrix-matrix} product and one \emph{vector-matrix} operation,
+while the latter would require $(L-l)$ times evaluating a \emph{vector-matrix} product and one \emph{matrix-matrix} at the end. 
+Using forward-mode differentiation does not require keeping transient activations $y^l$, however it is computationally costly.
+Using backward-mode differentiation does not strain the CPU, but the memory. 
+It is because if $J(F_l)$ is not linear, then it requires the input $x_l$ to evaluate the first order derivatives.
+
+\subsection{Activation Layer} 
+Though the activation layer operates on the input, it has no adjustable parameter. 
+Since we have to evaluate $\delta$ for layers behind activation layers, the error must pass through $J(F_{activation}$ as well.
+Luckily activation layers applies a scalar function element-wise on the inputs, 
+the Jacobian of the composite function $F$ has a special attribute: it is \textbf{diagonal}
 
