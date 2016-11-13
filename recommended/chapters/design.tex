@@ -139,7 +139,7 @@ These functions are essential for the network, since they increase the numerical
     \mathrm{SoftPlus (SP) := }   &ln(1+e^x) \\
     \mathrm{Sigmoid (S) := }  &\frac{1}{1+e^{-x}}
 \end{align*}
-The only constraint on these functions that they have to keep the dimension of the input, namely $F_{act}:\mathbb{R}^N \rightarrow \mathbb{R}^N$.
+The only constraint on these functions that they have to keep the dimension of the input, namely $F_{act}:\mathbb{R}^N \mapsto \mathbb{R}^N$.
 \emph{Note:} These functions do not have any variable parameters, therefore activation layers cannot be trained.
 
 \section{Measuring efficiency}
@@ -154,7 +154,7 @@ or too abstract to be \emph{measurable} (i.e. telling how funny a picture is),
 we cannot utilize the universal approximator.
 
 \subsection{Loss} 
-By reformulating the objective, we can define a Loss function $\mathcal{L}:\mathcal{F}(\mathbb{X}) \rightarrow \mathbb{R}$,
+By reformulating the objective, we can define a Loss function $\mathcal{L}:\mathcal{F}(\mathbb{X}) \mapsto \mathbb{R}$,
 which maps our candidate $\mathcal{F}$ network to a scalar field, that represents the general correctness of $\mathcal{F}$ over the space of possible inputs $\mathbb{X}$ -- the lower its value the better $\mathcal{F}$ is performing.
 By doing so we may apply Machine Learning algorithms that would \emph{minimize} the Loss, therefore $\mathcal{F}$ would converge towards $\mathcal{F}^*$ implicitly.
 
@@ -162,11 +162,11 @@ By doing so we may apply Machine Learning algorithms that would \emph{minimize} 
 
 
 \subsection{Supervised learning}
-In cases where the parameters of $\mathcal{F}^*$ is not known but we know how it would map the input space $\mathbb{X} \rightarrow \mathbb{Y}$, e.g. which character appears on the input image $x$, then we can define a set of previously \emph{labeled} pairs of input - solution sample which could be used later on for training, and evaluating performance of the network.
+In cases where the parameters of $\mathcal{F}^*$ is not known but we know how it would map the input space $\mathbb{X} \mapsto \mathbb{Y}$, e.g. which character appears on the input image $x$, then we can define a set of previously \emph{labeled} pairs of input - solution sample which could be used later on for training, and evaluating performance of the network.
 
 \subsection{Unsupervised learning}
 When no labeled dataset is available, the network still can be used for extraction of hidden structure of the unlabeled samples. Later these instances are used as density estimators, or adapted as feature extractors for larger networks.
-\textbf{Generative Networks.} Training such architectures can be done by feeding networks random noise as input and training them to reproduce given samples: $\mathcal{F}:\mathbb{R}^k \rightarrow \mathbb{X}$, hence the name \emph{Generative Networks}.
+\textbf{Generative Networks.} Training such architectures can be done by feeding networks random noise as input and training them to reproduce given samples: $\mathcal{F}:\mathbb{R}^k \mapsto \mathbb{X}$, hence the name \emph{Generative Networks}.
 
 \textbf{Auto-encoder Networks} The other frequently applied paradigm is setting the objective task to compress the input sample into a $h \in \mathbb{R}^k$ hidden representation vector that is able to preserve the key information about the original input, and either by symmetric (Restrictive Boltzmann Machines) or independent (Deep Belief networks) operations decompress the data.
 
@@ -187,7 +187,7 @@ Enucleating the general form of Gradient Descent depends on the architecture of 
 Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla_\phi F_{FC}$ is well defined, explained in the following example.
 
 \paragraph{Toy example.} 
-Assume $\mathcal{L}$ is given, and we have a fully connected network with 2 hidden layers, i.e. $L=3$, which maps a $N$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \rightarrow \mathbb{R}^M$. The constraint on the parameters are:
+Assume $\mathcal{L}$ is given, and we have a fully connected network with 2 hidden layers, i.e. $L=3$, which maps a $N$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \mapsto \mathbb{R}^M$. The constraint on the parameters are:
 \begin{itemize}
     \item[] $W^1$ of the first layer must have $N$ columns
     \item[] $W^3$ and the bias $b^3$ of the last layer must have $M$ rows, dimensions respectively.
@@ -204,7 +204,7 @@ Define an $L_2$ Loss function on the toy example. For one sample-label pair $(x,
 \begin{equation}
     \mathcal{L}_2(\mathcal{F}) = \frac{1}{2} \sum_{i} (y_i^* - \mathcal{F}(x)_i)^2 = \frac{1}{2} \sum_{i} (y_i^* - y_i)^2
 \end{equation}
-$L_2$ is a universal Loss function, which is used in cases where the label space $\mathbb{Y}$ is continuous (e.g. floorspace, consumption and height of a house, based on the price: $\mathbb{R}^1 \rightarrow \mathbb{R}^3$).
+$L_2$ is a universal Loss function, which is used in cases where the label space $\mathbb{Y}$ is continuous (e.g. floorspace, consumption and height of a house, based on the price: $\mathbb{R}^1 \mapsto \mathbb{R}^3$).
 
 \section{Derivation} In the above evaluating of $\nabla_\phi \mathcal{F}$ can be done in two ways, namely by numerical approximation, or by analytical derivation, in the following I will discuss both.
 
@@ -241,7 +241,7 @@ That encourages us to derive our differentials on paper first, and use \emph{num
 Deriving the update by hand requires basic knowledge in calculus extended to multivariate cases, though since the operations are elementary, in general we must understand only three basic definitions to do so. 
 Some formality before starting: we have three independent variables $x$, $y$, $z$ and functions $f$, $g$, $h$. The result of operations performed on variables, i.e. $x+2y$ can be represented by a function $f=x+2y$. 
 If the value depends on a variable then it can be written explicitly, passing the variable as \emph{the argument} of the function $f(x,y)=x+2y$. 
-For the sake of simplicity assume that the variables are not general objects from an abstract space, they are only real values: $x,y,z\in \mathbb{R}$. However the following description could be extended for the above-mentioned variables as well. For any one-dimensional function $f(x):\mathbb{R}\rightarrow\mathbb{R}$ we say that the value represented by the function depends on the variable by the extent of its derivative. The derivative (or differential) of the function can be seen as an ideal case of \ref{eq:numgrad} where the perturbation would approach zero, namely:
+For the sake of simplicity assume that the variables are not general objects from an abstract space, they are only real values: $x,y,z\in \mathbb{R}$. However the following description could be extended for the above-mentioned variables as well. For any one-dimensional function $f(x):\mathbb{R}\mapsto\mathbb{R}$ we say that the value represented by the function depends on the variable by the extent of its derivative. The derivative (or differential) of the function can be seen as an ideal case of \ref{eq:numgrad} where the perturbation would approach zero, namely:
 \begin{equation}
     \frac{\partial f}{\partial x} = \lim_{dx\rightarrow 0}\frac{df(x)}{dx}= \lim_{dx\rightarrow 0} \frac{f(x+dx)-f(x-dx)}{2dx}
 \end{equation}
@@ -372,15 +372,24 @@ and the $i^{th}$ neuron of the $2^{nd}$ layer fires when it recognizes sharp edg
 Of course it would be bad if our neuron had a large weight on $x^3_i$. 
 If this node performs poorly because of $x^3_i$, then it would contribute a lot to the Loss function while inferring sharp objects, with its output $y_1$ being far away from $y^*_1$, resulting in a positive $\delta^3_1$. 
 In case of $x^3_i = 0$, the weight $w_{1,i}$ has nothing to do with the error $\delta^3_1$ of the neuron.
-Notice that the error of each weight (w.r.t $\mathcal{L}$) should be proportional to the error and the input as well: $\frac{\partial \mathcal{L}}{\partial w_{1,i}}=\delta^3_1 \cdot x^3_i$.
-Now assume that a picture of an origami sculpture was inferred and the $i^{th}$ node of the second layer worked correctly. Both $\delta^3_1$ and $x^3_i$ is positive but the weight should be decreased: that is why we will take the negative of the derivative for updating $w_{1,i}$.
-Substituting $i=1,2,3,4$ into $\frac{\partial \mathcal{L}}{\partial w_{1,i}}$ yields a gradient of $\mathcal{L}$ with regards to the weights of the first neuron of the last layer. Doing so for each neurons in the layer would result in 3 gradient vectors $\nabla_W_1 \mathcal{L}$, $\nabla_W_2 \mathcal{L}$ and $\nabla_W_1 \mathcal{L}$ which is practically stacked to make a matrix which can be later added element-wisely to the weight matrix $W$.
+Notice that the error of each weight (w.r.t $\mathcal{L}$) should be proportional to the error and the input as well: $\frac{\partial \mathcal{L}}{\partial w_{1,i}}=x^3_i \cdot \delta^3_1$.
+Now assume that a picture of an origami sculpture was inferred and the $i^{th}$ node of the second layer worked correctly. Both $x^3_i$ and $\delta^3_1$ is positive but the weight should be decreased: that is why we will take the negative of the derivative for updating $w_{1,i}$.
+Substituting $i=1,2,3,4$ into $\frac{\partial \mathcal{L}}{\partial w_{1,i}}$ yields a gradient of $\mathcal{L}$ with regards to the weights of the first neuron of the last layer. Doing so for each neurons in the layer would result in 3 gradient vectors $\nabla_{W_1} \mathcal{L}$, $\nabla_{W_2} \mathcal{L}$ and $\nabla_{W_3 }\mathcal{L}$ which is practically stacked to make a matrix which can be later added element-wisely to the weight matrix $W$.
 \begin{equation}
-\nabla_W \mathcal{L} = \left(\frac{\partial \mathcal{L}}{\partial W_{i,j}}\right) = \begin{pmatrix}
-\frac{\partial \mathcal{L}}{\partial W_{1,1} & \frac{\partial \mathcal{L}}{\partial W_{1,2} & \frac{\partial \mathcal{L}}{\partial W_{1,3} & \frac{\partial \mathcal{L}}{\partial W_{1,4} \\ 
-\frac{\partial \mathcal{L}}{\partial W_{2,1} & \frac{\partial \mathcal{L}}{\partial W_{2,2} & \frac{\partial \mathcal{L}}{\partial W_{2,3} & \frac{\partial \mathcal{L}}{\partial W_{2,4} \\ 
-\frac{\partial \mathcal{L}}{\partial W_{3,1} & \frac{\partial \mathcal{L}}{\partial W_{3,2} & \frac{\partial \mathcal{L}}{\partial W_{3,3} & \frac{\partial \mathcal{L}}{\partial W_{3,4}
-\end{pmatrix} 
+\nabla_W \mathcal{L} = 
+\left(\frac{\partial \mathcal{L}}{\partial W_{i,j}}\right) \Longrightarrow 
+\begin{pmatrix}
+\frac{\partial \mathcal{L}}{\partial W_{1,1}} & \frac{\partial \mathcal{L}}{\partial W_{1,2}} & \frac{\partial \mathcal{L}}{\partial W_{1,3}} & \frac{\partial \mathcal{L}}{\partial W_{1,4}} \\ \\
+\frac{\partial \mathcal{L}}{\partial W_{2,1}} & \frac{\partial \mathcal{L}}{\partial W_{2,2}} & \frac{\partial \mathcal{L}}{\partial W_{2,3}} & \frac{\partial \mathcal{L}}{\partial W_{2,4}} \\ \\
+\frac{\partial \mathcal{L}}{\partial W_{3,1}} & \frac{\partial \mathcal{L}}{\partial W_{3,2}} & \frac{\partial \mathcal{L}}{\partial W_{3,3}} & \frac{\partial \mathcal{L}}{\partial W_{3,4}}
+\end{pmatrix} = 
+\begin{pmatrix}
+ x_1 \delta_1 &  x_2 \delta_1 &  x_3 \delta_1 &  x_4 \delta_1 \\ \\
+ x_1 \delta_2 &  x_2 \delta_2 &  x_3 \delta_2 &  x_4 \delta_2 \\ \\
+ x_1 \delta_3 &  x_2 \delta_3 &  x_3 \delta_3 &  x_4 \delta_3
+\end{pmatrix}
 \end{equation}
+
+
 
 \paragraph{Activation Layer.} To have a better grasp on how to extend the rules (\ref{eq:multiplication}, \ref{eq:addition}, \ref{eq:chain}) for neural networks in practice, consider a 
