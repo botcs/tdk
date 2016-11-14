@@ -89,11 +89,11 @@ Regularization addresses exactly this problem, implicitly making the network les
 \end{figure}
 
 \subsection{Basics of Learning}
-After describing the model, the first question is:\\ \\
+After describing the model, the first question is:\\
 \begin{flushright}
     \emph{--- what are the correct values for $\mathbf{w_P}$ for each $   
-    \mathbf{P}$ in network $N$?}
-\end{flushright} \\ \\ 
+    \mathbf{P}$ in network $N$?} \\ 
+\end{flushright}
 There are a lot of intuitive explanation how this problem should be approached and solved. For exhaustive investigation of the topic, visit Michael Nielsen's website \cite{nnsdl}. 
 Anyhow, in general this is still the most studied question in machine learning. 
 Luckily if $N$'s performance can be measured, thanks to its feed-forward structure a \emph{numerical suggestion} can be defined as well, which tells how to change $\mathbf{w_P}$ to improve efficiency of $N$. In practice an $\mathbf{E}$ error function is defined, and the objective of the training is to reduce it. Without digging deep in math we can find an intuitive situation with the same results.\\
