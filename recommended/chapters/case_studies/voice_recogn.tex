@@ -1,10 +1,21 @@
 \section{Voice recognition}
 
-Today's neural networks work on algorithmically very complex, yet intuitive tasks. These objectives can be categorized into two main classes: \emph{supervised} and \emph{unsupervised}. The trend shows that sample labeling slavery becomes unfavored therefore classical supervised learning is getting less attention over time. Still understanding how these models (should) work is essential and demonstrating via the simplest examples ends in some interesting case studies. In the following an informal introduction presents results of such experiments.
+Today's neural networks work on algorithmically very complex, yet 
+intuitive tasks. These objectives can be categorized into two main 
+classes: \emph{supervised} and \emph{unsupervised}. 
+The trend shows that sample labeling slavery becomes unfavored, 
+because human-resource for classifying and evaluating tasks is getting more expensive.
+Therefore classical supervised learning is getting less attention over time. 
+Still understanding how these models (should) work is essential and 
+demonstrating via the simplest examples leads to some interesting case 
+studies. In the following an informal introduction presents results of 
+such experiments.
 
-    {Technical background}
-For the sake of readability the detailed implementation of the perceptron framework is excluded from this writing (although can be found at \href{https://github.com/botcs/deepvision/tree/master/demo/audio}{github}). 
-The writing assumes basic knowledge in linear algebra, the model will be described in the following manner: \\
+\paragraph{Technical background.} 
+For the sake of readability the detailed implementation of the perceptron 
+framework is excluded from this work (although can be found in 
+\texttt{~/tree/master/demo/audio} at the GitHub repository of my implementation \cite{DV}). 
+The writing assumes basic knowledge in linear algebra, the model will be described in the following manner:
  
 \begin{figure}
 	\centering
@@ -12,13 +23,13 @@ The writing assumes basic knowledge in linear algebra, the model will be describ
 	\caption{
 	The basic conception of voice recognition: 
 	the original message is first expressed in physical waveforms which may introduce a lot of noise in real life. 
-	After recording, the wave from time domain is transferred to \emph{frequency domain} that tells which frequencies were dominant in the captured signal sample.
+	After recording, the wave in time domain, it is transferred to \emph{frequency domain} that 
+	tells which frequencies were dominant in the captured signal sample.
 	According to nature's biological systems in this form the same information can be better processed.
 	}
 	\label{fig:workflow}
 \end{figure}
-
-For a given network $N$ and fixed length input $x$ the system's assumption, the output is computed as $y=N(x)$, where $y$ is a fixed length vector.
+For a given network $N$ and fixed length input $x$ the system's assumption, the output, is computed as $y=N(x)$, where $y$ is a fixed length vector.
 $N$ can be seen as a \emph{black box}, that takes $dim(x)$ information, somehow processes it and - if $N$ is trained correctly it returns the class of $x$. Practically $dim(y)=|\{\textrm{classes}\}|$ - therefore $y$ represents the network's confidence on each class.
 
 \subsection{Separating sine waves}

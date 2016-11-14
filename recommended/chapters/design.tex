@@ -59,13 +59,14 @@ Later I used these units in \textsc{bottom-up} approach to create an object-orie
 
 
 \section{Single Layered networks}
-For example if a small picture is given to a person, he or she guesses which it could and could not be. If that person is told that there are four classes, like \emph{Car, Plane, Cat, Kid}, he can tell how likely it is that the given picture falls in that class, so he can give a so-called \emph{confidence parameter}.
-
+For example if a small picture is given to a person, he or she guesses about it. If that person is told that there are four classes, 
+like \emph{Car, Plane, Cat, Kid}, he can tell how likely it is that 
+the given picture falls in that class, so he can give a so-called \emph{confidence parameter}.
 Patterns which are associated with cats may be associated with kids too, but is unlikely to be associated with planes. Deciding whether a pattern improves the confidence on each class or not, yields a \textbf{sign} for the given pattern, and the measure how strongly it influences the likelihood is called the \textbf{weight} of the pattern.
 In \emph{neural networks} there are small nodes based on the biological model of neurons, that is responsible for recognizing and weighting the patterns. These nodes are called \textbf{perceptrons}. 
 
 \subsection{Defining the Perceptron} 
-Let $x$ be a preprocessed information, the perceptron $\mathbf{P}$ decides which of them are important in recognizing a cat: having a corresponding weight with large magnitude, and which of them are irrelevant: having a weight with magnitude close to zero. 
+Let be $x$ a preprocessed information, the perceptron $\mathbf{P}$ decides which parts of it are important in recognizing a cat: having a corresponding weight with large magnitude, and which of them are irrelevant: having a weight with magnitude close to zero. 
 Therefore a \emph{perceptron} has a weight $w_i$ for each input $x_i$ and its transient state can be now formally written:
 $$
 	\mathbf{P}_{transient}=\sum_i x_i w_i
@@ -73,10 +74,11 @@ $$
 Which can be also rewritten as the inner product of $\mathbf{x}$ and $\mathbf{w}$
 
 $$
-	\mathbf{P}_{transient}=<\mathbf{x}, \mathbf{w}>=\mathbf{x}^T\mathbf{w}
+	\mathbf{P}_{transient}= <\mathbf{x} \;,\; \mathbf{w}>=\mathbf{x}^T\mathbf{w}
 $$
-
-To enhance the stability of $N$  \emph{non-linearities} may be introduced as activation functions. Without further investigation, accept the fact, that wiring many perceptrons together results in a numerically unstable system, caused by the lack of any restriction on the magnitude of the weights. In the following examples perceptrons will be arranged in a special way, to form a \textbf{Feed Forward} network, meaning that the information flow will occur in a direct way, without feedbacks, see figure \ref{fig:ff}.
+In the following examples perceptrons will be arranged in a special way, to form a \textbf{Feed Forward} network, meaning that the information flow will occur in a direct way, without feedbacks, see figure \ref{fig:ff}.
+However wiring many perceptrons together results in a numerically unstable system, caused by the lack of any restriction on the magnitude of the weights.
+Regularization addresses exactly this problem, implicitly making the network less likely to simply memorize pictures, or only respond to samples from the training set -- the problem of overfitting.
 
 \begin{figure}
 	\centering
@@ -87,10 +89,12 @@ To enhance the stability of $N$  \emph{non-linearities} may be introduced as act
 \end{figure}
 
 \subsection{Basics of Learning}
-After describing the model, the first question is:\\
-\emph{what are the correct values for $\mathbf{w_P}$ for each $\mathbf{P}$ in network $N$?}
-
-There are a lot of intuitive explanation how this problem should be approached and solved. For exhaustive investigation of the topic, see \cite{nnsdl}. 
+After describing the model, the first question is:\\ \\
+\begin{flushright}
+    \emph{--- what are the correct values for $\mathbf{w_P}$ for each $   
+    \mathbf{P}$ in network $N$?}
+\end{flushright} \\ \\ 
+There are a lot of intuitive explanation how this problem should be approached and solved. For exhaustive investigation of the topic, visit Michael Nielsen's website \cite{nnsdl}. 
 Anyhow, in general this is still the most studied question in machine learning. 
 Luckily if $N$'s performance can be measured, thanks to its feed-forward structure a \emph{numerical suggestion} can be defined as well, which tells how to change $\mathbf{w_P}$ to improve efficiency of $N$. In practice an $\mathbf{E}$ error function is defined, and the objective of the training is to reduce it. Without digging deep in math we can find an intuitive situation with the same results.\\
 
