@@ -241,15 +241,14 @@ The contribution to the Loss of the general $l^{th}$ layer $\delta^l$ can be ret
 \begin{equation}\label{backprop}
 \begin{split}
     \delta^l &= 
-    \frac{\partial \mathcal{L}}{\partial y^{(L-1)}} = 
+    \frac{\partial \mathcal{L}}{\partial y^{l}} = 
     \frac{\partial \mathcal{L}}{\partial y^{L}} \cdot
     \frac{\partial y^{L}}{\partial y^{(L-1)}} \quad \cdots \quad
     \frac{\partial y^{(l+1)}}{\partial y^{l}} \\
-    \delta^l &= \delta^L \cdot J(F_L) \cdot J(F_{(L-1)}) \qquad \cdots \qquad J(F_{(L-1)})\\
+    \delta^l &= \delta^L \cdot J(F_L) \cdot J(F_{(L-1)}) \quad \cdots \quad J(F_{(l-1)})\\
     \left[dim(l)\right] &= \left[dim(L)\right] \cdot \left[dim(L)\times dim(L-1)\right] \cdots \left[dim(l+1)\times dim(l)\right]
 \end{split}   
 \end{equation}
-
 \emph{Note}: the order of evaluating these derivatives is theoretically irrelevant, 
 however computationally there is an opportunity to implement it in two ways \cite{akthesis}:
 \begin{enumerate}

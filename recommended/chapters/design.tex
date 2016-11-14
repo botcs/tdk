@@ -20,7 +20,7 @@ Most thankfully, by starting from scratch I have faced situations when theoretic
 \end{itemize}
 \paragraph{Disclaimer.} Apart from \textbf{NumPy} and its complementary package \textbf{SciPy}, no external libraries and dependencies are used in the implementation. 
 I want to emphasize that this work was not written to compete with contemporary state-of-the-art frameworks, rather to help perceive the general ideas behind novel researches, and to encourage interested fellows to carry out researches on their own.
-
+\clearpage
 \section{Choice of design pattern and language}
 
 The formulas of classical neural networks, whose nodes are organized into lattices forming a Directed Acyclic Graph, shows minor variance in contents of independent sources. Still their common point that they rely on basic vector algebra and functional analysis, therefore considering array represented general mapping functions, as their core building units is a paradigm which would not interfere with the current formal and informal descriptions of deep learning.
@@ -276,3 +276,20 @@ $L_2$ is a universal Loss function, which is used in cases where the label space
 \input{chapters/differentiation}
 
 \section{Special activation layers}
+In this section I will introduce layers derived from the abstract \emph{activation layers}, with the common attribute: the lack of trainable parameters. 
+Some of these layers are only used for manipulating the shape of information flow, 
+while others are down-sampling the input signal, 
+and there are layers which are removed from the network after training.
+
+\subsection{Shaper} This layer does not manipulate the values of its input, but as the name suggests rearranges the values also redirects the gradient flow.
+Its activation function $f(x) = x$ is the identity function, and its derivative is also quite straightforward $f(x)'=1$.
+Used for networks, where a single input is not one dimensional and has to be \texttt{flatten} before inference, or in \emph{multi-thread} networks where the inference is distributed between parallel layers.
+
+\subsection{Pooling layers} Pooling layers are decreasing the parameter space with a fixed down-sampling projection which operates independently on tiles of input.
+In general pooling layers are moving a \texttt{N}-sized window, or a tile through the data taking \texttt{stride} steps.
+Data in each window is collapsed by an aggregation function, such as \texttt{mean()} or \texttt{max()} lowering the computational complexity of the next layers processes. Implementation of this layer can be a bottleneck of inference, since the operations carried out in each window may rely on the same input values if \texttt{N} $>$ \texttt{stride} i.e. windows overlap. In my library a single \texttt{max-pool} layer is implemented with fixed parameters: \texttt{stride} $=$ \texttt{N} $=2$.
+
+\subsection{Output} 
+On the top of every network there should be a dedicated layer, which arranges the networks response. 
+If a \emph{(sample, label)} pair was inferred it also evaluates the result and output a \emph{(response, loss)} pair.
+Therefore the output layer will determine how the network will be trained, and the 

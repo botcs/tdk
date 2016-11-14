@@ -50,6 +50,16 @@
 %\usepackage[plain]{fancyref}
 %\usepackage[english, nameinlink]{cleveref}
 
+%formázás
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+%\fancyhead[L]{\leftmark}
+\fancyhead[L]{\rightmark}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.1pt}
+
 % Ezeket írd át!
 \author{Csaba Botos}
 \title{Building, testing and visualizing neural networks from scratch}
