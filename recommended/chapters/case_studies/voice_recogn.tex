@@ -33,18 +33,35 @@ For a given network $N$ and fixed length input $x$ the system's assumption, the 
 $N$ can be seen as a \emph{black box}, that takes $dim(x)$ information, somehow processes it and - if $N$ is trained correctly it returns the class of $x$. Practically $dim(y)=|\{\textrm{classes}\}|$ - therefore $y$ represents the network's confidence on each class.
 
 \subsection{Separating sine waves}
-After defining the model, the first implementation should be able to classify the low- and high-pitch samples. For starting let the low-pitch sample, $\mathbf{x^1}$ be a sine function with frequency $F1$, and high-pitch sample $\mathbf{x^2}$ a sine with frequency $F2$. For mimicking the nature's living systems, the sample is transformed to frequency domain with an algorithm called \emph{N-point Fast Fourier Transform}. Without further explanation it just tells which frequencies were dominant in the time domain, which is a better clue for both the living, and the machines too. The architecture will be two perceptrons in the same layer. For each $\mathbf{x_i}$ they have different weights, which helps them decide when to turn on, and when to output lower value. After training them the results are promising. The training set is totally fed to the network. For details see Figure \ref{fig:N500}. For the script which was used to produce the figures check out \href{https://github.com/botcs/deepvision/tree/master/demo/audio}{demo}
+After defining the model, the first implementation should be able to classify the low- and high-pitch samples. For starting let the low-pitch sample, $\mathbf{x^1}$ be a sine function with frequency $F1$, and high-frequency sample $\mathbf{x^2}$ a sine with frequency $F2$. 
+For mimicking the nature's living systems (especially the inner ear), the sample is transformed to frequency domain with an algorithm called \emph{N-point Fast Fourier Transform} \cite{welch1967use}. 
+\paragraph{Fourier Transform in a nutshell.} Basically the result of the transformation tells which frequencies were dominant in the time domain, which is a better clue for both the living, and the machines too. 
+The architecture will be two perceptrons in the same layer. 
+For each $\mathbf{x_i}$ they have different weights, which helps them decide when to turn on, and when to output lower value. 
+For details see Figure \ref{fig:N500}. 
+For the script which was used to produce the figures check out \cite{DV}.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{N500-L2e-1.png}
-	\caption{On the first row the original sample is shown in time domain. On the second row the N-FFT of it. On the last row the plot of the weights of the corresponding perceptron. The first feature to recognize, that each perceptron learned that not just to turn on for the corresponding input sample, but to output negative values when samples of the opposite class are shown to the network. The network was initialized with Gaussian random noise with mean at 0 and deviation $1/2$, and trained with mini-batch size 1, learning rate $\eta=0.5$, \emph{regularization} factor $\lambda=0.1$ for 10 epoch with \emph{cross-likelihood} error function}
+	\caption{On the first row the original sample is shown in time domain.
+	 On the second row the N-FFT of it. On the last row the plot of the 
+	 weights of the corresponding perceptron. 
+	 The first feature to 
+	 recognize, that each perceptron learned that not just to turn on for 
+	 the corresponding input sample, but to output negative values when 
+	 samples of the opposite class are shown to the network. 
+	 The network 
+	 was initialized with Gaussian random noise with mean at 0 and 
+	 deviation $1/2$, and trained with mini-batch size 1, learning rate $
+	 \eta=0.5$, \emph{regularization} factor $\lambda=0.1$ for 10 epoch 
+	 with \emph{cross-likelihood} error function}
 	
 	\label{fig:N500}
 \end{figure}
 
-\paragraph{Varying the precision of the Fourier Transform, N}
-For such arbitrary cases, where no noise is added to the signal, larger precision is unnecessary, for validation check Figure \ref{fig:N5000}, \ref{fig:N50}. However the importance of choosing the right N should not be underestimated: in environments with high \emph{Signal-to-Noise ratio} it is advised to use high \emph{sampling rate}, and large $N$, however for real-time applications it is a trade-off between quality and speed, because the computation complexity for this architecture is $\mathcal{O}(N^2)$, therefore choosing too large N results in slow processing.
+\paragraph{Varying the precision of the Fourier Transform, N.}
+For such arbitrary cases, where no noise is added to the signal, larger precision is unnecessary, for validation check Figure \ref{fig:N5000}, \ref{fig:N50}. However the importance of choosing the right N should not be underestimated: in environments with loss \emph{Signal-to-Noise ratio} it is advised to use high \emph{sampling rate}, and large $N$, however for real-time applications it is a trade-off between quality and speed, because the computation complexity for this architecture is $\mathcal{O}(N^2)$, therefore choosing too large N results in slow processing.
 
 \begin{figure}
 	\centering
@@ -62,11 +79,6 @@ For such arbitrary cases, where no noise is added to the signal, larger precisio
 	
 	\label{fig:N50}
 \end{figure}
-
-\paragraph{Introducing regularization}
-An unknown term was used in the previous description, which now will be revealed.
-The regularization is simply a practical implementation of Occam's razor, meaning that the unimportant features of $\mathbf{x}$ will not be taken into account by the perceptron. On Figures \ref{fig:N500}, \ref{fig:N5000},  \ref{fig:N50} the weights were originally initialized with random Gaussian noise, but after training only the important frequencies' weights stayed significant. If the regularization factor is reduced the noise wouldn't disappear and the perceptron would still take irrelevant informations into account. This phenomena is shown on Figure \ref{fig:reg}. However instead of regularizing we can \emph{over train} our networks, increasing the number of epochs, the number of times we show the same samples in the training set. Noise reducing via \textbf{overfit} can be seen on Figure \ref{fig:overtrain}. 
-
 
 \begin{figure}
 	\centering
@@ -86,7 +98,7 @@ The regularization is simply a practical implementation of Occam's razor, meanin
 
 
 \paragraph{Dealing with multiple waves}
-Approaching to real life problems, more parallel signals should be introduced to the network. In this subsection the case of recognizing overlapping frequencies and common frequencies are examined. The networks were initialized and trained identically to the network in previous experiment with $\lambda=0.5$. In the first case six different base functions were used to compose the samples. On Figure \ref{fig:multi} it is really trivial that the network is not just capable of separating low-pitch samples from high-pitch samples, but can recognize different patterns, even if they are scattered throughout the state space of the input. In the second case the conclusion is that the perceptrons (if well trained) will look only for relevant signals and patterns in the input.  See Figure \ref{fig:multi-common} \\
+Approaching real life problems, more parallel signals should be introduced to the network. In this subsection the case of recognizing overlapping frequencies and common frequencies are examined. The networks were initialized and trained identically to the network in previous experiment with $\lambda=0.5$. In the first case six different base functions were used to compose the samples. On Figure \ref{fig:multi} it is really trivial that the network is not just capable of separating low-pitch samples from high-pitch samples, but can recognize different patterns, even if they are scattered throughout the state space of the input. In the second case the conclusion is that the perceptrons (if well trained) will look only for relevant signals and patterns in the input.  See Figure \ref{fig:multi-common}
 
 \begin{figure}
 	\centering
@@ -105,9 +117,18 @@ Approaching to real life problems, more parallel signals should be introduced to
 	\label{fig:multi-common}
 \end{figure}
 
+\subsection{Introducing Regularization}
+Regularization is simply a practical implementation of Occam's razor, meaning that the unimportant features of $\mathbf{x}$ will not be taken into account by the perceptron. 
+
+On Figures \ref{fig:N500}, \ref{fig:N5000}, \ref{fig:N50} the weights were originally initialized with random Gaussian noise, but after training only the important frequencies' weights stayed significant. 
+If the regularization factor is reduced the noise wouldn't disappear and the perceptron would still take irrelevant information into account. 
+This phenomena is shown on Figure \ref{fig:reg}. 
+However, instead of regularizing, we can \emph{over train} our networks, increasing the number of epochs, the number of times we show the same samples in the training set. 
+Noise reduction via \textbf{overfit} can be seen on Figure \ref{fig:overtrain}. 
+
 \subsection{Real Samples}
 For acquiring samples from the environment the architecture should be wired to a physical sensor which will transfer signals from analog to digital. 
-Practically outer libraries are applied to perform the capturing, the only thing remaining is to write an adapter to make the information format compatible with the network's architecture.
+Practically external libraries are applied to perform the capturing, the only thing remaining is to write an adapter to make the information format compatible with the network's architecture.
 
 \paragraph{Capturing sound}
 For the following experiments an algorithmic smart capturing is used, which enables us to record multiple sound waves with different length, without pressing a single key. The main idea is that the noise of the environment can be monitored, and in the background mean averaged. A practical threshold is set for recognizing significant audio inputs, where the magnitudes of the sampled waves reach the critical. After the recording starts, a fixed size time-frame will cancel out further activities of the capturing system. Another option is to end the capturing process when the magnitude of the input falls below a threshold. Either way, the samples are gathered in a list, and each of them are transformed to frequency domain with \emph{N-FFT}, producing equal length inputs  $\mathbf{x^i}$ for the network.
@@ -127,7 +148,12 @@ Currently the model somehow works like the one depicted on Figure \ref{fig:dumb}
 
 The experiments were done with 5 different languages: \emph{French, Arabic, Spanish, German, Hungarian}. The training scene is the same as in the previous cases: input sequentially $N$ number of samples for each language, end the recording with a clap.
 For a demonstration script check out \href{https://github.com/botcs/deepvision/tree/master/demo/audio}{demo (nclass.py)}
-The network trains on the given set, and the system is ready for testing. End the testing session by sending a \textbf{\textsc{sig-term}} signal. With the following hyperparameters: 1-1 number of samples in each language, \emph{mini-batch}$=1$, \emph{number of epochs}$=15$, $\lambda=0.005$, from random Gaussian initialization a network with 60\% performance can be obtained. With larger training set, 3 samples for each language the result raised over 85\%. Comparing to industrial networks the training set used to adjust the parameters is very small in size. For larger projects usually the training set contains thousands and millions of samples, and overfitting is less likely to occur. For such a narrow network trained with a poor training set it can be said that 85\% is not that bad at all. Although the result still depends on who tests the configured network.
+The network trains on the given set, and the system is ready for testing. End the testing session by sending a \textbf{\textsc{sig-term}} signal. 
+
+With the following hyperparameters: 1-1 number of samples in each language, \emph{mini-batch}$=1$, \emph{number of epochs}$=15$, $\lambda=0.005$, from random Gaussian initialization a network with 60\% performance can be obtained. 
+With larger training set, 3 samples for each language the result raised over 85\%. Comparing to industrial networks the training set used to adjust the parameters is very small in size. 
+For larger projects usually the training set contains thousands and millions of samples, and overfitting is less likely to occur. 
+For such a narrow network trained with a poor training set it can be said that 85\% is not that bad at all. Although the result still depends on who tests the configured network.
 
 \begin{figure}
 	\centering

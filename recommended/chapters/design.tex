@@ -89,20 +89,24 @@ Regularization addresses exactly this problem, implicitly making the network les
 \end{figure}
 
 \subsection{Basics of Learning}
-After describing the model, the first question is:\\
+After describing the model, the first question is:
 \begin{flushright}
     \emph{--- what are the correct values for $\mathbf{w_P}$ for each $   
     \mathbf{P}$ in network $N$?} \\ 
 \end{flushright}
-There are a lot of intuitive explanation how this problem should be approached and solved. For exhaustive investigation of the topic, visit Michael Nielsen's website \cite{nnsdl}. 
+There are a lot of intuitive explanations how this problem should be approached and solved. For exhaustive investigation of the topic, visit Michael Nielsen's website \cite{nnsdl}. 
 Anyhow, in general this is still the most studied question in machine learning. 
-Luckily if $N$'s performance can be measured, thanks to its feed-forward structure a \emph{numerical suggestion} can be defined as well, which tells how to change $\mathbf{w_P}$ to improve efficiency of $N$. In practice an $\mathbf{E}$ error function is defined, and the objective of the training is to reduce it. Without digging deep in math we can find an intuitive situation with the same results.\\
+Luckily, if $N$'s performance can be measured, thanks to its feed-forward structure a \emph{numerical suggestion} can be defined as well, which tells how to change $\mathbf{w_P}$ to improve efficiency of $N$. In practice an $\mathbf{E}$ error function is defined, and the objective of the training is to reduce it. Without digging deep in math we can find an intuitive situation with the same results.\\
 
 Take a perceptron $\mathbf{P}$ with input $\mathbf{x}$ of objects on a given picture of a cat. Suppose that this perceptron \emph{fires} (has high output value) when wheels are on the picture. It should remain silent when there are no round objects listed in 
-$\mathbf{x}$, still it turns on, ruining the output of $N$, producing high $\mathbf{E}$.
-Since we know the original label of the picture, we can tell which assumptions were wrong, and which were good - which to decrease, which to increase if the next time $N$ is given the same input. This information is distributed between the previous perceptrons which caused the actual to fail by simply multiplying the error with the weight corresponding to the previous node. Also with the information of how much the output of the actual node influenced the error, and with its input values, the significance of wrong $\mathbf{x_i}$s can be reduced, and important features' weights can be increased, which is actually finding a better $\mathbf{w_P}$.
+$\mathbf{x}$, still it turns on, affecting the output of $N$, producing high error.
+Since we know the original label of the picture, we can tell which assumptions were wrong, and which were good - which to decrease, which to increase if the next time $N$ is given the same input. 
+This information is distributed between the previous perceptrons which caused the current one to fail, by simply multiplying the error with the weight corresponding to the previous node. 
+Also with the information of how much the output of the actual node influenced the error, and with its input values, the significance of misleading $\mathbf{x_i}$ can be reduced, and important features' weights can be increased, which is actually finding a better $\mathbf{w_P}$.
+For further intuitive examples see section \ref{sec:diff}, or visit Andrej Karpathy's guide \cite{karpathyblog}.
 
-The example concluded to the practical application of the so called \emph{Stochastic Gradient Descent}. Originally every samples in the training set should be introduced to the system before updating its weights and that would be the \emph{Gradient Descent}, but in  the hope that the samples falls in a subset of the whole space of all possible inputs, the algorithm uses mini-batches for the learning process. When the number of samples in the batches reduces to 1, the training is called on-line training. And if it happens on $N$ containing a single perceptron it is called \emph{Rosenblatt perceptron learning algorithm} .
+\paragraph{SGD.} The example concluded to the practical application of the so called \emph{Stochastic Gradient Descent}. 
+Originally every samples in the training set should be introduced to the system before updating its weights and that would be the \emph{Gradient Descent}, but in  the hope that the samples falls in a subset of the whole space of all possible inputs, the algorithm uses mini-batches for the learning process. When the number of samples in the batches reduces to 1, the training is called on-line training. And if it happens on $N$ containing a single perceptron it is called \emph{Rosenblatt perceptron learning algorithm}.
 
 
 \section{Inference}
