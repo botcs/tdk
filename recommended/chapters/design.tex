@@ -131,6 +131,7 @@ Therefore evaluating the output of the Fully Connected layer is the defined by t
     \left[M\right] &= \left[M \times N\right] \cdot \left[N\right] + \left[M\right]
 \end{split}
 \end{equation}
+
 \subsection{Activation layer} 
 Nodes in activation layers are introducing non-linearity to the network, 
 by applying the same non-linear activation function to the corresponding output of the previous layer, performing element-wise operation.
@@ -200,20 +201,52 @@ The problem with generalization is that the training set has finite samples and 
 Therefore training networks with many layers requires some advanced techniques for training.
 There are multiple way to improve the \emph{convergence rate} and the \emph{stability} of the network.
 
+\paragraph{Batch processing.} There are two radical methods of updating the parameters in the network. 
+Theoretically if we wanted to create a perfect network, we would infer all possible samples from $\mathbb{X}$ and the Loss function 
+$\mathcal{L}$ would evaluate the network on every solution (in a single iteration, without the network being updated), 
+then we would take the mean of the Loss to evaluate the gradient, e.g. 
+$$\mathcal{L}^*=\frac{1}{N}\sum_{x \in \mathbb{X}}\mathcal{L}(\mathcal{F}(x))$$
+This way, if the capacity of $\mathcal{F}$ is large enough, it is possible to train the network to be able to solve every problem.
+In a special case when we want to simulate logical circuits with real values instead of Boolean \texttt{true} or \texttt{false},
+then we can train a network to act like a logical processing unit - since we are able to map $\forall x \in \mathbb{X} \mapsto y \in \mathbb{Y}$ by 
+external evaluation.
+The other case is more practical, when the network is updated \textbf{on-line}, described exhaustively in \cite{onlinelearn}. 
+In a nutshell on-line training is when the network after initialization, is utilized as well.
+Predictions which were correct are put into the training set, and the network weights are updated immediately 
+to encourage the same response for similar samples.
+A frequent application of on-line training is called \emph{Q-learn}, for case studies see \cite{qlearn-case}.
+Both methods are powerful for specific tasks, but in practice taking the golden mean is considerable:
+Inferring multiple samples at the same time with the same network not just yields a more stable convergence, 
+but is an excellent opportunity to parallelize the process:
+Extending by one extra dimension to each stage of the inference (inputs, transient activations, outputs) can be done easily,
+also almost every library can take the advantage to perform optimized matrix operations on multidimensional matrices (at least \emph{NumPy} can).
+On the second hand, processing only \emph{some} instead of all of the input samples at once is computationally a better choice.
+In real applications it is worth considering $2^k$ mini-batch sizes because of the memory allocation \cite{stanfordlectures}.
+
 \paragraph{Advanced First order derivatives.} 
 Simple heuristics applied to first order derivatives, such as:
 
-\begin{itemize}
-\item Momentum \cite{sutskever2013importance}: 
+
+
+\begin{description}[align=right,labelwidth=3cm]
+\item[Momentum] \cite{sutskever2013importance}
     $v_{(n+1)}=\gamma v_{n} + \nabla_{\phi_n}\mathcal{L}$ and 
     $\phi_{(n+1)} = \phi_n -\epsilon v_n$
-\item Adagrad \cite{duchi2011adaptive}:
+\item[Adagrad] \cite{duchi2011adaptive}
     $r_{(n+1)}=r_n+\left(\nabla_{\phi_n}\mathcal{L}\right)^2$  and 
     $\phi_{(n+1)} = \phi_n - \frac{\epsilon}{\gamma + \sqrt{r_n}} \left(\nabla_{\phi_n}\mathcal{L}\right)^2$ (element-wise) 
-\item RMSProp: $r_{(n+1)}=(1-\epsilon)r_n + \epsilon\left(\nabla_{\phi_n}\mathcal{L}\right)^2$ \cite{rmsprop}
-\item Adam: Combination of RMSProp and momentum \cite{kingma2014adam}.
-\end{itemize}
-Second order derivative e.g. Conjugate gradient \cite{shewchuk1994introduction}.
+\item[RMSProp] \cite{rmsprop} $r_{(n+1)}=(1-\epsilon)r_n + \epsilon\left(\nabla_{\phi_n}\mathcal{L}\right)^2$
+\item[Adam] \cite{kingma2014adam} Combination of RMSProp and momentum.
+\end{description}
+A more sophisticated, but expensive method is using second order derivative, for instance Conjugate gradient \cite{shewchuk1994introduction}.
+
+\paragraph{Decreasing the learning rate $\epsilon$.}
+For large networks it is inevitable to use decreasing learning rate, otherwise the convergence would take too much time (small $\epsilon$) or would not even occur (large $\epsilon$). 
+
+\paragraph{Cross-Validation.} Special $\hat{\mathcal{L}}=(\mathcal{L}_{train}, \mathcal{L}_{validation})$ functions approximate the efficiency of the network not just by evaluating them on the currently or previously trained samples, but on samples which are from a totally \textbf{disjunct set} $\mathbb{X}_{validation}$.
+The motivation behind it is to see how well would the network perform on samples which it have not faced before.
+By doing so we can evaluate how well the network \emph{generalized} the information from samples of the training set.
+In order to keep $\mathbb{X}_{validation} \$ we may not use $\mathcal{L}_{validation}$ for parameter updating. 
 
 \subsection{Networks in practice} 
 Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla_\phi F_{FC}$ is well defined, explained in the following example.
