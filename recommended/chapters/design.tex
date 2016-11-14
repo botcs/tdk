@@ -202,6 +202,7 @@ Therefore training networks with many layers requires some advanced techniques f
 There are multiple way to improve the \emph{convergence rate} and the \emph{stability} of the network.
 
 \paragraph{Batch processing.} There are two radical methods of updating the parameters in the network. 
+
 Theoretically if we wanted to create a perfect network, we would infer all possible samples from $\mathbb{X}$ and the Loss function 
 $\mathcal{L}$ would evaluate the network on every solution (in a single iteration, without the network being updated), 
 then we would take the mean of the Loss to evaluate the gradient, e.g. 
@@ -210,11 +211,13 @@ This way, if the capacity of $\mathcal{F}$ is large enough, it is possible to tr
 In a special case when we want to simulate logical circuits with real values instead of Boolean \texttt{true} or \texttt{false},
 then we can train a network to act like a logical processing unit - since we are able to map $\forall x \in \mathbb{X} \mapsto y \in \mathbb{Y}$ by 
 external evaluation.
+
 The other case is more practical, when the network is updated \textbf{on-line}, described exhaustively in \cite{onlinelearn}. 
 In a nutshell on-line training is when the network after initialization, is utilized as well.
 Predictions which were correct are put into the training set, and the network weights are updated immediately 
 to encourage the same response for similar samples.
 A frequent application of on-line training is called \emph{Q-learn}, for case studies see \cite{qlearn-case}.
+
 Both methods are powerful for specific tasks, but in practice taking the golden mean is considerable:
 Inferring multiple samples at the same time with the same network not just yields a more stable convergence, 
 but is an excellent opportunity to parallelize the process:
@@ -283,7 +286,7 @@ and there are layers which are removed from the network after training.
 
 \subsection{Shaper} This layer does not manipulate the values of its input, but as the name suggests rearranges the values also redirects the gradient flow.
 Its activation function $f(x) = x$ is the identity function, and its derivative is also quite straightforward $f(x)'=1$.
-Used for networks, where a single input is not one dimensional and has to be \texttt{flatten} before inference, or in \emph{multi-thread} networks where the inference is distributed between parallel layers.
+Used for networks, where a single input is not one dimensional and has to be \texttt{flatten} before inference, or in \emph{multi-thread} networks where the inference is distributed between parallel layers \cite{szegedy2015going}.
 
 \subsection{Pooling layers} Pooling layers are decreasing the parameter space with a fixed down-sampling projection which operates independently on tiles of input.
 In general pooling layers are moving a \texttt{N}-sized window, or a tile through the data taking \texttt{stride} steps.
@@ -292,4 +295,20 @@ Data in each window is collapsed by an aggregation function, such as \texttt{mea
 \subsection{Output} 
 On the top of every network there should be a dedicated layer, which arranges the networks response. 
 If a \emph{(sample, label)} pair was inferred it also evaluates the result and output a \emph{(response, loss)} pair.
-Therefore the output layer will determine how the network will be trained, and the 
+Therefore the output layer will determine how the network will be trained, and the response interpreted
+\paragraph{Softmax.} In case of classification, 
+when the network has to decide which set was the input sampled from, 
+then we can transform the response into a categorical probability distribution, 
+i.e. how confident each neuron in the last layer in classifying the input as their 'own'.
+For that, we use \textbf{one-hot} notation, where $y^*_i = \left[ 0,0 \cdots 1 \cdots 0\right]$ (with only one non-zero element) represents the \emph{ground-truth} label, the $i^{th}$ class.
+The response will be turned into a discrete density function, e. g. $  = [0.1, \; 0.6, \; 0.2, \; 0.1]$ can be interpreted as the following:
+the input $x$ is categorized as a sample from the second class with 60\% confidence. Notice that $|p|_1=\sum_i y_i=1$ constraint should be satisfied.
+To transform a real valued $N$ dimensional vector $y \in \mathbb{R}^N$ to the mentioned probability distribution $p\in \Omega^N$ we apply the \emph{Softmax} function:
+$$e_i = \frac{\exp(y_i)}{|\exp(y)|_1}$$
+Conventionally the corresponding Loss function is the \textbf{log-loss} or \textbf{cross-entropy} function, and its gradient w.r.t. the original response of the last layer $y$ is:
+\begin{equation}
+\begin{split}
+\mathcal{L}(y)=-\sum_i y^*_i \log p_i \\
+\frac{\partial \mathcal{L}}{\partial y_i} = 
+\end{split}
+\end{equation}
