@@ -143,11 +143,11 @@ Let $F$ be an activation layer with activation function $f$ after a fully connec
     \end{pmatrix}
 \end{equation*}
 These functions are essential for the network, since they increase the numerical stability: they \emph{squeeze} or \emph{mitigate} the input preventing the network from \emph{saturation} or \emph{explosion} (numerical of course). Conventionally the following functions are applied most often as activation function:
-\begin{align}\label{eq:actfunc}
-    \mathrm{Rectified Linear Unit (ReLU) := } &max(0, x) \\
-    \mathrm{Hyperbolic Tangent (TanH) := }   &tanh(x) = \frac{2}{1+e^{-2x}}-1 \\
-    \mathrm{SoftPlus (SP) := }   &ln(1+e^x) \\
-    \mathrm{Sigmoid (S) := }  &\frac{1}{1+e^{-x}}
+\begin{align}
+    \mathrm{Rectified Linear Unit (ReLU) := } &max\left\lbrace 0, x \right\rbrace \label{eq:af1} \\
+    \mathrm{Hyperbolic Tangent (TanH) := }   &\tanh(x) = \frac{2}{1+e^{-2x}}-1 \label{eq:af2}\\
+    \mathrm{SoftPlus (SP) := }   &\ln(1+e^x) \label{eq:af3}\\
+    \mathrm{Logistic (Log) := }  &\frac{1}{1+e^{-x}} \label{eq:af4}
 \end{align}
 The only constraint on these functions that they have to keep the dimension of the input, namely $F_{act}:\mathbb{R}^N \mapsto \mathbb{R}^N$.
 \emph{Note:} These functions do not have any variable parameters, therefore activation layers cannot be trained.
@@ -492,4 +492,10 @@ $$
     \end{cases}
 $$
 We can exploit this function when implementing activation layers, by simply using element-wise product $\frac{\partial f(x_i)}{\partial x_i}$ instead of a matrix multiplication.
-The mentioned activation functions (\ref{eq:actfunc})
+The mentioned activation functions (\ref{eq:af1}, \ref{eq:af2}, \ref{eq:af3}, \ref{eq:af4}), are differentiable \emph{almost everywhere}, the corresponding derivatives:
+\begin{align}
+    \mathrm{(ReLU)' := } &\mathrm{Heaviside}(x)\\
+    \mathrm{(TanH)' := }   & 1 - \tanh(x)^2\\
+    \mathrm{(SP)' := }   &\frac{1}{1+e^{-x}}\\
+    \mathrm{(Log)' := }  &\mathrm{Logistic}(x)\cdot (1-\mathrm{Logistic}(x))
+\end{align}
