@@ -50,8 +50,8 @@ the time is spent on optimizing further and
 further the basic algorithms, and usage usually 
 results in boilerplate codes. 
 Either way it would make the implementation unclear for those, who did not participate in the designing of the library.
-I wanted to chose a lagnuage which offers an optimal solution for this challenge, is flexible, well documented and simple enough for newbies to catch up.
-Because of the support of both object-oriented andelse procedural approaches and offering the above, I choose Python.
+I wanted to chose a language which offers an optimal solution for this challenge, is flexible, well documented and simple enough for newbies to catch up.
+Because of the support of both object-oriented and procedural approaches and offering the above, I choose Python.
 
 \subsection{Design pattern} While designing blueprints of the implementation, I examined the Neural Networks as universal approximators in a \textsc{top-down} manner.
 I have disassembled them to basic blocks, abstracting the function of each level.
@@ -110,7 +110,7 @@ while other instances operate on the whole input data i.e. processing audio samp
 Either way the output $y$ (or $y_L$) can be obtained by feeding $x$ to the network: 
 $ y = \mathcal{F}(x)$
 The core concept is that we can compose such an $\mathcal{F}$ function by applying multiple projections to $x$.
-Practically that means sending input through the first layer, the second and all the way through to the last layer $L^{th}$, which output would be the value of $\mathcal{F}(x)$, the response of the network.
+Practically that means sending input through the first layer, the second, and all the way through to the last layer $L^{th}$, which output would be the value of $\mathcal{F}(x)$, the response of the network.
 Therefore in terms of evaluating $\mathcal{F}(x)$ layer by layer, actually translates to a single function call, which can be unfolded to a sequence of embedded projections:
 $$
     \mathcal{F}(x) = F_L \left( x_L \right) = F_L \left( y_{(L-1)} \right)
@@ -170,7 +170,7 @@ However this is usually not the case, and finding the optimal $\mathcal{F}^*$ is
 Despite it was proven, that standard multilayer
 feed-forward networks are capable of approximating
 any measurable function to any desired degree of
-accuracy \cite{hornik1989multilayer}
+accuracy \cite{hornik1989multilayer},
 if the goal function $\mathcal{F}^*$ is unknown, 
 or too abstract to be \emph{measurable} (i.e. telling how funny a picture is), 
 we cannot utilize the universal approximator.
@@ -184,7 +184,12 @@ By doing so we may apply Machine Learning algorithms that would \emph{minimize} 
 
 
 \subsection{Supervised learning}
-In cases where the parameters of $\mathcal{F}^*$ is not known but we know how it would map the input space $\mathbb{X} \mapsto \mathbb{Y}$, e.g. which character appears on the input image $x$, then we can define a set of previously \emph{labeled} pairs of input - solution sample which could be used later on for training, and evaluating performance of the network.
+In cases where the parameters of $\mathcal{F}^*$ are not known,
+but we know how it would map the input space $\mathbb{X} \mapsto
+\mathbb{Y}$, e.g. which character appears on the input image $x$, 
+then we  can define a set of previously \emph{labeled} pairs of input - 
+solution sample which could be used later on for training, and
+evaluating performance of the network.
 
 \subsection{Unsupervised learning}
 When no labeled dataset is available, the network still can be used for extraction of hidden structure of the unlabeled samples. Later these instances are used as density estimators, or adapted as feature extractors for larger networks.
@@ -201,8 +206,10 @@ Once $\mathcal{L}(\mathcal{F})$ is obtained, we can evaluate how changing the pa
 
 \subsection{Gradient Descent}
 Updating $\phi$ by descending on the gradient slope with a small step size $\epsilon$ will decrease $\mathcal{L}$.
-Enucleating the general form of Gradient Descent depends on the architecture of the network, but there is a main concept for doing so, called Backpropagation described by Werbos \emph{et al.} \cite{werbos1994roots}. 
-The exact method which can be applied for Fully Connected networks will be described in section \ref{sec:diff}.
+Derivation from the general form of Gradient Descent depends on the architecture of the network, 
+but there is a main concept for doing so, called Backpropagation described by Werbos \emph{et al.} \cite{werbos1994roots}. 
+The exact method which can be applied for Fully Connected networks 
+will be explained in detail in section \ref{sec:diff}.
 
 \subsection{Training Policies}
 Though theoretically after finite steps of iterations, with Gradient Descent $\mathcal{F}$ may approximate any Borel-measurable function, 
