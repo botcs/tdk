@@ -246,7 +246,9 @@ For large networks it is inevitable to use decreasing learning rate, otherwise t
 \paragraph{Cross-Validation.} Special $\hat{\mathcal{L}}=(\mathcal{L}_{train}, \mathcal{L}_{validation})$ functions approximate the efficiency of the network not just by evaluating them on the currently or previously trained samples, but on samples which are from a totally \textbf{disjunct set} $\mathbb{X}_{validation}$.
 The motivation behind it is to see how well would the network perform on samples which it have not faced before.
 By doing so we can evaluate how well the network \emph{generalized} the information from samples of the training set.
-In order to keep $\mathbb{X}_{validation} \$ we may not use $\mathcal{L}_{validation}$ for parameter updating. 
+In order to keep $\mathbb{X}_{train} \bigcap \mathbb{X}_{validation} = \varnothing$ we may not use $\mathcal{L}_{validation}$ for parameter updating.
+However in order to \textbf{prevent overfitting} we can monitor e.g. generalization error $E_g=\frac{\hat{\mathcal{L}}_1}{\hat{\mathcal{L}}_2}$ during training 
+and use \textbf{Early Stopping} when $E_g > \delta$, where $\delta$ is a parameter of how much we tolerate overfitting.
 
 \subsection{Networks in practice} 
 Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla_\phi F_{FC}$ is well defined, explained in the following example.
@@ -272,3 +274,5 @@ Define an $L_2$ Loss function on the toy example. For one sample-label pair $(x,
 $L_2$ is a universal Loss function, which is used in cases where the label space $\mathbb{Y}$ is continuous (e.g. floorspace, consumption and height of a house, based on the price: $\mathbb{R}^1 \mapsto \mathbb{R}^3$).
 
 \input{chapters/differentiation}
+
+\section{Special activation layers}
