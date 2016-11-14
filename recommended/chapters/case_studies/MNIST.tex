@@ -89,9 +89,31 @@ $\delta_l = \mathbf{e}$ or $\delta_l =\mathbf{b}$
 from the $l^{th}$ layer toward the input layer to get gradient of the input w.r.t the $i^{th}$ neuron's activation of the $l^{th}$ layer, and iteratively update the original sample by the gradient multiplied with \emph{modification rate}. The method is depicted on Figure \ref{fig:ga-method1} and \ref{fig:ga-method2}, 
 for visual guide for understanding how the applied gradient looks like, see Figure \ref{fig:grad-sub}.
 
+%\begin{figure}
+%    \begin{subfigure}{\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{GA1.png}
+%      \caption{$x+\nabla$}
+%    \end{subfigure}
+%%    \vfill
+%    \begin{subfigure}{\textwidth}
+%      \centering
+%      \includegraphics[width=\textwidth]{GA_gradients.png}
+%      \caption{$\nabla$}
+%    \end{subfigure}
+%    \caption{After one iteration the enhancement is evanescent, still the gradient holds important information of the layer.
+%    By looking at the gradient, we can tell which parts will be emphasized and which will be diminished during the process.
+%    The depicted gradients are extracted from the randomly picked neurons from the first hidden layer of a two layered network.
+%    For the smooth image result \texttt{bicubic} interpolation was used, with \texttt{seismic} color map.
+%    }
+%    \label{fig:grad-sub}
+%\end{figure}
+
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{grad-sub.pdf}
+    \subfloat[$x+\nabla$]{\includegraphics[width=\textwidth]{GA1.png}}\\
+    \vfill
+    \subfloat[$\nabla$]{\includegraphics[width=\textwidth]{GA_gradients.png}}
     \caption{After one iteration the enhancement is evanescent, still the gradient holds important information of the layer.
     By looking at the gradient, we can tell which parts will be emphasized and which will be diminished during the process.
     The depicted gradients are extracted from the randomly picked neurons from the first hidden layer of a two layered network.
@@ -99,7 +121,6 @@ for visual guide for understanding how the applied gradient looks like, see Figu
     }
     \label{fig:grad-sub}
 \end{figure}
-
 
 By choosing $\mathbf{e}_{i} = [0, 0 \cdots 1 \cdots 0]^T$ the enhancement would not take other activations into account, while letting $\delta_l = \mathbf{b}_i = [-1, -1 \cdots 1 \cdots -1]^T$ would result in activation where other neurons' output would decrease over amplification. 
 Both methods were tested by the following procedure: The top 1 digit was selected for each neurons in the last layer of the best performing network, totaling in 10 samples. Skipping the candidate search of the top 10 samples were enhanced by the GA algorithm, with different number of iterations and with $\mathbf{e}$ and $ \mathbf{b}$. The results are shown on Figure \ref{fig:bias-nobias}. 

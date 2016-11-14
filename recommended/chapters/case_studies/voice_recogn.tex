@@ -26,7 +26,7 @@ After defining the model, the first implementation should be able to classify th
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.95\textwidth]{N500-L2e-1.png}
+	\includegraphics[width=0.8\textwidth]{N500-L2e-1.png}
 	\caption{On the first row the original sample is shown in time domain. On the second row the N-FFT of it. On the last row the plot of the weights of the corresponding perceptron. The first feature to recognize, that each perceptron learned that not just to turn on for the corresponding input sample, but to output negative values when samples of the opposite class are shown to the network. The network was initialized with Gaussian random noise with mean at 0 and deviation $1/2$, and trained with mini-batch size 1, learning rate $\eta=0.5$, \emph{regularization} factor $\lambda=0.1$ for 10 epoch with \emph{cross-likelihood} error function}
 	
 	\label{fig:N500}
@@ -147,7 +147,7 @@ So far it is shown how single layer neural networks work. How they should be tho
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\textwidth]{hello-5lang-3each}
+	\includegraphics[width=\textwidth]{hello-5lang-3each}
 	\caption{On this figure the sample time, frequency and the perceptrons' weight plots are depicted of the network that recognizes greetings in 5 languages. For human eyes it is hard to tell from either the time and frequency domain plot the corresponding language. The recorded greetings were sampled by me saying \emph{Bonjour, Salem, Hola, Halo} and \emph{Csá}}
 	
 	\label{fig:hello5}
