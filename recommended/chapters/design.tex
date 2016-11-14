@@ -7,7 +7,7 @@ I concluded that the best way to acquire an in-dept understanding of neural netw
 This way I had a chance to understand why novel solutions in Machine Learning are formed the way they are.
 I also gained insight into what main paradigms are popular libraries based on, such as \emph{computational graphs, parallel processing}, 
 and what trade-offs can be made between \emph{computational cost} and \emph{memory usage}, between robustness and plasticity.
-Most thankfully, by starting from scratch I have faced situations when theoretical formulas had to be translated into exact working code, which was an important challenge.
+Most thankfully, by starting from scratch I have faced situations when theoretical formulas had to be translated into exact working code, which was an important challenge for me.
 
 \paragraph{Goals.} My main objectives when writing code was the following:
 \begin{itemize}
@@ -23,28 +23,39 @@ I want to emphasize that this work was not written to compete with contemporary 
 \clearpage
 \section{Choice of design pattern and language}
 
-The formulas of classical neural networks, whose nodes are organized into lattices forming a Directed Acyclic Graph, shows minor variance in contents of independent sources. Still their common point that they rely on basic vector algebra and functional analysis, therefore considering array represented general mapping functions, as their core building units is a paradigm which would not interfere with the current formal and informal descriptions of deep learning.
+The formulas of classical neural networks, whose nodes are organized into
+ lattices forming a Directed Acyclic Graph, shows minor variance in
+ contents of independent sources. Still their common point that they rely
+ on basic vector algebra and functional analysis, therefore considering
+ arrays representing general mapping functions, as their core building
+ blocks is a paradigm which would not interfere with the current formal
+ and informal descriptions of deep learning.
 
 \subsection{Disassembling a universal approximator}
 Thinking of a neural net as a function \(\mathcal{F}\), is implicitly a black-box representation of the paradigm.
-Users of different applications which offers feature detection, segmentation, prediction, etc. are using this function without knowing what exactly happens behind the curtains. 
-Further investigating \(\mathcal{F}\) we can constrain it to have a DAG computational graph, also to have the nodes of the graph arranged to lattices.
+Users of different applications which offer feature detection, segmentation, prediction, etc. are using this function without knowing what exactly happens behind the curtains. 
+Further investigating $\mathcal{F}$, we can constrain it to have a DA computational graph, also to have the nodes of the graph arranged to lattices.
 Practically it means that the perceptrons making up the layer \(l\) are strictly projecting $F_l$ their \textbf{inputs} 
-$ x_l \in \mathbb{R}^N $ \emph{forward} to scalars, which if all perceptron is evaluated parallel, forms the 
+$ x_l \in \mathbb{R}^N $ \emph{forward} to scalars, which if all perceptrons are evaluated in parallel, forms the 
 \textbf{output} $y_l \in \mathbb{R}^M$, have no feedbacks and loops. 
 This projection of layer $l$ can be written as $y_l = F_l(x_l)$. 
 Intuitively the input of the next $(l+1)^{th}$ layer will be the output of the previous layer:
 $x_{(l+1)} = y_l$.
 For the sake of simplicity I excluded Recurrent Networks from the space of $\mathcal{F}$, but later the definition can be extended for vanilla recurrent networks and LSTM networks as well.
 
-\subsection{Language} Keeping in mind, that using a general high-level language (like MATLAB) can yield poor computational efficiency, making benchmarks, testing and applications impossible.
-Also considering a low-level language (like C) would distract us from the main goal, always optimizing further and further the basic algorithms -- else resulting in boilerplate codes. Either way it would make the implementation unclear for those, who did not participate in the designing of the library.
+\subsection{Language} Keeping in mind that using a general high-level language (like MATLAB) can yield poor computational efficiency, making benchmarks, testing and applications ponderous.
+Also considering a low-level language (like C) 
+would distract us from the main goal, all 
+the time is spent on optimizing further and 
+further the basic algorithms, and usage usually 
+results in boilerplate codes. 
+Either way it would make the implementation unclear for those, who did not participate in the designing of the library.
 I wanted to chose a lagnuage which offers an optimal solution for this challenge, is flexible, well documented and simple enough for newbies to catch up.
-Because of the support of both object-oriented and procedural approaches and offering the above, I choose Python.
+Because of the support of both object-oriented andelse procedural approaches and offering the above, I choose Python.
 
-\subsection{Design pattern} While carrying out blueprints of the implementation, I examined the Neural Networks as universal approximators in a \textsc{top-down} manner.
+\subsection{Design pattern} While designing blueprints of the implementation, I examined the Neural Networks as universal approximators in a \textsc{top-down} manner.
 I have disassembled them to basic blocks, abstracting the function of each level.
-Later I used these units in \textsc{bottom-up} approach to create an object-oriented hierarchic model that realize simple operations and is well defined on every level: granting a universal interface to be further extended.
+Later I used these units in \textsc{bottom-up} approach to create an object-oriented hierarchic model that realizes simple operations and is well defined on every level: granting a universal interface to be further extended.
 
 
 \section{Single Layered networks}
@@ -311,7 +322,7 @@ Conventionally the corresponding Loss function is the \textbf{log-loss} or \text
 \begin{equation}
 \mathcal{L}(y)=-\sum_i y^*_i \log p_i
 \end{equation}
-and its gradient w.r.t. the original response of the last layer $y$, is the following:
+and the derivation of its gradient w.r.t. the original response of the last layer $y$, is the following (based on \cite{softmax}):
 \begin{equation}
 \begin{split}
 \frac{\partial \mathcal{L}}{\partial y_i} &=
@@ -336,4 +347,4 @@ $$
 \section{Implementation}
 ide jönnek a code-snippetek 
 \subsection{Network as a container}
-While implementing 
+While implementing the
