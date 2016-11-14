@@ -304,11 +304,25 @@ For that, we use \textbf{one-hot} notation, where $y^*_i = \left[ 0,0 \cdots 1 \
 The response will be turned into a discrete density function, e. g. $  = [0.1, \; 0.6, \; 0.2, \; 0.1]$ can be interpreted as the following:
 the input $x$ is categorized as a sample from the second class with 60\% confidence. Notice that $|p|_1=\sum_i y_i=1$ constraint should be satisfied.
 To transform a real valued $N$ dimensional vector $y \in \mathbb{R}^N$ to the mentioned probability distribution $p\in \Omega^N$ we apply the \emph{Softmax} function:
-$$e_i = \frac{\exp(y_i)}{|\exp(y)|_1}$$
-Conventionally the corresponding Loss function is the \textbf{log-loss} or \textbf{cross-entropy} function, and its gradient w.r.t. the original response of the last layer $y$ is:
+\begin{equation}
+p_i = \frac{\exp(y_i)}{|\exp(y)|_1}
+\end{equation}
+Conventionally the corresponding Loss function is the \textbf{log-loss} or \textbf{cross-entropy} function:
+\begin{equation}
+\mathcal{L}(y)=-\sum_i y^*_i \log p_i
+\end{equation},
+and its gradient w.r.t. the original response of the last layer $y$, is the following:
 \begin{equation}
 \begin{split}
-\mathcal{L}(y)=-\sum_i y^*_i \log p_i \\
-\frac{\partial \mathcal{L}}{\partial y_i} = 
+\frac{\partial \mathcal{L}}{\partial y_i} &= 
+-\sum_k y^*_j \frac{\partial \log p_j}{\partial y_i} = 
+-\sum_k \frac{y^*_j}{p_j}\frac{\partial p_j}{\partial y_i} \\ \\
+\frac{\partial p_j}{\partial y_i} &= 
+\begin{cases}
+    p_i(1-p_i) & i=j \\
+    -p_i p_j & i \neq j
+\end{cases} \\ \\
+\frac{\partial \mathcal{L}}{\partial y_i} &= 
+-y^*_i\left(1-p_i\right) - \sum_{j \neq i} \frac{y^*_j}{p_j}
 \end{split}
 \end{equation}
