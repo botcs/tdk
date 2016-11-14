@@ -318,11 +318,13 @@ and its gradient w.r.t. the original response of the last layer $y$, is the foll
 -\sum_k y^*_j \frac{\partial \log p_j}{\partial y_i} = 
 -\sum_k \frac{y^*_j}{p_j}\frac{\partial p_j}{\partial y_i} \\
 &= -y^*_i\left(1-p_i\right) - \sum_{j \neq i} \frac{y^*_j}{p_j}\left(p_i p_j\right) \\
-&= -y^*_i-y^*_i p_i + \sum_{j \neq i} y^*_j p_i = -y^*_i + \sum_j y^*_j p_i \\
-&= p_i \left(\sum_j y^*_j\right) -y^*_i = p_i - y^*_i
+&= -y^*_i-y^*_i p_i + \sum_{j \neq i} y^*_j p_i \\
+&= -y^*_i + \sum_j y^*_j p_i \\
+&= p_i \left(\sum_j y^*_j\right) -y^*_i \\
+&= p_i - y^*_i
 \end{split}
 \end{equation}
-The trick of the derivation is that $y^*$ has only one non-zero element, and the lemma:
+The trick of the derivation is that $y^*$ has only one non-zero element which is 1, and the lemma:
 $$
 \frac{\partial p_j}{\partial y_i} = 
 \begin{cases}
@@ -330,3 +332,8 @@ $$
     -p_i p_j & i \neq j
 \end{cases}
 $$
+
+\section{Implementation}
+ide jönnek a code-snippetek 
+\subsection{Network as a container}
+While implementing 
