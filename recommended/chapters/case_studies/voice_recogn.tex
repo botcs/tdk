@@ -117,7 +117,7 @@ Approaching real life problems, more parallel signals should be introduced to th
 	\label{fig:multi-common}
 \end{figure}
 
-\subsection{Introducing Regularization}
+\paragraph{Introducing Regularization.}
 Regularization is simply a practical implementation of Occam's razor, meaning that the unimportant features of $\mathbf{x}$ will not be taken into account by the perceptron. 
 
 On Figures \ref{fig:N500}, \ref{fig:N5000}, \ref{fig:N50} the weights were originally initialized with random Gaussian noise, but after training only the important frequencies' weights stayed significant. 
@@ -128,29 +128,38 @@ Noise reduction via \textbf{overfit} can be seen on Figure \ref{fig:overtrain}.
 
 \subsection{Real Samples}
 For acquiring samples from the environment the architecture should be wired to a physical sensor which will transfer signals from analog to digital. 
-Practically external libraries are applied to perform the capturing, the only thing remaining is to write an adapter to make the information format compatible with the network's architecture.
+Practically external libraries are applied to perform the capturing. I used PyAudio. PyAudio provides Python bindings for PortAudio \cite{pham2006pyaudio}. 
+The only thing remaining is to write an adapter to make the information format compatible with the network's architecture.
 
 \paragraph{Capturing sound}
 For the following experiments an algorithmic smart capturing is used, which enables us to record multiple sound waves with different length, without pressing a single key. The main idea is that the noise of the environment can be monitored, and in the background mean averaged. A practical threshold is set for recognizing significant audio inputs, where the magnitudes of the sampled waves reach the critical. After the recording starts, a fixed size time-frame will cancel out further activities of the capturing system. Another option is to end the capturing process when the magnitude of the input falls below a threshold. Either way, the samples are gathered in a list, and each of them are transformed to frequency domain with \emph{N-FFT}, producing equal length inputs  $\mathbf{x^i}$ for the network.
 
 \paragraph{Defining the classes}
-For human interpretation it is useful, that the separated classes are labeled, while from the aspect of the network it is totally irrelevant whatever these classes are. That is an important thing to understand, both in supervised and in unsupervised learning. In the next cases separation sound waves of \emph{Hello} will be separated from samples of \emph{Goodbye}.
+For human interpretation it is useful, that the separated classes are labeled, while from the aspect of the network it is totally irrelevant what the classes represent. That is an important thing to understand, both in supervised and in unsupervised learning. In the next cases separation sound waves of \emph{Hello} will be separated from samples of \emph{Goodbye}.
 
-\paragraph{Binary classifiers}
+\subsection{Binary classifiers}
 \paragraph{First greeting recognizer}
-The first model trained on greetings and farewells is working as expected. In the \href{https://github.com/botcs/deepvision/tree/master/demo/audio}{demo (so.py)} the user is asked to input number of $N$ samples representing class I, and the same number from class II which will be labeled with the assumption that the samples do not overlap. The length of the samples can vary in time, because the smart capturing takes care of the preprocess. For ending the recording session produce some loud noise, a clap should do. The labeled samples are then taken into account as the training set for the network, and the process adjusting the parameters begins. After 30 epochs the network waits for new $\mathbf{x}$s to classify. A few tests can be made to ensure the network is working well. My results with N=1000, on 3-3 input sample is performing around 91\% (100 tests were performed totally). Sending a \textbf{\textsc{sig-term}} will end the testing session and a summary window will pop up, probably something like on Figure \ref{fig:hello}.
-
-
+The first model trained on greetings and farewells is working as expected. In the demo found at \cite{DV} \texttt{~/demo/audio/so.py} the user is asked to input number of $N$ samples representing class I, and the same number from class II which will be labeled with the assumption that the samples do not overlap. The length of the samples can vary in time, because the smart capturing takes care of the preprocessing. 
+For ending the recording session produce some loud noise, a clap should do. 
+The labeled samples are then taken into account as the training set for the network, and the process adjusting the parameters begins. 
+After 30 epochs of training the network waits for new $\mathbf{x}$s to classify. 
+A few tests can be made to ensure the network is working well. 
+My results with N=1000, on 3-3 input sample is performing around 91\% (100 tests were performed in total). 
+Sending a \textbf{\textsc{sig-term}} will end the testing session and a summary window will pop up, probably something like on Figure \ref{fig:hello}.
 
 \subsection{Multiclass classification}
 \paragraph{Recognizing greetings in multiple languages}
-Currently the model somehow works like the one depicted on Figure \ref{fig:dumb}. A real task can be defined, where the network $\mathbf{N}$ has to classify that in which language the user said hello. Unfortunately there are more languages than two, but neural networks are flexible enough to be able to recognize and separate the inputs into  $N$ number of classes. For the improved model see Figure \ref{fig:improved} \\
+Currently the model works like the one depicted on Figure \ref{fig:dumb}. 
+A real task can be defined, where the network $\mathbf{N}$ has to classify in which language the user said hello. Unfortunately there are more languages than two, but neural networks are flexible enough to be able to recognize and separate the inputs into  $N$ number of classes. For the improved model see Figure \ref{fig:improved} 
 
 The experiments were done with 5 different languages: \emph{French, Arabic, Spanish, German, Hungarian}. The training scene is the same as in the previous cases: input sequentially $N$ number of samples for each language, end the recording with a clap.
-For a demonstration script check out \href{https://github.com/botcs/deepvision/tree/master/demo/audio}{demo (nclass.py)}
-The network trains on the given set, and the system is ready for testing. End the testing session by sending a \textbf{\textsc{sig-term}} signal. 
+For a demonstration script check out \cite{DV} \texttt{~/demo/audio/nclass.py}.
+The network trains on the given set, and the system is ready for testing.
 
-With the following hyperparameters: 1-1 number of samples in each language, \emph{mini-batch}$=1$, \emph{number of epochs}$=15$, $\lambda=0.005$, from random Gaussian initialization a network with 60\% performance can be obtained. 
+With the following hyperparameters: 1-1 number of samples in each language, \emph{mini-batch}$=1$, \emph{number of epochs}$=15$, $\lambda=0.005$, from random Gaussian initialization a network with 60\% performance can be obtained.
+\emph{Note}: at first 60\% may sound only slightly better then the 50-50 guessing, but considering the fact that the random guess would be distributed now between 5 classes, resulting in 20\% hit-rate, meaning that only every fifth greeting would be classified correctly. 
+Compared to that, 60\% is much better -- the network is tells the good answer in more than half of the cases.
+
 With larger training set, 3 samples for each language the result raised over 85\%. Comparing to industrial networks the training set used to adjust the parameters is very small in size. 
 For larger projects usually the training set contains thousands and millions of samples, and overfitting is less likely to occur. 
 For such a narrow network trained with a poor training set it can be said that 85\% is not that bad at all. Although the result still depends on who tests the configured network.
@@ -172,12 +181,18 @@ For such a narrow network trained with a poor training set it can be said that 8
 \end{figure}
 
 \subsection{Conclusion}
-So far it is shown how single layer neural networks work. How they should be thought of, what difficulties rises during their training. The capabilities of shallow networks were met during tests with the N-multiclass classifier. The next topic of the investigation is that how can these perceptron layers be combined to each other, for example to recognize whether a user said yes or no, without explicitly telling  which language he or she was speaking.
+So far it was shown how single layer neural networks work. 
+How they should be thought of, what difficulties arises during their training. 
+The capabilities of shallow networks were met during tests with the N-multiclass classifier. 
+The next topic of the investigation is that how can these perceptron layers be combined to each other, 
+for example to recognize whether a user said yes or no, without explicitly telling  which language he or she was speaking.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{hello-goodbye-N1000-L205}
-	\caption{On the left: the first example of the whole training set, showing the wave and frequency plot of a \emph{Hello}. On the right: the same for the word \emph{Goodbye}. As experienced on Figure \ref{fig:N500}, an anti-symmetric pattern arises in the weight plot of the classifier perceptrons. One pattern in the frequency domain of \emph{Goodbye} samples is very dominant and the weights of the \emph{Goodbye}-recognizing perceptron fits on it very well, while the same pattern can be found in the opposite perceptron's weight plot with negative sign.}
+	\caption{On the left: the first example of the whole training set, showing the wave and frequency plot of a \emph{Hello}. On the right: the same for the word \emph{Goodbye}. guesses more than half 
+	As experienced on Figure \ref{fig:N500}, an anti-symmetric pattern arises in the weight plot of the classifier perceptrons. 
+	One pattern in the frequency domain of \emph{Goodbye} samples is very dominant and the weights of the \emph{Goodbye}-recognizing perceptron fits on it very well, while the same pattern can be found in the opposite perceptron's weight plot with negative sign.}
 	
 	\label{fig:hello}
 \end{figure}

@@ -1,6 +1,9 @@
 \clearpage
 \section{Visualizing handwritten digit recognizer}
-First layer can be easily visualized by just simply reshaping the weights (see Figure \ref{fig:regression}), but extracting patterns which are recognized by further layers are not trivial. The main goal is to find an algorithm which with the input images can be enhanced to highlight the patterns that causes strongest activation in each neuron.
+In neural networks, the first layer can be easily visualized by just simply reshaping the weights (see Figure \ref{fig:regression}), 
+but extracting patterns which are recognized by further layers are not trivial. 
+The main goal is to find an algorithm which with the input images can be 
+enhanced to highlight the patterns that causes strongest activation in each neuron.
 
 
 \begin{figure}
@@ -31,13 +34,18 @@ Despite the varying capacity, the results rather depend on the shape of the netw
 \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{shapeNN-even.png}
-    \caption{Evenly distributed networks don't the input, even the last layers tend to activate on various input patterns. During backpropagation the gradient is also more likely to disappear.}
+    \caption{Evenly distributed networks preserve the size of the    
+    activations,    
+    i.e.they map it to a space with the same dimension. 
+    Despite the stable convergence during backpropagation the gradient is more likely to disappear, causing the first few layers to remain inept.}
     \label{fig:even}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{shapeNN-dec.png}
-    \caption{Decreasing networks tend to compress data through layer to layer, highest result was achieved with decreasing width network}
+    \caption{Decreasing networks tend to infer data through 
+    higher levels of abstraction, from layer to layer, highest result was 
+    achieved with decreasing width network}
     \label{fig:dec}
 \end{figure}
 \begin{figure}
@@ -66,13 +74,8 @@ For a given layer, the search can be done parallel, and for more general results
     \caption{First step of visualizing the $l^{th}$ layer: selecting each neuron's most confident choice from the image set}
     \label{fig:ga-method1}
 \end{figure}
-
-\subsection{Enhancing - gradient ascent}
-
-Simply mean averaging the candidates would not reveal the true signals which each neurons look for, see Figure \ref{fig:mean-ga-comp}
-
 \begin{figure}
-    \centering
+    \centeringalso 
     \includegraphics[width=0.5\textwidth]{mean-ga-comparison.png}
     \caption{On the first set of pictures the mean of the $T=100$ candidates are shown, they are the most preferred inputs of the candidate set for the last layer's neurons. On the set depicted below the enhanced images are shown}
     \label{fig:mean-ga-comp}
@@ -83,7 +86,13 @@ Simply mean averaging the candidates would not reveal the true signals which eac
     \caption{One iteration shown: a hidden layer's weights cannot be reshaped into images, but applying their activation gradient on the input images will emphasize, and amplify the patterns which yields the highest output w.r.t each neuron}
     \label{fig:ga-method2}
 \end{figure}
-Gradient ascent is an iterative method for enhancing the input to emphasize the patterns that are recognized by the neurons. A method which utilizes a network on top of the original to extract the recognition patterns, called DeConvnet, is described by Zeiler \emph{et al.} \cite{zeiler2014visualizing}. The mentioned algorithm can be reduced to the following, by leaving out the sparsity encouraging regularization term - making parallel processing more efficient:
+
+\subsection{Enhancing - Gradient Ascent}
+
+Simply mean averaging the candidates would not reveal the true signals which each neurons look for in the input space, namely the \emph{perceptive field}, see Figure \ref{fig:mean-ga-comp}.
+Gradient ascent is an iterative method to determine \emph{perceptive field}, by enhancing the input to emphasize the patterns that are recognized by the neurons. 
+A method which utilizes a network on top of the original to extract the recognition patterns, called DeConvnet, is described by Zeiler \emph{et al.} \cite{zeiler2014visualizing}. 
+I simplified the mentioned algorithm to the following, by leaving out the sparsity encouraging regularization term - making parallel processing more efficient:
 for fully connected layers the method boils down to backward propagating an \emph{arbitrary} delta vector (instead of calculating the gradient of the loss function described in \cite{zeiler2014visualizing}): 
 $\delta_l = \mathbf{e}$ or $\delta_l =\mathbf{b}$
 from the $l^{th}$ layer toward the input layer to get gradient of the input w.r.t the $i^{th}$ neuron's activation of the $l^{th}$ layer, and iteratively update the original sample by the gradient multiplied with \emph{modification rate}. The method is depicted on Figure \ref{fig:ga-method1} and \ref{fig:ga-method2}, 
@@ -122,7 +131,7 @@ for visual guide for understanding how the applied gradient looks like, see Figu
     \label{fig:grad-sub}
 \end{figure}
 
-By choosing $\mathbf{e}_{i} = [0, 0 \cdots 1 \cdots 0]^T$ the enhancement would not take other activations into account, while letting $\delta_l = \mathbf{b}_i = [-1, -1 \cdots 1 \cdots -1]^T$ would result in activation where other neurons' output would decrease over amplification. 
+In my proposed algorithm, by choosing $\mathbf{e}_{i} = [0, 0 \cdots 1 \cdots 0]^T$ the enhancement would not take other activations into account, while letting $\delta_l = \mathbf{b}_i = [-1, -1 \cdots 1 \cdots -1]^T$ would result in activation where other neurons' output would decrease over amplification. 
 Both methods were tested by the following procedure: The top 1 digit was selected for each neurons in the last layer of the best performing network, totaling in 10 samples. Skipping the candidate search of the top 10 samples were enhanced by the GA algorithm, with different number of iterations and with $\mathbf{e}$ and $ \mathbf{b}$. The results are shown on Figure \ref{fig:bias-nobias}. 
 
 \begin{figure}
@@ -248,4 +257,3 @@ For conviction, that we cannot simply read the values out from neither the activ
     }
     \label{fig:act-weight}
 \end{figure}
-
