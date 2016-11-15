@@ -1,5 +1,19 @@
 \clearpage
 \section{Visualizing handwritten digit recognizer}
+Novel architectures are performing better on classifying handwritten characters than average human volunteers, currently recognizing 9979 out of 10 000 unmet digits correctly. 
+Usually in papers researchers use public labeled datasets (such as MNIST\cite{mnist}, CIFAR\cite{cifar} etc...), available to anyone, for training and evaluating their models.
+It also serve well as a common base for comparison of recently developed networks: 
+For a short summary of the current state of the art implementations in image classification see \cite{bestmnist}.
+When I decided to make visualizations of more complex networks I chose MNIST, because of its popularity and restricted size: 
+\begin{itemize}
+\item[] training set: 50 000
+\item[] validation set: 10 000
+\item[] test set: 10 000
+\end{itemize}.
+
+\paragraph{Disclaimer.} I want to make it clear, that with this work I do \emph{not} intend to compete with current networks.
+My main motivation was to implement and test recent algorithms, also develop my own, based on intuitions that came up while studying related works.
+
 In neural networks, the first layer can be easily visualized by just simply reshaping the weights (see Figure \ref{fig:regression}), 
 but extracting patterns which are recognized by further layers are not trivial. 
 The main goal is to find an algorithm which with the input images can be 
@@ -63,11 +77,11 @@ Despite the varying capacity, the results rather depend on the shape of the netw
 \end{figure}
 
 
-\subsection{Candidates for enhancing}
+\subsection{Candidates for Gradient Ascent}
 \label{method}
 The most basic method for visualizing a perceptron is cherry-picking those pictures which results in the highest output.
 Formally: for a given network and set of input samples, a set of candidates can be found, which yield the highest output w.r.t. each neuron. 
-For a given layer, the search can be done parallel, and for more general results, not only the best samples are taken into account, but the top $T$ inputs yielding the highest activation of all samples from the given search set, see Figure \ref{fig:ga-method1}. 
+For a given layer, the search can be done parallel, and for more general results, not only the best samples are taken into account, but the top $T$ inputs yielding the highest activation of all samples from the given search set. For explanation see Figure \ref{fig:ga-method1}. 
 \begin{figure}
     \centering
     \includegraphics[width=0.6\textwidth]{NN1.png}
@@ -75,7 +89,7 @@ For a given layer, the search can be done parallel, and for more general results
     \label{fig:ga-method1}
 \end{figure}
 \begin{figure}
-    \centeringalso 
+    \centering
     \includegraphics[width=0.5\textwidth]{mean-ga-comparison.png}
     \caption{On the first set of pictures the mean of the $T=100$ candidates are shown, they are the most preferred inputs of the candidate set for the last layer's neurons. On the set depicted below the enhanced images are shown}
     \label{fig:mean-ga-comp}
@@ -90,6 +104,13 @@ For a given layer, the search can be done parallel, and for more general results
 \subsection{Enhancing - Gradient Ascent}
 
 Simply mean averaging the candidates would not reveal the true signals which each neurons look for in the input space, namely the \emph{perceptive field}, see Figure \ref{fig:mean-ga-comp}.
+Taking the mean, or calculating the deviation of these samples may result in pretty figures, but they do not rely directly on parameters of the network.
+
+
+\emph{\textbf{Note}: Deviating, or averaging the input samples is an important step to strengthen the features which the given node truly recognize, and drop out those which it does not (see Figure \ref{fig:mean}). For the rest of the case studies mean averaging is used for aggregation}
+
+\textbf{Remainder}: For the following examples, a small subset of samples are shown, which were selected for the most revealing clues. Still, they may not represent all features of the network.
+
 Gradient ascent is an iterative method to determine \emph{perceptive field}, by enhancing the input to emphasize the patterns that are recognized by the neurons. 
 A method which utilizes a network on top of the original to extract the recognition patterns, called DeConvnet, is described by Zeiler \emph{et al.} \cite{zeiler2014visualizing}. 
 I simplified the mentioned algorithm to the following, by leaving out the sparsity encouraging regularization term - making parallel processing more efficient:
@@ -123,7 +144,7 @@ for visual guide for understanding how the applied gradient looks like, see Figu
     \subfloat[$x+\nabla$]{\includegraphics[width=\textwidth]{GA1.png}}\\
     \vfill
     \subfloat[$\nabla$]{\includegraphics[width=\textwidth]{GA_gradients.png}}
-    \caption{After one iteration the enhancement is evanescent, still the gradient holds important information of the layer.
+    \caption{After one iteration the enhancement is barely visible, still the gradient holds important information of the layer.
     By looking at the gradient, we can tell which parts will be emphasized and which will be diminished during the process.
     The depicted gradients are extracted from the randomly picked neurons from the first hidden layer of a two layered network.
     For the smooth image result \texttt{bicubic} interpolation was used, with \texttt{seismic} color map.
@@ -192,7 +213,7 @@ A pre-trained network holds generalized information in the weights and biases, a
     \item Do fully connected networks converge to recognizing \emph{localized} patterns, like ConvNets do
 \end{itemize}
 
-\subsection{Challenges} Because the parameter space is too wide, the main obstacle in visualization is to find out what to look for. For example visualizing the current best network that has the following dimensions: 
+\subsection{Challenges} Because the parameter space is too wide, the main obstacle to visualization is to find out what to look for. For example visualizing the current best network that has the following dimensions: 
 \begin{itemize}
     \item for each node in the network there is a $T \times 28 \times 28$ sized input set
     \item for each layer there is a given set of nodes $N = [784, 784, 100, 10]$ respectively
@@ -229,11 +250,6 @@ Therefore finding the best $I$ is also essential for extracting important inform
 \end{figure}
 
 
-\emph{\textbf{Note}: Deviating, or averaging the input samples is an important step to strengthen the features which the given node truly recognize, and drop out those which it does not (see Figure \ref{fig:mean}). For the rest of the case studies mean averaging is used for aggregation}
-
-\textbf{Remainder}: For the following examples, a small subset of samples are shown, which were selected for the most revealing clues. Still, they may not represent all features of the network.
-
-
 \subsection{Analyzing the best performing network}
 The best result belongs to a network with hidden layer width: 784-784-100. 
 The layers were visualized with the following parameters:
@@ -244,7 +260,7 @@ and the training set was used for choosing candidates.
 
 The suggestion while looking for evidences is that the reason behind the good performance of the network is relying on different levels of abstraction.
 I visualized all three layers in order to get a better grasp what happens inside of a network, which can recognize digits with $98\%$ success.
-For conviction, that we cannot simply read the values out from neither the activation, or the weights from the hidden layers see Figure \ref{fig:act-weight}.
+To convince ourselves, that we cannot simply read the values out from neither the activation, or the weights from the hidden layers see Figure \ref{fig:act-weight}.
 
 \begin{figure}
     \centering
@@ -257,3 +273,4 @@ For conviction, that we cannot simply read the values out from neither the activ
     }
     \label{fig:act-weight}
 \end{figure}
+
