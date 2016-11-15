@@ -105,7 +105,7 @@ This information is distributed between the previous perceptrons which caused th
 Also with the information of how much the output of the actual node influenced the error, and with its input values, the significance of misleading $\mathbf{x_i}$ can be reduced, and important features' weights can be increased, which is actually finding a better $\mathbf{w_P}$.
 For further intuitive examples see section \ref{sec:diff}, or visit Andrej Karpathy's guide \cite{karpathyblog}.
 
-\paragraph{SGD.} The example concluded to the practical application of the so called \emph{Stochastic Gradient Descent}. 
+\paragraph{SGD.} The example led to the practical application of the so called \emph{Stochastic Gradient Descent}. 
 Originally every samples in the training set should be introduced to the system before updating its weights and that would be the \emph{Gradient Descent}, but in  the hope that the samples falls in a subset of the whole space of all possible inputs, the algorithm uses mini-batches for the learning process. When the number of samples in the batches reduces to 1, the training is called on-line training. And if it happens on $N$ containing a single perceptron it is called \emph{Rosenblatt perceptron learning algorithm}.
 
 
