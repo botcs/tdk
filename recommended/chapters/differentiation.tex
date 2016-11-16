@@ -210,13 +210,13 @@ then we can apply the same method with a 4 dimensional $\delta^{(L-1)}$ and with
 Acquiring the $\delta^{(L-1)}$ is where the chain rule \eqref{eq:chain} steps into the scene.
 While in the example before we could find an intuitive workaround, in this case it would be quite strained, since $\mathcal{L}$ does not depend directly on $y_{(L-1)}$.
 Utilizing the chain rule:
-\begin{equation*}
+\begin{equation}\label{eq:backward}
     \delta^{(L-1)} = 
     \frac{\partial \mathcal{L}}{\partial y^{(L-1)}} = 
     \frac{\partial \mathcal{L}}{\partial y^{L}} \cdot
     \frac{\partial y^{L}}{\partial y^{(L-1)}} = 
     \delta^L \cdot J(F_L)
-\end{equation*}
+\end{equation}
 Where $J(F_L)$ denotes the \emph{Jacobian} \eqref{eq:jacobian} of the function representing the projection of the last layer $F_L:\mathbb{R}^4\mapsto \mathbb{R}^3$.
 It is a map of how each input variable affects the output of the layer.
 In general: the Jacobian numerically can be represented as a $3 \times 4$ matrix, analytically as a \emph{local derivative} of function $F$.

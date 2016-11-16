@@ -311,12 +311,36 @@ $L_2$ is a universal Loss function, which is used in cases where the label space
 
 \input{chapters/differentiation}
 
-\section{Special layers}
-In this section I will introduce layers derived from the abstract \emph{activation layers}, 
+\section{Implementation}
+As I have mentioned in the beginning of the chapter, before implementing my own library I have analyzed multiple source-codes and tutorials. 
+Practical considerations led me to the current concept of neural networks, which will be described in this section.
+I will also introduce special layers derived from the abstract layers, 
 with the common attribute: the lack of trainable parameters. 
 Some of these layers are only used for manipulating the shape of information flow, 
 while others are down-sampling the input signal, 
 and there are layers which are removed from the network after training.
+
+
+\subsection{Layers as functioning units}
+Taking into account the functions of a general layer, 
+I made an abstract object with interface to implement
+by derived layers. 
+The most important attributes of the \url{abstract_layer}:
+\begin{itemize}
+\item[] \url{get_local_output} performs the \emph{forward-pass} of the layer on its argument
+\item[] \url{backprop_delta} performs the \emph{backward-pass} of the layer for a given delta
+\item[] \url{prev} and \url{next} fields pointing to other layers
+\item[] \url{get_output} and \url{get_delta} uses \url{prev} and \url{next} to unfold the \ref{eq:forward} and \ref{eq:backward} function calls.
+\end{itemize}
+
+\subsection{Network as layer manager}
+In my implementation the \texttt{network} is an object that arranges, connects, train and utilize layers.
+While layers can function without a network, for ease of use and modularity purposes
+the network takes care of managing the computational graph.
+The use of \texttt{network} class enables to implement high-level features such as:
+defining training policies, serializing saving and loading networks on hard drive,
+visualizing layers.
+The network can add existing layers to its graph, and also makes it easier to create new ones and remove others.
 
 \subsection{Shaper} This layer does not manipulate the values of its input, but as the name suggests, it rearranges the values and also redirects the gradient flow.
 Its activation function $f(x) = x$ is the identity function, and its derivative is also quite straightforward $f(x)'=1$.
@@ -325,7 +349,13 @@ Used for networks, where a single input is not one dimensional and has to be \te
 
 \subsection{Pooling layers} Pooling layers are decreasing the parameter space with a fixed down-sampling projection which operates independently on tiles of input.
 In general pooling layers are moving a \texttt{N}-sized window, or a tile through the data taking \texttt{stride} steps.
-Data in each window is collapsed by an aggregation function, such as \texttt{mean()} or \texttt{max()} lowering the computational complexity of the next layers processes. Implementation of this layer can be a bottleneck of inference, since the operations carried out in each window may rely on the same input values if \texttt{N} $>$ \texttt{stride} i.e. windows overlap. In my library a single \texttt{max-pool} layer is implemented with fixed parameters: \texttt{stride} $=$ \texttt{N} $=2$. Further information see~\cite{stanfordlectures}~\url{~/convolutional-networks/#pool}
+Data in each window is collapsed by an aggregation function, such as \texttt{mean()} or \texttt{max()} lowering the computational complexity of the next layers processes. Implementation of this layer can be a bottleneck of inference, since the operations carried out in each window may rely on the same input values if \texttt{N} $>$ \texttt{stride} i.e. windows overlap. In my library a single \texttt{max-pool} layer is implemented with fixed parameters: \texttt{stride} $=$ \texttt{N} $=2$. Further information see~\cite{stanfordlectures}~\url{~/convolutional-networks/#pool}.
+
+\subsection{k-WTA}
+Similar to pooling layers, without preserving spatial information.
+Mainly used in fully-connected networks for reducing computational complexity.
+This layer was applied when generating MNIST visualization.
+For further information see~\cite{wta}.
 
 \subsection{Dropout} Dropout layers target the problem of overfitting, being considered as a method of regularization.
 In theory they reduce complex co-adaptation via model averaging, 
@@ -337,11 +367,7 @@ considering that latent layers would be \emph{saturated} when dropout layers wer
 the activations passed by this layer are multiplied by the constant $\frac{1}{p}$.
 \paragraph{DropConnect} A similar concept, introduced by Li Wan \emph{et al.}~\cite{dropcon}: 
 instead dropping the activation of the previous layer, the weights of the layer are canceled out in the same fashion.
-In my implementation they can be only applied to fully-connected layers.
-
-
-
-\subsection{k-WTA layers}
+In my implementation they can be only applied to fully-connected layers, where a \emph{Boolean matrix} mask is used.
 
 \subsection{Output} 
 On the top of every network there should be a dedicated layer, which arranges the networks response. 
@@ -383,14 +409,3 @@ $$
     -p_i p_j & i \neq j
 \end{cases}
 $$
-
-\section{Implementation}
-As I have mentioned in the beginning of the chapter, before implementing my own library I have analyzed multiple source-codes and tutorials. 
-Practical considerations led me to the current concept of neural networks, which will be described in this section.
-
-\subsection{Layers as functioning units}
-Taking into account the functions of a general layer, I have 
-
-\subsection{Network as a container}
-an object that arranges, connects 
-While implementing the
