@@ -142,7 +142,7 @@ For human interpretation it is useful, that the separated classes are labeled, w
 The first model trained on greetings and farewells is working as expected. In the demo found at \cite{DV} \url{~/demo/audio/so.py} the user is asked to input number of $N$ samples representing class I, and the same number from class II which will be labeled with the assumption that the samples do not overlap. The length of the samples can vary in time, because the smart capturing takes care of the preprocessing. 
 For ending the recording session produce some loud noise, a clap should do. 
 The labeled samples are then taken into account as the training set for the network, and the process adjusting the parameters begins. 
-After 30 epochs of training the network waits for new $\mathbf{x}$s to classify. 
+After 30 epochs of training the network waits for new $\mathbf{x}$ to classify. 
 A few tests can be made to ensure the network is working well. 
 My results with N=1000, on 3-3 input sample is performing around 91\% (100 tests were performed in total). 
 Sending a \textbf{\textsc{sig-term}} will end the testing session and a summary window will pop up, probably something like on Figure \ref{fig:hello}.

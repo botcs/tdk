@@ -16,6 +16,7 @@ My main motivation was to implement and test recent algorithms, also develop my 
 
 In neural networks, the first layer can be easily visualized by just simply reshaping the weights (see Figure \ref{fig:regression}), 
 but extracting patterns which are recognized by further layers are not trivial. 
+To convince ourselves, that we cannot simply read the values out from neither the activation, or the weights from the hidden layers see Figure \ref{fig:act-weight}.
 The main goal is to find an algorithm which with the input images can be 
 enhanced to highlight the patterns that causes strongest activation in each neuron.
 
@@ -43,6 +44,20 @@ Shallow networks, with fewer layers that had theoretically larger capacity than 
 Deeper networks, with more layers either were numerically unstable, and exhibited vanishing gradient, or overfitting occurred early in the training process.
 The 3 layered networks were trained with the following constraints: Stochastic gradient descent with $mini-batch=64$, learning rate $\epsilon = 0.05$ and total number of $epochs=25$.
 Despite the varying capacity, the results rather depend on the shape of the network. The best of the three networks are compared on Figure \ref{fig:comp}.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{act-weight.pdf}
+    \caption{\emph{On top}: Every sample translates to some response signal (like the depicted maps) before reaching the final classifier layer. 
+    Though we cannot understand it, for the network the activation patterns holds all information about the corresponding input.
+    \emph{On bottom}: Each map is processed by the weights of the last layer, which is also essential for the network, but does not exhibit any intuitive feature.
+    Think about the analogy: we cannot simply define what happens inside by just looking at brains of creatures. 
+    Even if we had a high resolution microscope, revealing the fine structure of the nervous tissue would not suddenly illuminate everything.
+    }
+    \label{fig:act-weight}
+\end{figure}
+
 
 
 \begin{figure}
@@ -259,17 +274,3 @@ and the training set was used for choosing candidates.
 
 The suggestion while looking for evidences is that the reason behind the good performance of the network is relying on different levels of abstraction.
 I visualized all three layers in order to get a better grasp what happens inside of a network, which can recognize digits with $98\%$ success.
-To convince ourselves, that we cannot simply read the values out from neither the activation, or the weights from the hidden layers see Figure \ref{fig:act-weight}.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\textwidth]{act-weight.pdf}
-    \caption{\emph{On top}: Every sample translates to some response signal (like the depicted maps) before reaching the final classifier layer. 
-    Though we cannot understand it, for the network the activation patterns holds all information about the corresponding input.
-    \emph{On bottom}: Each map is processed by the weights of the last layer, which is also essential for the network, but does not exhibit any intuitive feature.
-    Think about the analogy: we cannot simply define what happens inside by just looking at brains of creatures. 
-    Even if we had a high resolution microscope, revealing the fine structure of the nervous tissue would not suddenly illuminate everything.
-    }
-    \label{fig:act-weight}
-\end{figure}
-

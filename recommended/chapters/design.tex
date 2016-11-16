@@ -343,7 +343,7 @@ visualizing layers.
 The network can add existing layers to its graph, and also makes it easier to create new ones and remove others.
 Below the definition a definition and the train of the network which performs over 98\% on MNIST.
 \clearpage
-\begin{lstlisting}
+\begin{lstlisting}[language=Python]
 import network_module as nm
 ...
 
@@ -356,13 +356,8 @@ nn.add_full(100)
 nn.add_activation('tanh')
 nn.add_full(10)
 
-nn.SGD(train_policy=nn.fix_epoch,
-       training_set=train,
-       batch=128, 
-       rate=0.05, 
-       epoch=25,
-       L2=True,
-       reg=0.001)
+nn.SGD(train_policy=nn.fix_epoch, epoch=25, training_set=train,
+       batch=128, rate=0.05, L2=True, reg=0.001)
 \end{lstlisting}
 
 
