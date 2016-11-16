@@ -233,29 +233,36 @@ Theoretically if we wanted to create a perfect network, we would infer all possi
 $\mathcal{L}$ would evaluate the network on every solution (in a single iteration, without the network being updated), 
 then we would take the mean of the Loss to evaluate the gradient, e.g. 
 $$\mathcal{L}^*=\frac{1}{N}\sum_{x \in \mathbb{X}}\mathcal{L}(\mathcal{F}(x))$$
+One update on the whole training set is called a \textbf{batch}
 This way, if the capacity of $\mathcal{F}$ is large enough, it is possible to train the network to be able to solve every problem.
 In a special case when we want to simulate logical circuits with real values instead of Boolean \texttt{true} or \texttt{false},
 then we can train a network to act like a logical processing unit - since we are able to map $\forall x \in \mathbb{X} \mapsto y \in \mathbb{Y}$ by 
 external evaluation.
 
-The other case is more practical, when the network is updated \textbf{on-line}, described exhaustively in \cite{onlinelearn}. 
-In a nutshell on-line training is when the network after initialization, is utilized as well.
-Predictions which were correct are put into the training set, and the network weights are updated immediately 
+The other case is more practical, when the train data is not available at once, but in sequence.
+The network is usually updated in \emph{testing} time and that is why it is called \textbf{on-line} training.
+The topic is described exhaustively in \cite{onlinelearn}.
+In practice the network is trained previously before on-line training (even if a very few sample are available), 
+because the responses are not just used for evaluating the Loss function, but taken into account as valid predictions.
+Normally there is no opportunity to label freshly acquired samples, 
+and this is the main reason that this technique is used mainly in \emph{unsupervised learning} tasks.
+However when supervision is available, then the network can be trained in the following manner:
+predictions which were correct are put into the training set, 
+and the network weights are updated immediately 
 to encourage the same response for similar samples.
+For experiments with the mentioned method, see section~\ref{sec:voice}.
 A frequent application of on-line training is called \emph{Q-learn}, for case studies see \cite{qlearn-case}.
 
-Both methods are powerful for specific tasks, but in practice taking the golden mean is considerable:
+Both methods are powerful for specific tasks, but in practice the solution is between: \textbf{mini-batch} training.
 Inferring multiple samples at the same time with the same network not just yields a more stable convergence, 
 but is an excellent opportunity to parallelize the process:
 Extending by one extra dimension to each stage of the inference (inputs, transient activations, outputs) can be done easily,
-also almost every library can take the advantage to perform optimized matrix operations on multidimensional matrices (at least \emph{NumPy} can).
+also almost every library can take the advantage to perform optimized matrix operations on tensors (at least \emph{NumPy} can).
 On the second hand, processing only \emph{some} instead of all of the input samples at once is computationally a better choice.
-In real applications it is worth considering $2^k$ mini-batch sizes because of the memory allocation \cite{stanfordlectures}.
+In real applications it is worth considering $2^k$ mini-batch sizes because of the requirement of memory allocation~\cite{stanfordlectures}.
 
 \paragraph{Advanced First order derivatives.} 
 Simple heuristics applied to first order derivatives, such as:
-
-
 
 \begin{description}[align=right,labelwidth=3cm]
 \item[Momentum] \cite{sutskever2013importance}
@@ -273,7 +280,7 @@ A more sophisticated, but expensive method is using second order derivative, for
 For large networks it is inevitable to use decreasing learning rate, otherwise the convergence would take too much time (small $\epsilon$) or would not even occur (large $\epsilon$). 
 
 \paragraph{Cross-Validation.} Special $\hat{\mathcal{L}}=(\mathcal{L}_{train}, \mathcal{L}_{validation})$ functions approximate the efficiency of the network not just by evaluating them on the currently or previously trained samples, but on samples which are from a totally \textbf{disjunct set} $\mathbb{X}_{validation}$.
-The motivation behind it is to see how well would the network perform on samples which it have not faced before.
+The motivation behind it is to see how well would the network perform on samples which it has not faced before.
 By doing so we can evaluate how well the network \emph{generalized} the information from samples of the training set.
 In order to keep $\mathbb{X}_{train} \bigcap \mathbb{X}_{validation} = \varnothing$ we may not use $\mathcal{L}_{validation}$ for parameter updating.
 However in order to \textbf{prevent overfitting} we can monitor e.g. generalization error $E_g=\frac{\hat{\mathcal{L}}_1}{\hat{\mathcal{L}}_2}$ during training 
@@ -304,19 +311,37 @@ $L_2$ is a universal Loss function, which is used in cases where the label space
 
 \input{chapters/differentiation}
 
-\section{Special activation layers}
-In this section I will introduce layers derived from the abstract \emph{activation layers}, with the common attribute: the lack of trainable parameters. 
+\section{Special layers}
+In this section I will introduce layers derived from the abstract \emph{activation layers}, 
+with the common attribute: the lack of trainable parameters. 
 Some of these layers are only used for manipulating the shape of information flow, 
 while others are down-sampling the input signal, 
 and there are layers which are removed from the network after training.
 
-\subsection{Shaper} This layer does not manipulate the values of its input, but as the name suggests rearranges the values also redirects the gradient flow.
+\subsection{Shaper} This layer does not manipulate the values of its input, but as the name suggests, it rearranges the values and also redirects the gradient flow.
 Its activation function $f(x) = x$ is the identity function, and its derivative is also quite straightforward $f(x)'=1$.
 Used for networks, where a single input is not one dimensional and has to be \texttt{flatten} before inference, or in \emph{multi-thread} networks where the inference is distributed between parallel layers \cite{szegedy2015going}.
+\paragraph{Input.} In my implementation, for practical considerations I use the \texttt{input} layer, the $0^{th}$ layer, for reshaping the input samples (if required).
 
 \subsection{Pooling layers} Pooling layers are decreasing the parameter space with a fixed down-sampling projection which operates independently on tiles of input.
 In general pooling layers are moving a \texttt{N}-sized window, or a tile through the data taking \texttt{stride} steps.
-Data in each window is collapsed by an aggregation function, such as \texttt{mean()} or \texttt{max()} lowering the computational complexity of the next layers processes. Implementation of this layer can be a bottleneck of inference, since the operations carried out in each window may rely on the same input values if \texttt{N} $>$ \texttt{stride} i.e. windows overlap. In my library a single \texttt{max-pool} layer is implemented with fixed parameters: \texttt{stride} $=$ \texttt{N} $=2$.
+Data in each window is collapsed by an aggregation function, such as \texttt{mean()} or \texttt{max()} lowering the computational complexity of the next layers processes. Implementation of this layer can be a bottleneck of inference, since the operations carried out in each window may rely on the same input values if \texttt{N} $>$ \texttt{stride} i.e. windows overlap. In my library a single \texttt{max-pool} layer is implemented with fixed parameters: \texttt{stride} $=$ \texttt{N} $=2$. Further information see~\cite{stanfordlectures}~\url{~/convolutional-networks/#pool}
+
+\subsection{Dropout} Dropout layers target the problem of overfitting, being considered as a method of regularization.
+In theory they reduce complex co-adaptation via model averaging, 
+by generating different networks (using the same parameters) in each forward pass~\cite{hinton2012improving}.
+Practically they drop activations of the previous layer (with random \emph{Bernoulli($p$)} probability) when propagating information, forcing succeeding layers to not depend on an individual neuron of the layer before.  
+Computationally it is very efficient to create different, so called \textbf{sub-networks}: both for forward and backward pass a single \emph{Boolean array} mask is used.
+\emph{Note}: Dropout layers are reducing the overall magnitude of the activation of the previous layer,
+considering that latent layers would be \emph{saturated} when dropout layers were removed after training,
+the activations passed by this layer are multiplied by the constant $\frac{1}{p}$.
+\paragraph{DropConnect} A similar concept, introduced by Li Wan \emph{et al.}~\cite{dropcon}: 
+instead dropping the activation of the previous layer, the weights of the layer are canceled out in the same fashion.
+In my implementation they can be only applied to fully-connected layers.
+
+
+
+\subsection{k-WTA layers}
 
 \subsection{Output} 
 On the top of every network there should be a dedicated layer, which arranges the networks response. 
@@ -360,6 +385,12 @@ $$
 $$
 
 \section{Implementation}
-ide jönnek a code-snippetek 
+As I have mentioned in the beginning of the chapter, before implementing my own library I have analyzed multiple source-codes and tutorials. 
+Practical considerations led me to the current concept of neural networks, which will be described in this section.
+
+\subsection{Layers as functioning units}
+Taking into account the functions of a general layer, I have 
+
 \subsection{Network as a container}
+an object that arranges, connects 
 While implementing the
