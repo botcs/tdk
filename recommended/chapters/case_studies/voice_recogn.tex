@@ -29,11 +29,11 @@ The writing assumes basic knowledge in linear algebra, the model will be describ
 	}
 	\label{fig:workflow}
 \end{figure}
-For a given network $N$ and fixed length input $x$ the system's assumption, the output, is computed as $y=N(x)$, where $y$ is a fixed length vector.
-$N$ can be seen as a \emph{black box}, that takes $dim(x)$ information, somehow processes it and - if $N$ is trained correctly it returns the class of $x$. Practically $dim(y)=|\{\textrm{classes}\}|$ - therefore $y$ represents the network's confidence on each class.
+For a given network $\mathcal{F}$ and fixed length input $x$ the system's assumption, the output, is computed as $y=\mathcal{F}(x)$, where $y$ is a fixed length vector.
+$\mathcal{F}$ can be seen as a \emph{black box}, that takes $dim(x)$ information, somehow processes it and - if $\mathcal{F}$ is trained correctly it returns the class of $x$. Practically $dim(y)=|\{\textrm{classes}\}|$ - therefore $y$ represents the network's confidence on each class (detailed explanation \ref{eq:softmax}). 
 
 \subsection{Separating sine waves}
-After defining the model, the first implementation should be able to classify the low- and high-pitch samples. For starting let the low-pitch sample, $\mathbf{x^1}$ be a sine function with frequency $F1$, and high-frequency sample $\mathbf{x^2}$ a sine with frequency $F2$. 
+After defining the model, the first implementation should be able to classify the low- and high-pitch samples. For starting let the low-pitch sample, $\mathbf{x^1}$ be a sine function with frequency $F1$, and high-frequency sample $\mathbf{x^2}$, a sine with frequency $F2$. 
 For mimicking the nature's living systems (especially the inner ear), the sample is transformed to frequency domain with an algorithm called \emph{N-point Fast Fourier Transform} \cite{welch1967use}. 
 \paragraph{Fourier Transform in a nutshell.} Basically the result of the transformation tells which frequencies were dominant in the time domain, which is a better clue for both the living, and the machines too. 
 The architecture will be two perceptrons in the same layer. 
@@ -150,7 +150,7 @@ Sending a \textbf{\textsc{sig-term}} will end the testing session and a summary 
 \subsection{Multiclass classification}
 \paragraph{Recognizing greetings in multiple languages}
 Currently the model works like the one depicted on Figure \ref{fig:dumb}. 
-A real task can be defined, where the network $\mathbf{N}$ has to classify in which language the user said hello. Unfortunately there are more languages than two, but neural networks are flexible enough to be able to recognize and separate the inputs into  $N$ number of classes. For the improved model see Figure \ref{fig:improved} 
+A real task can be defined, where the network $\mathcal{F}$ has to classify in which language the user said hello. Unfortunately there are more languages than two, but neural networks are flexible enough to be able to recognize and separate the inputs into  $N$ number of classes. For the improved model see Figure \ref{fig:improved} 
 
 The experiments were done with 5 different languages: \emph{French, Arabic, Spanish, German, Hungarian}. The training scene is the same as in the previous cases: input sequentially $N$ number of samples for each language, end the recording with a clap.
 For a demonstration script check out \cite{DV} \url{~/demo/audio/nclass.py}.

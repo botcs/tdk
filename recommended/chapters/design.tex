@@ -409,7 +409,7 @@ Conventionally the corresponding Loss function is the \textbf{log-loss} or \text
 \mathcal{L}(y)=-\sum_i y^*_i \log p_i
 \end{equation}
 and the derivation of its gradient w.r.t. the original response of the last layer $y$, is the following (based on \cite{softmax}):
-\begin{equation}
+\begin{equation}\label{eq:softmax}
 \begin{split}
 \frac{\partial \mathcal{L}}{\partial y_i} &=
 -\sum_k y^*_j \frac{\partial \log p_j}{\partial y_i} = 
