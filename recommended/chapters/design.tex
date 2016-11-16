@@ -321,7 +321,7 @@ while others are down-sampling the input signal,
 and there are layers which are removed from the network after training.
 
 
-\subsection{Layers as functioning units}
+\subsection{Layers as building blocks}
 Taking into account the functions of a general layer, 
 I made an abstract object with interface to implement
 by derived layers. 
@@ -341,6 +341,31 @@ The use of \texttt{network} class enables to implement high-level features such 
 defining training policies, serializing saving and loading networks on hard drive,
 visualizing layers.
 The network can add existing layers to its graph, and also makes it easier to create new ones and remove others.
+Below the definition a definition and the train of the network which performs over 98\% on MNIST.
+\clearpage
+\begin{lstlisting}
+import network_module as nm
+...
+
+nn = nm.network(in_shape=np.prod(train[0][0].shape), criterion='softmax')
+nn.add_full(784)
+nn.add_activation('relu')
+nn.add_full(784)
+nn.add_activation('relu')
+nn.add_full(100)
+nn.add_activation('tanh')
+nn.add_full(10)
+
+nn.SGD(train_policy=nn.fix_epoch,
+       training_set=train,
+       batch=128, 
+       rate=0.05, 
+       epoch=25,
+       L2=True,
+       reg=0.001)
+\end{lstlisting}
+
+
 
 \subsection{Shaper} This layer does not manipulate the values of its input, but as the name suggests, it rearranges the values and also redirects the gradient flow.
 Its activation function $f(x) = x$ is the identity function, and its derivative is also quite straightforward $f(x)'=1$.
