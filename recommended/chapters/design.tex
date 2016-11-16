@@ -1,4 +1,4 @@
-\chapter{Design and Implementation}
+\chapter{Design and Implementation}\label{cp:design}
 
 \epigraph{\textit{... where in this snippet $W1$ and $W2$ are two matrices that we initialize randomly. We're not using biases because meh.}}{\rightline{{\rm --- Andrej Karpathy}}}
 
@@ -342,21 +342,33 @@ The use of \texttt{network} class enables to implement high-level features such 
 defining training policies, serializing saving and loading networks on hard drive,
 visualizing layers.
 The network can add existing layers to its graph, and also makes it easier to create new ones and remove others.
-Below the definition a definition and the train of the network which performs over 98\% on MNIST.
+Below the definition and the train of the network which performs over 98\% on MNIST.
 \clearpage
 \begin{lstlisting}[language=Python]
 import network_module as nm
 ...
+# train is a two element tuple consisting of:
+#   50k MNIST image 
+#   their corresponding one-hot labels.
 
-nn = nm.network(in_shape=np.prod(train[0][0].shape), criterion='softmax')
+# initialize network with 784 wide input layer and SoftMax loss function
+nn = nm.network(in_shape=np.prod(train[0][0].shape), criterion='softmax') 
+
+nn.add_full(784) # add fully connected layer of 784 neurons
+nn.add_activation('relu') # add layer with ReLU activation function
+
 nn.add_full(784)
 nn.add_activation('relu')
-nn.add_full(784)
-nn.add_activation('relu')
+
 nn.add_full(100)
 nn.add_activation('tanh')
-nn.add_full(10)
 
+nn.add_full(10) 
+
+# the last layer always determine the shape of the output
+# the network updates its output layer automatically when a layer is added
+
+# train the network with the given parameters
 nn.SGD(train_policy=nn.fix_epoch, epoch=25, training_set=train,
        batch=128, rate=0.05, L2=True, reg=0.001)
 \end{lstlisting}
@@ -373,7 +385,9 @@ In general pooling layers are moving a \texttt{N}-sized window, or a tile throug
 Data in each window is collapsed by an aggregation function, such as \texttt{mean()} or \texttt{max()} lowering the computational complexity of the next layers processes. Implementation of this layer can be a bottleneck of inference, since the operations carried out in each window may rely on the same input values if \texttt{N} $>$ \texttt{stride} i.e. windows overlap. In my library a single \texttt{max-pool} layer is implemented with fixed parameters: \texttt{stride} $=$ \texttt{N} $=2$. Further information see~\cite{stanfordlectures}~\url{~/convolutional-networks/#pool}.
 
 \subsection{k-WTA}
-Similar to pooling layers, without preserving spatial information.
+\emph{k-Winner Takes All} layers are similar to pooling layers, without preserving spatial information.
+They function as a threshold of the previous layer, only passing those activations which have the largest magnitude among the others. 
+Gradient is also distributed between those neurons which were passed by the \emph{k-WTA} layer.
 Mainly used in fully-connected networks for reducing computational complexity.
 This layer was applied when generating MNIST visualization.
 For further information see~\cite{wta}.

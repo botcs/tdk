@@ -21,7 +21,7 @@ Finally I propose the main innovation of my recent work: a simple algorithm for 
 \paragraph{Primary goal.} With my work I intend to bring closer, and demystify cutting-edge concepts of applied neural networkings for larger audiences. 
 On related works and case studies I want to show what can be done by simply going back to the drawing board
 
-
+\clearpage
 \section{Related Works and Literature}
 
 \paragraph{Main motivation.} By using external libraries \cite{TF, torch, caffe}, without diving deep into mathematical proofs, and treating neural networks as black-boxes, thousands of useful applications \cite{haykin2004comprehensive} are made. 
@@ -49,10 +49,23 @@ Reading a practical guide~\cite{karpathyblog} pointed out how can we represent \
 His style of explaining complex theoretical concepts through very clear examples motivated me to
 write my own guide which covers those parts that I was missing from the literature mentioned above.
 
-When I had a functioning 
+When the library was working, the next step was writing demo applications, in which I have experimented with hyper-parameters.
+These applications were based on \emph{Browser demos} of \cite{convnetjs}.
+In this work only two of them is present, which are related to visualization.
+Later I was experimenting with different methods of revealing the \emph{perceptive field}.
+In \cite{breakingclass} I learned about how modern networks can be fooled with \emph{adversarial samples} which referred to \cite{goodfellow2014explaining} and \cite{nguyen2015deep}. 
+Further investigation in the area revealed basic methods on understanding how each neuron works in a network \cite{yosinski2015understanding}.
+I was inspired to develop my own algorithm while I was studying the novel architecture of DeconvNets \cite{zeiler2014visualizing}.
 
+\clearpage
 \section{Thesis outline and contributions}
+In this work I summarize my recent studies on Neural Networks and Computer Vision. 
+I present my current achievements in the field, the visualization techniques I have derived and developed from the latest 
+self-educational sources and novel research.
+I also provide a guide on how to build a library \textbf{from scratch} which I used for producing the present results.
 
+
+In \textbf{Chapter \ref{cp:design}} a detailed explanation on how I derived the main concepts of neural networks, from the very beginning, and 
 
 
 
