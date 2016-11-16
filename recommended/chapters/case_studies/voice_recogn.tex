@@ -74,7 +74,7 @@ For such arbitrary cases, where no noise is added to the signal, larger precisio
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\textwidth]{N50-L2e-1.png}
+	\includegraphics[width=\textwidth]{N50-L2e-1.png}
 	\caption{The network's initialization and training parameters are identical to the network depicted on Figure \ref{fig:N500}, only the transform precision is decreased from $N=500$ to $N=50$ resulting in more shallow spikes corresponding to the recognized frequency}
 	
 	\label{fig:N50}
@@ -82,7 +82,7 @@ For such arbitrary cases, where no noise is added to the signal, larger precisio
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\textwidth]{L2_factor_plot--5epoch.png}
+	\includegraphics[width=\textwidth]{L2_factor_plot--5epoch.png}
 	\caption{After the third row the figure depicts independently, identically initialized and trained networks detailed in Figure \ref{fig:N500}, only the regularization factor $\lambda$ is decreased from $0.5$ to $0.0001$ resulting in more noisy weight plot. Still the  corresponding weights' magnitude are outstanding}
 	
 	\label{fig:reg}
@@ -90,7 +90,7 @@ For such arbitrary cases, where no noise is added to the signal, larger precisio
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\textwidth]{L2_factor_plot.png}
+	\includegraphics[width=\textwidth]{L2_factor_plot.png}
 	\caption{The network was trained with the same parameters as the one depicted on \ref{fig:reg}, except that it was trained for five times longer. Despite the result is quite the same as the result achieved with greater regularization factor, overfitting should be avoided. Overfitting occurs when the network $N$ tends to perform well on the training set, but fails to recognize unmet samples, because either the training samples were not general enough, either the network was just large enough to memorize each one of the samples, or both. }
 	
 	\label{fig:overtrain}
@@ -102,7 +102,7 @@ Approaching real life problems, more parallel signals should be introduced to th
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\textwidth]{multiple---N5000---L2-5e-1.png}
+	\includegraphics[width=\textwidth]{multiple---N5000---L2-5e-1.png}
 	\caption{Each sample is an equal combination of 3 independent sine function. The frequency of the waves are not separated to low and high frequencies, both can be found in each sample, but it is important to notice, that the two samples do not have any common component.}
 	
 	\label{fig:multi}
@@ -111,7 +111,7 @@ Approaching real life problems, more parallel signals should be introduced to th
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.9\textwidth]{multiple--common-20-50Hz--N5000---L2-5e-1.png}
+	\includegraphics[width=\textwidth]{multiple--common-20-50Hz--N5000---L2-5e-1.png}
 	\caption{In opposite to the case depicted on Figure \ref{fig:multi} here the samples have two common component, meaning that in the base functions there are two common frequency and only differs in one harmonics. The result is that the common features extracted by the FFT are discarded, and the perceptrons only learn the difference.}
 	
 	\label{fig:multi-common}

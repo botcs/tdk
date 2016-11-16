@@ -9,9 +9,9 @@ When I decided to make visualizations of more complex networks I chose MNIST, be
 \item[] training set: 50 000
 \item[] validation set: 10 000
 \item[] test set: 10 000
-\end{itemize}.
+\end{itemize}
 
-\paragraph{Disclaimer.} I want to make it clear, that with this work I do \emph{not} intend to compete with current networks.
+\paragraph{Disclaimer.} I want to make it clear, that with this work I do \emph{not} intend to compete with current machine learning libraries.
 My main motivation was to implement and test recent algorithms, also develop my own, based on intuitions that came up while studying related works.
 
 In neural networks, the first layer can be easily visualized by just simply reshaping the weights (see Figure \ref{fig:regression}), 
@@ -44,6 +44,12 @@ Shallow networks, with fewer layers that had theoretically larger capacity than 
 Deeper networks, with more layers either were numerically unstable, and exhibited vanishing gradient, or overfitting occurred early in the training process.
 The 3 layered networks were trained with the following constraints: Stochastic gradient descent with $mini-batch=64$, learning rate $\epsilon = 0.05$ and total number of $epochs=25$.
 Despite the varying capacity, the results rather depend on the shape of the network. The best of the three networks are compared on Figure \ref{fig:comp}.
+
+
+\subsection{Analyzing the best performing network}
+The best result belongs to a network with hidden layer width: 784-784-100. 
+The suggestion while looking for evidences is that the reason behind the good performance of the network is relying on different levels of abstraction.
+In the following I will describe how we can extract such features from any network.
 
 
 \begin{figure}
@@ -262,15 +268,3 @@ Therefore finding the best $I$ is also essential for extracting important inform
     \caption{After increasing $T$, compared to fig. \ref{fig:dense} some of the amplified pictures gets noisy, which is not a problem in the first case. It is a trend in the early layers, to only focus on small, localized type of features, that yields different candidates, which makes the mean of the outcome noisy overall. Especially this is one important feature of \emph{MLPs} that initialized with random weights they converge towards recognizing localized features.}
     \label{fig:dense-100}
 \end{figure}
-
-
-\subsection{Analyzing the best performing network}
-The best result belongs to a network with hidden layer width: 784-784-100. 
-The layers were visualized with the following parameters:
-$T=100$
-$\eta=0.1$
-$I=10, 50$
-and the training set was used for choosing candidates.
-
-The suggestion while looking for evidences is that the reason behind the good performance of the network is relying on different levels of abstraction.
-I visualized all three layers in order to get a better grasp what happens inside of a network, which can recognize digits with $98\%$ success.
