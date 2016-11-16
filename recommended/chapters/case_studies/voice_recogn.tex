@@ -66,7 +66,7 @@ For such arbitrary cases, where no noise is added to the signal, larger precisio
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{N5000-L2e-1.png}
-	\caption{The network's initialization and training parameters are identical to the network depicted on Figure \ref{fig:N5000}, only the transform precision is increased from $N=500$ to $N=5000$ resulting in more narrow spikes corresponding to the recognized frequency}
+	\caption{The network's initialization and training parameters are identical to the network depicted in Figure \ref{fig:N5000}, only the transform precision is increased from $N=500$ to $N=5000$ resulting in more narrow spikes corresponding to the recognized frequency}
 	
 	\label{fig:N5000}
 \end{figure}
@@ -75,7 +75,7 @@ For such arbitrary cases, where no noise is added to the signal, larger precisio
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{N50-L2e-1.png}
-	\caption{The network's initialization and training parameters are identical to the network depicted on Figure \ref{fig:N500}, only the transform precision is decreased from $N=500$ to $N=50$ resulting in more shallow spikes corresponding to the recognized frequency}
+	\caption{The network's initialization and training parameters are identical to the network depicted In Figure \ref{fig:N500}, only the transform precision is decreased from $N=500$ to $N=50$ resulting in more shallow spikes corresponding to the recognized frequency}
 	
 	\label{fig:N50}
 \end{figure}
@@ -98,7 +98,7 @@ For such arbitrary cases, where no noise is added to the signal, larger precisio
 
 
 \paragraph{Dealing with multiple waves}
-Approaching real life problems, more parallel signals should be introduced to the network. In this subsection the case of recognizing overlapping frequencies and common frequencies are examined. The networks were initialized and trained identically to the network in previous experiment with $\lambda=0.5$. In the first case six different base functions were used to compose the samples. On Figure \ref{fig:multi} it is really trivial that the network is not just capable of separating low-pitch samples from high-pitch samples, but can recognize different patterns, even if they are scattered throughout the state space of the input. In the second case the conclusion is that the perceptrons (if well trained) will look only for relevant signals and patterns in the input.  See Figure \ref{fig:multi-common}
+Approaching real life problems, more parallel signals should be introduced to the network. In this subsection the case of recognizing overlapping frequencies and common frequencies are examined. The networks were initialized and trained identically to the network in previous experiment with $\lambda=0.5$. In the first case six different base functions were used to compose the samples. In Figure \ref{fig:multi} it is really trivial that the network is not just capable of separating low-pitch samples from high-pitch samples, but can recognize different patterns, even if they are scattered throughout the state space of the input. In the second case the conclusion is that the perceptrons (if well trained) will look only for relevant signals and patterns in the input.  See Figure \ref{fig:multi-common}
 
 \begin{figure}
 	\centering
@@ -112,7 +112,7 @@ Approaching real life problems, more parallel signals should be introduced to th
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{multiple--common-20-50Hz--N5000---L2-5e-1.png}
-	\caption{In opposite to the case depicted on Figure \ref{fig:multi} here the samples have two common component, meaning that in the base functions there are two common frequency and only differs in one harmonics. The result is that the common features extracted by the FFT are discarded, and the perceptrons only learn the difference.}
+	\caption{In opposite to the case depicted In Figure \ref{fig:multi} here the samples have two common component, meaning that in the base functions there are two common frequency and only differs in one harmonics. The result is that the common features extracted by the FFT are discarded, and the perceptrons only learn the difference.}
 	
 	\label{fig:multi-common}
 \end{figure}
@@ -120,11 +120,11 @@ Approaching real life problems, more parallel signals should be introduced to th
 \paragraph{Introducing Regularization.}
 Regularization is simply a practical implementation of Occam's razor, meaning that the unimportant features of $\mathbf{x}$ will not be taken into account by the perceptron. 
 
-On Figures \ref{fig:N500}, \ref{fig:N5000}, \ref{fig:N50} the weights were originally initialized with random Gaussian noise, but after training only the important frequencies' weights stayed significant. 
+In Figures \ref{fig:N500}, \ref{fig:N5000}, \ref{fig:N50} the weights were originally initialized with random Gaussian noise, but after training only the important frequencies' weights stayed significant. 
 If the regularization factor is reduced the noise wouldn't disappear and the perceptron would still take irrelevant information into account. 
-This phenomena is shown on Figure \ref{fig:reg}. 
+This phenomena is shown in Figure \ref{fig:reg}. 
 However, instead of regularizing, we can \emph{over train} our networks, increasing the number of epochs, the number of times we show the same samples in the training set. 
-Noise reduction via \textbf{overfit} can be seen on Figure \ref{fig:overtrain}. 
+Noise reduction via \textbf{overfit} can be seen in Figure \ref{fig:overtrain}. 
 
 \subsection{Real Samples}
 For acquiring samples from the environment the architecture should be wired to a physical sensor which will transfer signals from analog to digital. 
@@ -135,21 +135,21 @@ The only thing remaining is to write an adapter to make the information format c
 For the following experiments an algorithmic smart capturing is used, which enables us to record multiple sound waves with different length, without pressing a single key. The main idea is that the noise of the environment can be monitored, and in the background mean averaged. A practical threshold is set for recognizing significant audio inputs, where the magnitudes of the sampled waves reach the critical. After the recording starts, a fixed size time-frame will cancel out further activities of the capturing system. Another option is to end the capturing process when the magnitude of the input falls below a threshold. Either way, the samples are gathered in a list, and each of them are transformed to frequency domain with \emph{N-FFT}, producing equal length inputs  $\mathbf{x^i}$ for the network.
 
 \paragraph{Defining the classes}
-For human interpretation it is useful, that the separated classes are labeled, while from the aspect of the network it is totally irrelevant what the classes represent. That is an important thing to understand, both in supervised and in unsupervised learning. In the next cases separation sound waves of \emph{Hello} will be separated from samples of \emph{Goodbye}.
+For human interpretation it is useful that the separated classes are labeled, while from the aspect of the network it is totally irrelevant what the classes represent. That is an important thing to understand, both in supervised and in unsupervised learning. In the next cases separation sound waves of \emph{Hello} will be separated from samples of \emph{Goodbye}.
 
 \subsection{Binary classifiers}
 \paragraph{First greeting recognizer}
 The first model trained on greetings and farewells is working as expected. In the demo found at \cite{DV} \url{~/demo/audio/so.py} the user is asked to input number of $N$ samples representing class I, and the same number from class II which will be labeled with the assumption that the samples do not overlap. The length of the samples can vary in time, because the smart capturing takes care of the preprocessing. 
-For ending the recording session produce some loud noise, a clap should do. 
+To end the recording session, produce some loud noise - a clap should do. 
 The labeled samples are then taken into account as the training set for the network, and the process adjusting the parameters begins. 
 After 30 epochs of training the network waits for new $\mathbf{x}$ to classify. 
 A few tests can be made to ensure the network is working well. 
 My results with N=1000, on 3-3 input sample is performing around 91\% (100 tests were performed in total). 
-Sending a \textbf{\textsc{sig-term}} will end the testing session and a summary window will pop up, probably something like on Figure \ref{fig:hello}.
+Sending a \textbf{\textsc{sig-term}} will end the testing session and a summary window will pop up, showing something like shown in Figure \ref{fig:hello}.
 
 \subsection{Multiclass classification}
 \paragraph{Recognizing greetings in multiple languages}
-Currently the model works like the one depicted on Figure \ref{fig:dumb}. 
+Currently the model works like the one depicted in Figure \ref{fig:dumb}. 
 A real task can be defined, where the network $\mathcal{F}$ has to classify in which language the user said hello. Unfortunately there are more languages than two, but neural networks are flexible enough to be able to recognize and separate the inputs into  $N$ number of classes. For the improved model see Figure \ref{fig:improved} 
 
 The experiments were done with 5 different languages: \emph{French, Arabic, Spanish, German, Hungarian}. The training scene is the same as in the previous cases: input sequentially $N$ number of samples for each language, end the recording with a clap.
@@ -182,16 +182,16 @@ For such a narrow network trained with a poor training set it can be said that 8
 
 \subsection{Conclusion}
 So far it was shown how single layer neural networks work. 
-How they should be thought of, what difficulties arises during their training. 
+How they should be thought of, what difficulties arise during their training. 
 The capabilities of shallow networks were met during tests with the N-multiclass classifier. 
-The next topic of the investigation is that how can these perceptron layers be combined to each other, 
+The next topic of the investigation is how these perceptron layers can be combined to each other, 
 for example to recognize whether a user said yes or no, without explicitly telling  which language he or she was speaking.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{hello-goodbye-N1000-L205}
 	\caption{On the left: the first example of the whole training set, showing the wave and frequency plot of a \emph{Hello}. On the right: the same for the word \emph{Goodbye}. guesses more than half 
-	As experienced on Figure \ref{fig:N500}, an anti-symmetric pattern arises in the weight plot of the classifier perceptrons. 
+	As experienced in Figure \ref{fig:N500}, an anti-symmetric pattern arises in the weight plot of the classifier perceptrons. 
 	One pattern in the frequency domain of \emph{Goodbye} samples is very dominant and the weights of the \emph{Goodbye}-recognizing perceptron fits on it very well, while the same pattern can be found in the opposite perceptron's weight plot with negative sign.}
 	
 	\label{fig:hello}
