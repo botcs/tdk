@@ -3,15 +3,15 @@
 \epigraph{\textit{... where in this snippet $W1$ and $W2$ are two matrices that we initialize randomly. We're not using biases because meh.}}{\rightline{{\rm --- Andrej Karpathy}}}
 
 After researching literature on building libraries from scratch, analyzing pet project source-codes \cite{convnetjs, gibianskysource} and dozens of implementations of professional libraries \cite{TF, caffe, torch},
-I concluded that the best way to acquire an in-dept understanding of neural networks is to build my own Deep Learning framework.
+I concluded that the best way to acquire an in-depth understanding of neural networks is to build my own Deep Learning framework.
 This way I had a chance to understand why novel solutions in Machine Learning are formed the way they are.
 I also gained insight into what main paradigms are popular libraries based on, such as \emph{computational graphs, parallel processing}, 
 and what trade-offs can be made between \emph{computational cost} and \emph{memory usage}, between robustness and plasticity.
 Most thankfully, by starting from scratch I have faced situations when theoretical formulas had to be translated into exact working code, which was an important challenge for me.
 
-\paragraph{Goals.} My main objectives when writing code was the following:
+\paragraph{Goals.} My main objectives when writing code were the following:
 \begin{itemize}
-    \item[] to make such a library that is able to be extended further
+    \item[] to make a library that can be extended further
     \item[] open-source, so it can be forked by anyone interested in developing it
     \item[] to make it modular therefore make its usage independent of the task
     \item[] use the fewest possible technical tricks for sake of simplicity
@@ -24,7 +24,7 @@ I want to emphasize that this work was not written to compete with contemporary 
 \section{Choice of design pattern and language}
 
 The formulas of classical neural networks, whose nodes are organized into
- lattices forming a Directed Acyclic Graph, shows minor variance in
+ lattices forming a Directed Acyclic Graph, show minor variance in
  contents of independent sources. Still their common point that they rely
  on basic vector algebra and functional analysis, therefore considering
  arrays representing general mapping functions, as their core building
@@ -51,7 +51,7 @@ further the basic algorithms, and usage usually
 results in boilerplate codes. 
 Either way it would make the implementation unclear for those, who did not participate in the designing of the library.
 I wanted to chose a language which offers an optimal solution for this challenge, is flexible, well documented and simple enough for newbies to catch up.
-Because of the support of both object-oriented and procedural approaches and offering the above, I choose Python.
+Because of the support of both object-oriented and procedural approaches and offering the above, I chose Python.
 
 \subsection{Design pattern} While designing blueprints of the implementation, I examined the Neural Networks as universal approximators in a \textsc{top-down} manner.
 I have disassembled them to basic blocks, abstracting the function of each level.
@@ -66,7 +66,7 @@ Patterns which are associated with cats may be associated with kids too, but is 
 In \emph{neural networks} there are small nodes based on the biological model of neurons, that is responsible for recognizing and weighting the patterns. These nodes are called \textbf{perceptrons}. 
 
 \subsection{Defining the Perceptron} 
-Let be $x$ a preprocessed information, the perceptron $\mathbf{P}$ decides which parts of it are important in recognizing a cat: having a corresponding weight with large magnitude, and which of them are irrelevant: having a weight with magnitude close to zero. 
+Let $x$ be preprocessed information, the perceptron $\mathbf{P}$ decides which parts of it are important in recognizing a cat: having a corresponding weight with large magnitude, and which of them are irrelevant: having a weight with magnitude close to zero. 
 Therefore a \emph{perceptron} has a weight $w_i$ for each input $x_i$ and its transient state can be now formally written:
 $$
 	\mathbf{P}_{transient}=\sum_i x_i w_i
@@ -76,7 +76,7 @@ Which can be also rewritten as the inner product of $\mathbf{x}$ and $\mathbf{w}
 $$
 	\mathbf{P}_{transient}= <\mathbf{x} \;,\; \mathbf{w}>=\mathbf{x}^T\mathbf{w}
 $$
-In the following examples perceptrons will be arranged in a special way, to form a \textbf{Feed Forward} network, meaning that the information flow will occur in a direct way, without feedbacks, see figure \ref{fig:ff}.
+In the following examples perceptrons will be arranged in a special way, to form a \textbf{Feed Forward} network, meaning that the information flow will occur in a direct way, without feedback - see figure \ref{fig:ff}.
 However wiring many perceptrons together results in a numerically unstable system, caused by the lack of any restriction on the magnitude of the weights.
 Regularization addresses exactly this problem, implicitly making the network less likely to simply memorize pictures, or only respond to samples from the training set -- the problem of overfitting.
 
@@ -95,7 +95,7 @@ After describing the model, the first question is:
     \mathbf{P}$ in network $N$?} \\ 
 \end{flushright}
 There are a lot of intuitive explanations how this problem should be approached and solved. 
-For exhaustive investigation of the topic, visit Michael Nielsen's website \cite{nnsdl}. 
+For an exhaustive study of the topic, visit Michael Nielsen's website \cite{nnsdl}. 
 Anyhow, in general this is still the most studied question in machine learning. 
 Luckily, if $N$'s performance can be measured, thanks to its feed-forward structure a \emph{numerical suggestion} can be defined as well, which tells how to change $\mathbf{w_P}$ to improve efficiency of $N$. In practice an $\mathbf{E}$ error function is defined, and the objective of the training is to reduce it. Without digging deep in math we can find an intuitive situation with the same results.\\
 
@@ -107,7 +107,7 @@ Also with the information of how much the output of the actual node influenced t
 For further intuitive examples see section \ref{sec:diff}, or visit Andrej Karpathy's guide \cite{karpathyblog}.
 
 \paragraph{SGD.} The example led to the practical application of the so called \emph{Stochastic Gradient Descent}.
-Originally every samples in the training set should be introduced to the system before updating its weights and that would be the \emph{Batch Gradient Descent}, but in  the hope that the samples falls in a subset of the whole space of all possible inputs, the algorithm uses mini-batches for the learning process. When the number of samples in the batches reduces to 1, the training is called on-line training. And if it happens on $N$ containing a single perceptron it is called \emph{Rosenblatt perceptron learning algorithm}.
+Originally every samples in the training set should be introduced to the system before updating its weights and that would be the \emph{Batch Gradient Descent}, but in  the hope that the samples fall in a subset of the whole space of all possible inputs, the algorithm uses mini-batches for the learning process. When the number of samples in the batches reduces to 1, the training is called on-line training. And if it happens on $N$ containing a single perceptron it is called \emph{Rosenblatt perceptron learning algorithm}.
 
 
 \section{Inference}

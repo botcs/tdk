@@ -38,7 +38,7 @@ The networks were trained on the MNIST dataset \cite{mnist}, with varying the fo
     \item Regularization - $L_p$
 \end{itemize}
 
-The experiments width shapes and corresponding results are shown on \emph{Figure (\ref{fig:even}, \ref{fig:dec}, \ref{fig:inc})}.
+The experiments with shapes and corresponding results are shown on \emph{Figure (\ref{fig:even}, \ref{fig:dec}, \ref{fig:inc})}.
 In the very beginning it turned out that networks with 3 layer are the most stable for MNIST character recognition. 
 Shallow networks, with fewer layers that had theoretically larger capacity than 3 layered ones, were unable to generalize the digits.
 Deeper networks, with more layers either were numerically unstable, and exhibited vanishing gradient, or overfitting occurred early in the training process.
@@ -191,11 +191,11 @@ Both methods were tested by the following procedure: The top 1 digit was selecte
     \label{fig:bias-nobias}
 \end{figure}
 It is important to notice, that the algorithm initialized with different samples will introduce artifact features on the samples. 
-These features will bring closer the input towards an artificial sample which will much more likely be recognized as a sample from the class of the corresponding neuron. 
+These features will bring the input closer to an artificial sample which will much more likely be recognized as a sample from the class of the corresponding neuron. 
 The method of distortion can be exploited as well, which is called \emph{generating Adversarial} samples (detailed explanation in the end of the section).
 However applying GA on the sample with the corresponding neuron (samples in the green box on Figure \ref{fig:bias-nobias}) results in much better visualization of \emph{what each node is looking for} on the input.
 By qualitative analysis we concluded that biased Gradient Ascent takes less iterations to transform the sample, 
-however applying it should be  only restricted in the classifying layer, since it is diminishing activation of neighboring neurons. 
+however using it should be restricted to the classifying layer, since it is diminishing activation of neighboring neurons. 
 A comparison of how the algorithms work iteration by iteration, on noise and misleading samples is shown on Figure \ref{fig:noise-GA}
     
 
