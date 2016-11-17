@@ -35,10 +35,10 @@
 %\usepackage{sourcecodepro} % egy jó betűtípus
 \lstset{captionpos=b, numberbychapter=false, basicstyle=\ttfamily, showstringspaces=false, columns=fullflexible}
 % Kódrészletek magyar stílusú számozása
-\renewcommand\lstlistingname{kódrészlet}
-\makeatletter
-\renewcommand\fnum@lstlisting{\ifx\lst@@caption\@empty\else\thelstlisting.~\fi\lstlistingname}%
-\makeatother
+%\renewcommand\lstlistingname{kódrészlet}
+%\makeatletter
+%\renewcommand\fnum@lstlisting{\ifx\lst@@caption\@empty\else\thelstlisting.~\fi\lstlistingname}%
+%\makeatother
 % Nyilatkozathoz két parancs definíciója
 \newcommand{\pushtobottom}{\vspace*{\fill}}
 \newcommand{\signatureline}[1]{\begin{flushright}
@@ -57,9 +57,9 @@
 \pagestyle{fancy}
 \fancyhf{}
 %\fancyhead[L]{\leftmark}
-\fancyhead[L]{\rightmark}
+\fancyhead[L]{\textsl{\rightmark}}
 \fancyhead[R]{\thepage}
-\renewcommand{\headrulewidth}{0.1pt}
+\renewcommand{\headrulewidth}{.001cm}
 
 % Ezeket írd át!
 \author{Csaba Botos}
@@ -104,12 +104,13 @@ External supervisor: PhD. Csaba M. Józsa
 \pagenumbering{Roman}
 \chapter*{Abstract}
 \input{chapters/abstract}
-%\addcontentsline{toc}{chapter}{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
 \clearpage
 
 \input{chapters/declaration}
 \clearpage  % Declaration ended, now start a new page
 \input{chapters/acknowledge}
+\addcontentsline{toc}{chapter}{Acknowledgments}
 \clearpage
 \tableofcontents
 \clearpage

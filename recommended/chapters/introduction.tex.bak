@@ -59,13 +59,46 @@ I was inspired to develop my own algorithm while I was studying the novel archit
 
 \clearpage
 \section{Thesis outline and contributions}
-In this work I summarize my recent studies on Neural Networks and Computer Vision. 
-I present my current achievements in the field, the visualization techniques I have derived and developed from the latest 
+In this work I summarize my recent studies on Neural Networks and Computer 
+Vision. 
+I present my current achievements in the field, the visualization 
+techniques I have derived and developed from the latest 
 self-educational sources and novel research.
-I also provide a guide on how to build a library \textbf{from scratch} which I used for producing the present results.
+I also provide a guide on how to build a library \textbf{from scratch} 
+which I used for producing the present results.
 
 
-In \textbf{Chapter \ref{cp:design}} a detailed explanation on how I derived the main concepts of neural networks, from the very beginning, and 
+In Chapter \textbf{\nameref{cp:design}} I explain the overall structure of the library and the considerations which led to them, and provide a detailed explanation on how I 
+derived the main concepts of neural networks, from the very beginning supported with mathematical background. 
+First I zoom in from a larger picture of working AI to exact challenges of 
+Machine Learning: I disassemble neural networks in general, to basic 
+building blocks, explain them through several examples and provide a 
+formal mathematical definition which will be used in the following 
+sections.
+I put emphasis on linking the formal definitions to natural meanings of 
+mathematical formulas (throughout rather informal explanations).
+By providing intuitive theoretical considerations, from the perceptron 
+model, I build up step-by-step the entire idea of \emph{Forward- \& 
+Back-propagation} of Deep Neural Networks.
+In the end, exact layers are described involving examples of practical applications.
+
+In \textbf{\nameref{cp:design}}, I describe my research on 
+visualization techniques via elementary case studies of \emph{Voice 
+Recognition} and \emph{Image Classification}.
+In the first half I summarize the main concepts and capabilities of single 
+layered neural networks.
+I start with the basic problems of voice recognition, namely the 
+overlapping frequency domains, the irrelevant signals (noise) by training 
+networks on pure sinusoid input samples.
+I provide examples for the problem of overfitting and show how regularization techniques enhances the network performance.
+After clarification, I explain the challenges of the voice recognition topic involving real recordings,
+a case study that can be carried out at home by anyone, with the knowledge 
+provided by my work.
+In the second half, I show how feed-forward networks can be better understood via visualization with a simple algorithm, namely the \emph{Gradient Ascent}, which I have developed based on my previous studies of novel articles.
+I have also explored the hyper-parameter space of fully connected architectures,
+while training networks on the popular MNIST dataset.
+I present my experiments with different shape of layers and methods for training, and share my interpretations of the results.
+In the end an exhaustive investigation of different types of Gradient Ascent For revealing perceptive fields of neurons and for
 
 
 
