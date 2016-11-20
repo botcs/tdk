@@ -50,7 +50,7 @@ the time is spent on optimizing further and
 further the basic algorithms, and usage usually 
 results in boilerplate codes. 
 Either way it would make the implementation unclear for those, who did not participate in the designing of the library.
-I wanted to chose a language which offers an optimal solution for this challenge, is flexible, well documented and simple enough for newbies to catch up.
+I wanted to choose a language which offers an optimal solution for this challenge, is flexible, well documented and simple enough for newbies to catch up.
 Because of the support of both object-oriented and procedural approaches and offering the above, I chose Python.
 
 \subsection{Design pattern} While designing blueprints of the implementation, I examined the Neural Networks as universal approximators in a \textsc{top-down} manner.
@@ -100,14 +100,14 @@ Anyhow, in general this is still the most studied question in machine learning.
 Luckily, if $N$'s performance can be measured, thanks to its feed-forward structure a \emph{numerical suggestion} can be defined as well, which tells how to change $\mathbf{w_P}$ to improve efficiency of $N$. In practice an $\mathbf{E}$ error function is defined, and the objective of the training is to reduce it. Without digging deep in math we can find an intuitive situation with the same results.\\
 
 Take a perceptron $\mathbf{P}$ with input $\mathbf{x}$ of objects on a given picture of a cat. Suppose that this perceptron \emph{fires} (has high output value) when wheels are on the picture. It should remain silent when there are no round objects listed in 
-$\mathbf{x}$, still it turns on, affecting the output of $N$, producing high error.
-Since we know the original label of the picture, we can tell which assumptions were wrong, and which were good - which to decrease, which to increase if the next time $N$ is given the same input. 
+$\mathbf{x}$, still it turns on, affecting the output of $\mathcal{F}$, producing high error.
+Since we know the original label of the picture, we can tell which assumptions were wrong, and which were good - which to decrease, which to increase if the next time $\mathcal{F}$ is given the same input. 
 This information is distributed between the previous perceptrons which caused the current one to fail, by simply multiplying the error with the weight corresponding to the previous node. 
 Also with the information of how much the output of the actual node influenced the error, and with its input values, the significance of misleading $\mathbf{x_i}$ can be reduced, and important features' weights can be increased, which is actually finding a better $\mathbf{w_P}$.
 For further intuitive examples see section \ref{sec:diff}, or visit Andrej Karpathy's guide \cite{karpathyblog}.
 
 \paragraph{SGD.} The example led to the practical application of the so called \emph{Stochastic Gradient Descent}.
-Originally every samples in the training set should be introduced to the system before updating its weights and that would be the \emph{Batch Gradient Descent}, but in  the hope that the samples fall in a subset of the whole space of all possible inputs, the algorithm uses mini-batches for the learning process. When the number of samples in the batches reduces to 1, the training is called on-line training. And if it happens on $N$ containing a single perceptron it is called \emph{Rosenblatt perceptron learning algorithm}.
+Originally every samples in the training set should be introduced to the system before updating its weights and that would be the \emph{Batch Gradient Descent}, but in  the hope that the samples fall in a subset of the whole space of all possible inputs, the algorithm uses mini-batches for the learning process. When the number of samples in the batches reduces to 1, the training is called on-line training. And if it happens on $\mathcal{F}$ containing a single perceptron it is called \emph{Rosenblatt perceptron learning algorithm}.
 
 
 \section{Inference}
@@ -254,7 +254,7 @@ to encourage the same response for similar samples.
 For experiments with the mentioned method, see section~\ref{sec:voice}.
 A frequent application of on-line training is called \emph{Q-learn}, for case studies see \cite{qlearn-case}.
 
-Both methods are powerful for specific tasks, but in practice the solution is between: \textbf{mini-batch} training.
+Both methods are powerful for specific tasks, but in practice the solution is in between: \textbf{mini-batch} training.
 Inferring multiple samples at the same time with the same network not just yields a more stable convergence, 
 but is an excellent opportunity to parallelize the process:
 Extending by one extra dimension to each stage of the inference (inputs, transient activations, outputs) can be done easily,
@@ -401,7 +401,7 @@ Computationally it is very efficient to create different, so called \textbf{sub-
 considering that latent layers would be \emph{saturated} when dropout layers were removed after training,
 the activations passed by this layer are multiplied by the constant $\frac{1}{p}$.
 \paragraph{DropConnect} A similar concept, introduced by Li Wan \emph{et al.}~\cite{dropcon}: 
-instead dropping the activation of the previous layer, the weights of the layer are canceled out in the same fashion.
+instead of dropping the activation of the previous layer, the weights of the layer are canceled out in the same fashion.
 In my implementation they can be only applied to fully-connected layers, where a \emph{Boolean matrix} mask is used.
 
 \subsection{Output} 

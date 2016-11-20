@@ -5,7 +5,7 @@
 \epigraph{\textit{No one knows what the right algorithm is, but it gives us hope that if we can discover some crude approximation of whatever this algorithm is and implement it on a computer, that can help us make a lot of progress.}}{\rightline{{\rm --- Andrew Ng}}}
 
 Every time we are interacting with our environment, we get closer to understanding it. %still the closer we are the less we understand. 
-However, as a byproduct, further questions arise, for which pure logical (or mathematical) solution is not available, or the problem is larger what we can solve.
+However, as a byproduct, further questions arise, for which pure logical (or mathematical) solution is not available, or the problem is larger than what we can solve.
 Luckily we can always turn back to nature for inspiration: biological systems have proven their efficiency, therefore their functions are worth to be further analyzed -- even if there could be theoretically a better way to tackle obstacles. 
 One of the many branches of artificial intelligence, Neural Networks are based on the nervous systems of living organisms which is capable of self-learning.
 
@@ -82,7 +82,7 @@ model, I build up step-by-step the entire idea of \emph{Forward- \&
 Back-propagation} of Deep Neural Networks.
 In the end, exact layers are described involving examples of practical applications.
 
-In \textbf{\nameref{cp:design}}, I describe my research on 
+In \textbf{\nameref{cp:results}}, I describe my research on 
 visualization techniques via elementary case studies of \emph{Voice 
 Recognition} and \emph{Image Classification}.
 In the first half I summarize the main concepts and capabilities of single 
@@ -98,7 +98,9 @@ In the second half, I show how feed-forward networks can be better understood vi
 I have also explored the hyper-parameter space of fully connected architectures,
 while training networks on the popular MNIST dataset.
 I present my experiments with different shape of layers and methods for training, and share my interpretations of the results.
-In the end an exhaustive investigation of different types of Gradient Ascent For revealing perceptive fields of neurons and for
+In the end an exhaustive investigation of different types of Gradient Ascent can be found involving research of revealing perceptive field of neuron each neuron in a given layer and generating adversarial samples from any kind of input which can be used for harnessing the network.
+
+Finally, in the last chapters I summarize the research I have done so far and discuss the path forward.
 
 
 
