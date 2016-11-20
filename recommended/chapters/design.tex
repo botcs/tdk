@@ -400,7 +400,7 @@ Computationally it is very efficient to create different, so called \textbf{sub-
 \emph{Note}: Dropout layers are reducing the overall magnitude of the activation of the previous layer,
 considering that latent layers would be \emph{saturated} when dropout layers were removed after training,
 the activations passed by this layer are multiplied by the constant $\frac{1}{p}$.
-\paragraph{DropConnect} A similar concept, introduced by Li Wan \emph{et al.}~\cite{dropcon}: 
+\paragraph{DropConnect.} A similar concept, introduced by Li Wan \emph{et al.}~\cite{dropcon}: 
 instead of dropping the activation of the previous layer, the weights of the layer are canceled out in the same fashion.
 In my implementation they can be only applied to fully-connected layers, where a \emph{Boolean matrix} mask is used.
 
