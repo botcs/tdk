@@ -92,12 +92,12 @@ Regularization addresses exactly this problem, implicitly making the network les
 After describing the model, the first question is:
 \begin{flushright}
     \emph{--- what are the correct values for $\mathbf{w_P}$ for each $   
-    \mathbf{P}$ in network $N$?} \\ 
+    \mathbf{P}$ in network $\mathcal{F}$?} \\ 
 \end{flushright}
 There are a lot of intuitive explanations how this problem should be approached and solved. 
 For an exhaustive study of the topic, visit Michael Nielsen's website \cite{nnsdl}. 
 Anyhow, in general this is still the most studied question in machine learning. 
-Luckily, if $N$'s performance can be measured, thanks to its feed-forward structure a \emph{numerical suggestion} can be defined as well, which tells how to change $\mathbf{w_P}$ to improve efficiency of $N$. In practice an $\mathbf{E}$ error function is defined, and the objective of the training is to reduce it. Without digging deep in math we can find an intuitive situation with the same results.\\
+Luckily, if $\mathcal{F}$'s performance can be measured, thanks to its feed-forward structure a \emph{numerical suggestion} can be defined as well, which tells how to change $\mathbf{w_P}$ to improve efficiency of $\mathcal{F}$. In practice an $\mathcal{L}$ Loss function is defined, and the objective of the training is to reduce it. Without digging deep in math we can find an intuitive situation with the same results.\\
 
 Take a perceptron $\mathbf{P}$ with input $\mathbf{x}$ of objects on a given picture of a cat. Suppose that this perceptron \emph{fires} (has high output value) when wheels are on the picture. It should remain silent when there are no round objects listed in 
 $\mathbf{x}$, still it turns on, affecting the output of $\mathcal{F}$, producing high error.
@@ -291,7 +291,7 @@ and use \textbf{Early Stopping} when $E_g > \delta$, where $\delta$ is a paramet
 Though networks can vary in shape and function, the representation of the succeeding layers, evaluated by embedded functions described in \ref{eq:forward} is a common feature. Each of these layers serve as nodes of the computational graph of the network. The type of the layer determines whether it can be updated or not: for \emph{Fully Connected} layers $\nabla_\phi F_{FC}$ is well defined, explained in the following example.
 
 \paragraph{Toy example.} 
-Assume $\mathcal{L}$ is given, and we have a fully connected network with 2 hidden layers, i.e. $L=3$, which maps a $N$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \mapsto \mathbb{R}^M$. The constraint on the parameters are:
+Assume $\mathcal{L}$ is given, and we have a fully connected network with 2 hidden layers, i.e. $L=3$, which maps a $\mathcal{F}$ dimensional input vector $x$ to a $M$ dimensional output vector $y$, namely $\mathcal{F}:\mathbb{R}^N \mapsto \mathbb{R}^M$. The constraint on the parameters are:
 \begin{itemize}
     \item[] $W^1$ of the first layer must have $N$ columns
     \item[] $W^3$ and the bias $b^3$ of the last layer must have $M$ rows, dimensions respectively.
